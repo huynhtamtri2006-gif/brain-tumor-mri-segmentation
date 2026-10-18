@@ -75,9 +75,9 @@
      * Cơ sở toán học chi tiết của từng thuật toán.
 * **Lệnh kiểm tra:** `python -c "import yaml; print(yaml.safe_load(open('configs/default_params.yaml')))"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Đề tài và kế hoạch Sprint 7 ngày được thống nhất.
-  - [ ] Hoàn tất tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
-  - [ ] Khớp nối hợp đồng giao diện hàm (API interface) với thành viên Trí.
+  - [x] Đề tài và kế hoạch Sprint 7 ngày được thống nhất.
+  - [x] Hoàn tất tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+  - [x] Khớp nối hợp đồng giao diện hàm (API interface) với thành viên Trí.
 
 ---
 
