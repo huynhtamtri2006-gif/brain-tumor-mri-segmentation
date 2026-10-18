@@ -73,9 +73,9 @@
      * Xuất tài liệu thống kê chuyên sâu `docs/DATA_EXPLORATION_REPORT.md`.
 * **Lệnh kiểm tra:** `python -c "import os; print('Sample images:', len(os.listdir('data/sample/images')))"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Cấu trúc thư mục dữ liệu 2 tầng được thiết lập chuẩn mực.
-  - [x] Chạy hoàn thiện `notebooks/01_data_exploration.ipynb`.
-  - [x] Hoàn tất tài liệu phân tích dữ liệu `docs/DATA_EXPLORATION_REPORT.md`.
+  - [ ] Cấu trúc thư mục dữ liệu 2 tầng được thiết lập chuẩn mực.
+  - [ ] Chạy hoàn thiện `notebooks/01_data_exploration.ipynb`.
+  - [ ] Hoàn tất tài liệu phân tích dữ liệu `docs/DATA_EXPLORATION_REPORT.md`.
 
 ---
 
@@ -96,9 +96,9 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_metrics.py -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_metrics.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] 100% test cases trong `test_metrics.py` đạt kết quả PASSED.
-  - [x] Bắt lỗi số học an toàn, không có hiện tượng ngoại lệ `ZeroDivisionError`.
-  - [x] Các hàm trả về kiểu dữ liệu float chuẩn xác trong khoảng $[0.0, 1.0]$.
+  - [ ] 100% test cases trong `test_metrics.py` đạt kết quả PASSED.
+  - [ ] Bắt lỗi số học an toàn, không có hiện tượng ngoại lệ `ZeroDivisionError`.
+  - [ ] Các hàm trả về kiểu dữ liệu float chuẩn xác trong khoảng $[0.0, 1.0]$.
 
 ---
 
@@ -116,9 +116,9 @@
   3. Viết unit tests kiểm thử: `tests/test_measurement.py`.
 * **Lệnh kiểm tra:** `pytest tests/test_measurement.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
-  - [x] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
-  - [x] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
+  - [ ] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
+  - [ ] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
+  - [ ] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
 
 ---
 
@@ -134,8 +134,8 @@
      * Tận dụng `concurrent.futures.ProcessPoolExecutor` trên CPU đa nhân để chạy song song hàng ngàn lát cắt đạt tốc độ ~250 ảnh/giây.
 * **Lệnh kiểm tra:** `python -c "from src.evaluation.benchmark import run_benchmark; print('Benchmark module OK')"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
-  - [x] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
+  - [ ] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
+  - [ ] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
 
 ---
 
@@ -155,9 +155,9 @@
      * Lưu các biểu đồ độ phân giải cao phục vụ chèn vào Chương 8 của Báo cáo.
 * **Lệnh kiểm tra:** `streamlit run demo/app.py --server.headless true`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
-  - [x] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
-  - [x] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
+  - [ ] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
+  - [ ] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
+  - [ ] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
 
 ---
 
@@ -175,8 +175,8 @@
   * Phối hợp cùng Trường ghép nối thành `docs/BAO_CAO_DO_AN_XLAS.md` và chạy `python scripts/export_report_docx.py` để xuất bản file Word `docs/BAO_CAO_DO_AN_XLAS.docx` tuân thủ nghiêm ngặt Quy chuẩn Word HUIT (Times New Roman 13pt, line spacing 1.5, lề 3-3-3-2 cm).
 * **Lệnh kiểm tra:** `python scripts/export_report_docx.py`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
-  - [x] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
+  - [ ] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
+  - [ ] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
 
 ---
 
@@ -199,9 +199,9 @@
   4. Đóng gói toàn bộ sản phẩm đồ án thành file nén ZIP theo đúng quy cách của Khoa CNTT - HUIT.
 * **Lệnh kiểm tra:** `pytest -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Bộ Slide 20 trang hoàn thành, thiết kế chuyên nghiệp, đồng bộ nhận diện.
-  - [x] Video demo 3 phút ghi hình rõ nét, âm thanh thuyết minh lưu loát.
-  - [x] Toàn bộ hồ sơ đồ án đóng gói sẵn sàng nộp đúng hạn.
+  - [ ] Bộ Slide 20 trang hoàn thành, thiết kế chuyên nghiệp, đồng bộ nhận diện.
+  - [ ] Video demo 3 phút ghi hình rõ nét, âm thanh thuyết minh lưu loát.
+  - [ ] Toàn bộ hồ sơ đồ án đóng gói sẵn sàng nộp đúng hạn.
 
 ---
 
@@ -211,5 +211,5 @@ Tôi xin cam đoan bản kế hoạch Sprint 7 ngày trên phản ánh chính x�
 
 *TP. Hồ Chí Minh, ngày 19 tháng 10 năm 2026*  
 **Thành viên**  
-*(Đã ký)*  
+*(Ký và ghi rõ họ tên)*  
 **Huỳnh Tâm Trí**

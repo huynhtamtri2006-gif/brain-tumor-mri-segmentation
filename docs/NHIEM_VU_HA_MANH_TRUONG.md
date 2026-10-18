@@ -75,9 +75,9 @@
      * Cơ sở toán học chi tiết của từng thuật toán.
 * **Lệnh kiểm tra:** `python -c "import yaml; print(yaml.safe_load(open('configs/default_params.yaml')))"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Đề tài và kế hoạch Sprint 7 ngày được thống nhất.
-  - [x] Hoàn tất tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
-  - [x] Khớp nối hợp đồng giao diện hàm (API interface) với thành viên Trí.
+  - [ ] Đề tài và kế hoạch Sprint 7 ngày được thống nhất.
+  - [ ] Hoàn tất tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+  - [ ] Khớp nối hợp đồng giao diện hàm (API interface) với thành viên Trí.
 
 ---
 
@@ -98,9 +98,9 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_preprocessing.py -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_preprocessing.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] 100% test cases trong `test_preprocessing.py` đều đạt kết quả PASSED.
-  - [x] Chạy hoàn thiện `notebooks/02_preprocessing_and_skull_stripping.ipynb` không phát sinh lỗi.
-  - [x] Xuất bộ ảnh minh họa 6 bước trung gian để phục vụ đưa vào Chương 4 Báo cáo.
+  - [ ] 100% test cases trong `test_preprocessing.py` đều đạt kết quả PASSED.
+  - [ ] Chạy hoàn thiện `notebooks/02_preprocessing_and_skull_stripping.ipynb` không phát sinh lỗi.
+  - [ ] Xuất bộ ảnh minh họa 6 bước trung gian để phục vụ đưa vào Chương 4 Báo cáo.
 
 ---
 
@@ -119,9 +119,9 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_segmentation.py -k watershed -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_segmentation.py -k watershed -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Test `test_watershed_segmentation` đạt kết quả PASSED.
-  - [x] Watershed phân đoạn chính xác trên các ca u kích thước trung bình và lớn.
-  - [x] Cơ chế xử lý ca âm tính (lát não lành) hoạt động an toàn tuyệt đối.
+  - [ ] Test `test_watershed_segmentation` đạt kết quả PASSED.
+  - [ ] Watershed phân đoạn chính xác trên các ca u kích thước trung bình và lớn.
+  - [ ] Cơ chế xử lý ca âm tính (lát não lành) hoạt động an toàn tuyệt đối.
 
 ---
 
@@ -138,9 +138,9 @@
   3. Hoàn thiện nội dung so sánh thuật toán trong `notebooks/03_tumor_segmentation_comparison.ipynb`.
 * **Lệnh kiểm tra:** `pytest tests/test_segmentation.py tests/test_pipeline.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] 100% test cases trong `test_segmentation.py` và `test_pipeline.py` đều đạt (PASSED).
-  - [x] `BrainTumorPipeline` hỗ trợ chuyển đổi linh hoạt giữa 2 giải thuật qua cờ cấu hình `method='watershed'` hoặc `'region_growing'`.
-  - [x] Lưới ảnh so sánh đối chứng 2 giải thuật được xuất đầy đủ.
+  - [ ] 100% test cases trong `test_segmentation.py` và `test_pipeline.py` đều đạt (PASSED).
+  - [ ] `BrainTumorPipeline` hỗ trợ chuyển đổi linh hoạt giữa 2 giải thuật qua cờ cấu hình `method='watershed'` hoặc `'region_growing'`.
+  - [ ] Lưới ảnh so sánh đối chứng 2 giải thuật được xuất đầy đủ.
 
 ---
 
@@ -157,9 +157,9 @@
      * **Đề xuất giải pháp khắc phục:** Bổ sung lọc đẳng hướng đa tỷ lệ (multiscale vesselness/blob filter) hoặc kết hợp ngưỡng thích ứng gradient cục bộ.
 * **Lệnh kiểm tra:** `python -c "import pandas as pd; df=pd.read_csv('docs/BENCHMARK_RESULTS.csv'); print(df)"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Hoàn tất phân tích dữ liệu 7,858 lượt thực nghiệm.
-  - [x] Lập bảng phân tích 3 trường hợp lâm sàng điển hình (ca xuất sắc, ca trung bình, ca thất bại).
-  - [x] Soạn thảo toàn văn phần phân tích kỹ thuật phục vụ Mục 8 của Báo cáo đồ án.
+  - [ ] Hoàn tất phân tích dữ liệu 7,858 lượt thực nghiệm.
+  - [ ] Lập bảng phân tích 3 trường hợp lâm sàng điển hình (ca xuất sắc, ca trung bình, ca thất bại).
+  - [ ] Soạn thảo toàn văn phần phân tích kỹ thuật phục vụ Mục 8 của Báo cáo đồ án.
 
 ---
 
@@ -174,8 +174,8 @@
   * Phối hợp cùng Trí ghép nối toàn bộ 12 mục thành file `docs/BAO_CAO_DO_AN_XLAS.md` và chạy script xuất bản Word `docs/BAO_CAO_DO_AN_XLAS.docx` tuân thủ nghiêm ngặt Quy chuẩn Word HUIT (Times New Roman 13pt, giãn dòng 1.5, lề 3-3-3-2 cm).
 * **Lệnh kiểm tra:** `python scripts/export_report_docx.py`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] 4 chương kỹ thuật hoàn thiện đầy đủ công thức toán và hình ảnh minh chứng sắc nét.
-  - [x] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` xuất thành công, không bị lỗi bảng biểu hay tràn lề.
+  - [ ] 4 chương kỹ thuật hoàn thiện đầy đủ công thức toán và hình ảnh minh chứng sắc nét.
+  - [ ] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` xuất thành công, không bị lỗi bảng biểu hay tràn lề.
 
 ---
 
@@ -190,9 +190,9 @@
   4. Đóng gói trọn bộ sản phẩm theo đúng quy định nộp đồ án: Mã nguồn `src/`, Notebooks, Dữ liệu mẫu `data/sample/`, Báo cáo (Word + PDF), Slide (PPTX + PDF), Video demo.
 * **Lệnh kiểm tra:** `pytest -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Toàn bộ 12/12 unit tests PASSED (100% green).
-  - [x] Slide kỹ thuật hoàn thiện, thiết kế trực quan, súc tích.
-  - [x] Trọn bộ sản phẩm đồ án đóng gói sẵn sàng nộp đúng hạn.
+  - [ ] Toàn bộ 12/12 unit tests PASSED (100% green).
+  - [ ] Slide kỹ thuật hoàn thiện, thiết kế trực quan, súc tích.
+  - [ ] Trọn bộ sản phẩm đồ án đóng gói sẵn sàng nộp đúng hạn.
 
 ---
 
@@ -202,5 +202,5 @@ Tôi xin cam đoan bản kế hoạch Sprint 7 ngày trên phản ánh chính x�
 
 *TP. Hồ Chí Minh, ngày 19 tháng 10 năm 2026*  
 **Nhóm trưởng**  
-*(Đã ký)*  
+*(Ký và ghi rõ họ tên)*  
 **Hà Mạnh Trường**
