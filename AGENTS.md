@@ -1,3 +1,16 @@
+# Đồ án Xử lý ảnh số: Phân đoạn và phát hiện tổn thương trên ảnh y tế
+**Học phần:** Xử lý ảnh số — Bộ môn Khoa học Dữ liệu — Khoa CNTT — Trường ĐH Công Thương TP.HCM (HUIT)  
+**Năm học:** 2026–2027  
+**Repository:** [medical-image-lesion-segmentation](https://github.com/mtzwyu/medical-image-lesion-segmentation)
+
+## Thông tin nhóm thực hiện
+| STT | Họ và Tên | Mã số sinh viên | Vai trò |
+| :---: | :--- | :---: | :--- |
+| 1 | **Hà Mạnh Trường** | **2045240326** | Nhóm trưởng, Thiết kế pipeline tiền xử lý DIP, Thuật toán phân đoạn lõi (Otsu/Watershed), Báo cáo khoa học |
+| 2 | **Huỳnh Tâm Trí** | **2045240315** | Thành viên, Dữ liệu & Ground truth, Rút trích đặc trưng hình học/kết cấu, Đánh giá định lượng (Dice/IoU), Demo GUI |
+
+---
+
 # Global Multi-Agent Guidelines & Smart Model Router Protocol
 
 Behavioral guidelines adapted from Andrej Karpathy's engineering principles (`CLAUDE.md`), Antigravity with ChatGPT planning standards, and Smart Model Router architecture. Applies globally across all Antigravity projects and agent sessions.

@@ -77,7 +77,32 @@ typst_content = r'''
   ]
 ]
 
-#v(10pt)
+#v(6pt)
+#align(center)[
+  #block(
+    fill: rgb("#f1f5f9"),
+    stroke: 0.5pt + rgb("#cbd5e1"),
+    inset: (x: 12pt, y: 7pt),
+    radius: 4pt,
+    width: 100%,
+    [
+      #grid(
+        columns: (1fr, 1fr),
+        align: (left, right),
+        [
+          *Đề tài tự đề xuất:* Phân đoạn và phát hiện tổn thương trên ảnh y tế\
+          *Học phần:* Xử lý ảnh số (2026–2027)
+        ],
+        [
+          *Sinh viên 1:* Hà Mạnh Trường — MSSV: *2045240326*\
+          *Sinh viên 2:* Huỳnh Tâm Trí — MSSV: *2045240315*
+        ]
+      )
+    ]
+  )
+]
+
+#v(6pt)
 
 = I. TỔNG QUAN VÀ NGUYÊN TẮC CỐT LÕI
 Theo hướng dẫn chính thức của Bộ môn Khoa học Dữ liệu (năm học 2026–2027), đồ án kết thúc học phần Xử lý ảnh số yêu cầu sinh viên xây dựng quy trình giải quyết bài toán thị giác máy tính thực tế một cách hệ thống.

@@ -1,0 +1,11 @@
+numpy>=1.24.0
+scipy>=1.10.0
+opencv-python>=4.8.0
+scikit-image>=0.20.0
+scikit-learn>=1.2.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pillow>=9.5.0
+streamlit>=1.25.0
+pypdf>=3.9.0
+typst>=0.11.0
