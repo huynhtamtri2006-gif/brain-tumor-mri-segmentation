@@ -80,40 +80,133 @@
 ```
 brain-tumor-mri-segmentation/
 ├── .agents/                        # Bộ kỹ năng AI Agent hỗ trợ phát triển (Matt Pocock Skills)
-├── docs/                           # Tài liệu đề cương, danh mục đề tài và hướng dẫn học phần
-│   ├── 7. DANH_SACH_DE_TAI...pdf   # Danh mục đề tài gợi ý của Bộ môn
-│   ├── 9. Ke_hoach_thuc_ĐA...pdf   # Kế hoạch thực hiện 15 tuần của Bộ môn
-│   ├── KHUNG_NOI_DUNG_TONG_QUAT... # Khung nội dung chuẩn hóa cho mọi đề tài (PDF + MD)
-│   └── agents/                     # Cấu hình issue tracker, triage labels, domain docs
+├── docs/                           # Tài liệu đề cương, báo cáo đồ án và kết quả thực nghiệm
+│   ├── BAO_CAO_DO_AN_XLAS.md       # Báo cáo toàn văn đồ án định dạng Markdown
+│   ├── BAO_CAO_DO_AN_XLAS.docx     # Báo cáo chuẩn thể thức Bộ Giáo dục (Times New Roman 13pt, lề 3-3-3-2 cm)
+│   ├── BENCHMARK_RESULTS.csv       # Tổng hợp định lượng 3,929 lát cắt theo lát bệnh lý & não lành
+│   ├── BENCHMARK_RESULTS_FULL.csv  # Chi tiết 7,858 kết quả thực nghiệm từng lát cắt
+│   ├── DATA_EXPLORATION_REPORT.md  # Báo cáo thống kê dữ liệu 110 bệnh nhân TCGA-LGG
+│   └── KHUNG_NOI_DUNG_TONG_QUAT... # Khung nội dung chuẩn hóa của Bộ môn
 ├── data/                           # Dữ liệu ảnh MRI sọ não
-│   ├── README.md                   # Mô tả cấu trúc, quy cách và các link tải nguồn
-│   ├── sample/                     # Tập ảnh mẫu phục vụ thử nghiệm nhanh (20 ca chuẩn)
+│   ├── README.md                   # Mô tả cấu trúc hai tầng và quy cách mặt nạ u
+│   ├── sample/                     # [Tầng 1 - In Git] 20 ca mẫu kiểm thử nhanh
 │   │   ├── images/                 # Ảnh MRI sọ não gốc (.png, 256x256)
-│   │   ├── masks/                  # Mặt nạ nhị phân khối u Ground Truth (.png, 256x256)
-│   │   └── metadata.csv            # Bảng thông tin ca bệnh và diện tích u
-│   ├── raw/                        # (Đã gitignore) Nơi lưu toàn bộ dữ liệu tải về
-│   └── processed/                  # (Đã gitignore) Nơi lưu ảnh sau khi tách sọ/tiền xử lý
-│
-│   * 🔗 Nguồn chính (Hugging Face Datasets): https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research
-│   * 🔗 Nguồn dự phòng (Kaggle Benchmark): https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
-│   * 🔗 Kho gốc y sinh (TCIA NIH/NCI): https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG
-├── src/                            # Mã nguồn hệ thống (sẽ xây dựng theo các tuần)
-│   ├── preprocessing/              # Lọc nhiễu, CLAHE, Tách sọ (Skull Stripping)
-│   ├── segmentation/               # Watershed, Region Growing, K-Means
-│   ├── measurement/                # Đo diện tích u, độ tròn, Bounding Box
+│   │   ├── masks/                  # Mặt nạ Ground Truth u não (.png, 256x256)
+│   │   └── metadata.csv            # Metadata diện tích u của 20 mẫu
+│   └── full/                       # [Tầng 2 - Gitignored] Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
+│       ├── images/                 # 3,929 ảnh MRI (.png, 256x256)
+│       ├── masks/                  # 3,929 mặt nạ Ground Truth (.png, 256x256)
+│       └── metadata.csv            # Metadata chi tiết 110 bệnh nhân (3,929 lát)
+├── src/                            # Mã nguồn module xử lý ảnh số lõi
+│   ├── preprocessing/              # Lọc nhiễu Rician, CLAHE, Tách sọ (Skull Stripping)
+│   ├── segmentation/               # Watershed & Marker Distance Transform, Region Growing
+│   ├── measurement/                # Đo diện tích u, độ tròn Circularity, Bounding Box
 │   └── evaluation/                 # Tính Dice, IoU, Sensitivity, Specificity
-├── demo/                           # Ứng dụng giao diện minh họa (Streamlit GUI)
-├── scripts/                        # Scripts tải dữ liệu và biên dịch tài liệu PDF
+├── demo/                           # Ứng dụng giao diện minh họa (Streamlit GUI tương tác)
+│   ├── app.py                      # Giao diện chính hỗ trợ chuyển đổi data/full và data/sample
+│   └── utils.py                    # Tiện ích hiển thị và xuất báo cáo PDF/Excel
+├── notebooks/                      # 4 Jupyter Notebooks thực nghiệm trực quan
+│   ├── 01_data_exploration.ipynb   # Khám phá và phân tích phân bố dữ liệu
+│   ├── 02_preprocessing_and_skull_stripping.ipynb # Khử nhiễu & tách sọ não
+│   ├── 03_segmentation_comparison.ipynb # So sánh thuật toán phân đoạn
+│   └── 04_quantitative_evaluation.ipynb # Đánh giá định lượng trên toàn bộ tập dữ liệu
+├── scripts/                        # Scripts tự động hóa
+│   ├── download_full_dataset.py    # Tải toàn bộ 3,929 lát cắt từ Hugging Face
+│   ├── run_all_experiments.py      # Benchmark đa tiến trình xử lý 3,929 lát cắt (~25s)
+│   ├── export_report_docx.py       # Xuất báo cáo Word đúng chuẩn lề 3-3-3-2 cm
+│   └── create_notebooks.py         # Khởi tạo tự động các notebook thực nghiệm
+├── tests/                          # Bộ kiểm thử đơn vị tự động (Pytest)
 ├── AGENTS.md                       # Thông tin nhóm & Quy chuẩn kỹ thuật toàn cục
-├── requirements.txt                # Thư viện phụ thuộc (OpenCV, NumPy, Streamlit, Typst...)
+├── requirements.txt                # Thư viện phụ thuộc (OpenCV, NumPy, Streamlit, python-docx...)
 └── README.md                       # Tài liệu tổng quan dự án
 ```
 
 ---
 
-## 📋 4. Kế hoạch Nộp Sản phẩm theo chuẩn Khoa CNTT
+## 📊 4. Kết Quả Thực Nghiệm Benchmark Quy Mô Toàn Bộ Dữ Liệu (3,929 Lát Cắt)
 
-* **Báo cáo đồ án:** Soạn thảo theo chuẩn 10 mục của Khoa CNTT (Word và PDF).
-* **Mã nguồn:** Toàn bộ pipeline xử lý ảnh số sạch, có chú thích chi tiết, kèm demo tương tác.
-* **Tập dữ liệu:** Bộ dữ liệu kiểm thử kèm ground truth mask khối u não.
-* **Slide thuyết trình:** Tóm tắt bối cảnh, phương pháp, kết quả định lượng và kết luận.
+Toàn bộ 3,929 lát cắt từ 110 bệnh nhân TCGA-LGG được phân tích và đánh giá định lượng độc lập giữa hai giải thuật DIP cổ điển:
+
+| Nhóm dữ liệu kiểm thử | Phương pháp | Dice Score ($F_1$) | IoU (Jaccard) | Sensitivity | Specificity | Độ trễ (ms/ảnh) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Lát cắt có u (1,373 lát)** | **Marker-controlled Watershed** | **0.4446 ± 0.3014** | **0.3368 ± 0.2677** | **0.4436 ± 0.3170** | **0.9915 ± 0.0107** | **6.13 ± 3.32 ms** |
+| | Region Growing | 0.1990 ± 0.2682 | 0.1416 ± 0.2119 | 0.2226 ± 0.3221 | 0.9851 ± 0.0432 | 12.13 ± 22.83 ms |
+| **Lát não lành (2,556 lát)** | **Marker-controlled Watershed** | N/A (Không u) | N/A | N/A | **0.9904 ± 0.0100** | **6.15 ± 3.40 ms** |
+| | Region Growing | N/A (Không u) | N/A | N/A | 0.9760 ± 0.0480 | 12.05 ± 21.50 ms |
+
+> 📌 **Nhận xét chuyên môn:**
+> 1. **Watershed vượt trội toàn diện:** Nhờ cơ chế gieo mầm hạt giống dựa trên biến đổi khoảng cách Euclid (Euclidean Distance Transform) trên mặt nạ tách sọ, Watershed đạt Dice 0.4446 (gấp 2.23 lần Region Growing) và thời gian thực thi ổn định chỉ ~6.13 ms/lát cắt.
+> 2. **Kiểm soát dương tính giả tuyệt hảo:** Độ đặc hiệu (Specificity) trên lát não lành đạt **99.04%** (Watershed) và **97.60%** (Region Growing), khẳng định bước tách sọ não (Skull Stripping) loại bỏ triệt để tín hiệu nhiễu từ hộp sọ và màng não.
+
+---
+
+## 🚀 5. Hướng Dẫn Cài Đặt & Chạy Hệ Thống (Quickstart)
+
+### Bước 1: Cài đặt môi trường
+```bash
+git clone https://github.com/mtzwyu/brain-tumor-mri-segmentation.git
+cd brain-tumor-mri-segmentation
+pip install -r requirements.txt
+```
+
+### Bước 2: Tải dữ liệu toàn bộ (3,929 lát cắt)
+```bash
+# Tải và giải nén tự động 3,929 lát cắt từ Hugging Face (~1-2 phút tùy mạng)
+python scripts/download_full_dataset.py
+```
+
+### Bước 3: Chạy Benchmark đa tiến trình toàn bộ 3,929 lát cắt
+```bash
+# Chạy đánh giá đa luồng tốc độ cao (~25 giây hoàn thành toàn bộ 3,929 ảnh)
+python scripts/run_all_experiments.py
+```
+
+### Bước 4: Khởi chạy Giao diện Tương tác Web (Streamlit Demo)
+```bash
+streamlit run demo/app.py
+```
+
+### Bước 5: Chạy Kiểm thử Đơn vị Tự động (Unit Tests)
+```bash
+pytest -v
+```
+
+---
+
+## 📋 6. Kế hoạch 15 Tuần & Khung Đánh Giá Đồ Án Chuẩn HUIT
+
+### 6.1. Khung Tiêu Chí Đánh Giá (Rubric 5 Tiêu Chí - Thang Điểm 10)
+> Theo *Kế hoạch thực hiện Đồ án Xử lý ảnh số năm học 2026–2027* của Khoa CNTT — HUIT, điểm đồ án chiếm **100% điểm thi kết thúc học phần** (tương đương **70% tổng điểm học phần**):
+
+| STT | Tiêu chí đánh giá | Chuẩn đầu ra (PLO/CLO) | Trọng số | Điểm tối đa |
+| :---: | :--- | :---: | :---: | :---: |
+| 1 | Phân tích và lựa chọn đúng phương pháp | PLO2 / CLO1 | 15% | 1.5 điểm |
+| 2 | **Áp dụng được các phương pháp xử lý (Trọng tâm)** | PLO2 / CLO2 | **50%** | **5.0 điểm** |
+| 3 | Đọc tài liệu, nghiên cứu giải quyết bài toán | PLO4 / CLO3 | 10% | 1.0 điểm |
+| 4 | Trình bày báo cáo | PLO7 / CLO5 | 15% | 1.5 điểm |
+| 5 | Phân công và phối hợp làm việc nhóm | PLO6 / CLO4 | 10% | 1.0 điểm |
+| **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | **ĐẠT CHUẨN ĐẦU RA** | **100%** | **10.0 điểm** |
+
+### 6.2. Lộ Trình 15 Tuần Triển Khai Chi Tiết
+* **Tuần 1:** Đăng ký đề tài, phân công vai trò 50%-50%, lập kế hoạch 15 tuần.
+* **Tuần 2–3:** Nghiên cứu lý thuyết DIP (Bilateral, Morphology, Watershed, Region Growing) và các chỉ số y tế.
+* **Tuần 4:** Thu thập, kiểm tra và chuẩn hóa 3,929 lát cắt dữ liệu TCGA-LGG (2 tầng dữ liệu: sample/full).
+* **Tuần 5:** Hiện thực hóa module Tiền xử lý & Quy trình 6 bước Tách sọ não (Skull Stripping).
+* **Tuần 6:** Hiện thực hóa Phương án A (Marker-controlled Watershed với biến đổi khoảng cách EDT) và Unit tests.
+* **Tuần 7:** Tích hợp pipeline xử lý hoàn chỉnh từ ảnh thô đến u não (`BrainTumorPipeline`).
+* **Tuần 8:** **Báo cáo tiến độ nội bộ với Giảng viên hướng dẫn.**
+* **Tuần 9:** Hiện thực hóa Phương án B (Seeded Region Growing đối chứng) và module benchmark tự động.
+* **Tuần 10:** Rút trích đặc trưng hình học khối u (Diện tích, Tỷ lệ u/não, Circularity) và Bounding Box.
+* **Tuần 11:** Tích hợp ứng dụng Web Demo GUI tương tác Streamlit (`demo/app.py`).
+* **Tuần 12:** Đánh giá định lượng quy mô lớn trên toàn bộ 3,929 lát cắt TCGA-LGG và phân tích Failure cases.
+* **Tuần 13:** Biên soạn bản nháp Báo cáo đồ án đầy đủ 12 mục chuẩn HUIT.
+* **Tuần 14:** Rà soát mã nguồn, tối ưu hóa hiệu năng, bảo đảm 100% Unit tests đạt.
+* **Tuần 15:** Hoàn thiện Báo cáo bản cuối (Word/PDF), thiết kế bộ Slide 20 trang, quay Video demo 3 phút và đóng gói hồ sơ.
+* **Sau kết thúc:** Nộp trọn bộ hồ sơ đồ án lên cổng Trường và bảo vệ trước Hội đồng.
+
+### 6.3. Chi Tiết Nhiệm Vụ Từng Sinh Viên
+* [Nhiệm vụ 15 tuần chi tiết của Hà Mạnh Trường (Nhóm trưởng)](docs/NHIEM_VU_HA_MANH_TRUONG.md)
+* [Nhiệm vụ 15 tuần chi tiết của Huỳnh Tâm Trí (Thành viên)](docs/NHIEM_VU_HUYNH_TAM_TRI.md)
+* [Báo cáo toàn văn đồ án 12 mục (Markdown)](docs/BAO_CAO_DO_AN_XLAS.md)
+* [Báo cáo đồ án định dạng Microsoft Word chuẩn HUIT](docs/BAO_CAO_DO_AN_XLAS.docx)
+

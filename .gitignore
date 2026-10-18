@@ -35,4 +35,6 @@ Thumbs.db
 # Large dataset directories (keep only data/sample in git)
 data/raw/
 data/processed/
+data/full/
+data/raw_hf/
 *.parquet

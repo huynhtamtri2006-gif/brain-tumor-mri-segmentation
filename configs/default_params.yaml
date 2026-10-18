@@ -1,27 +1,49 @@
-# default_params.yaml - Cấu hình tham số mặc định cho hệ thống xử lý ảnh số MRI
+# =============================================================================
+# default_params.yaml — Siêu tham số mặc định cho hệ thống xử lý ảnh MRI
+# Đồ án: Phân đoạn và phát hiện khối u não trên ảnh cộng hưởng từ (MRI)
+#
+# Tham chiếu lý thuyết: Gonzalez & Woods, Digital Image Processing (4th Ed.)
+#   - Ch.3  Intensity Transformations & Spatial Filtering  -> CLAHE
+#   - Ch.5  Image Restoration                              -> Bilateral Filter
+#   - Ch.9  Morphological Image Processing                 -> Opening, LCC, Hole Filling
+#   - Ch.10 Image Segmentation                             -> Otsu, EDT, Watershed, Region Growing
+#
+# Quy ước dữ liệu: ảnh MRI xám 256x256, dtype uint8, miền giá trị [0, 255].
+# Khoá cấu hình -> keyword argument thực thi: xem docs/SPEC_PIPELINE_MRI.md §4.
+# Lưu ý: src/pipeline.py hiện nhận dict phẳng (không phải nguyên cây YAML này) và
+# chỉ đọc 2 khoá dist_thresh_ratio / intensity_tolerance — xem §4.7.
+# =============================================================================
 
 preprocessing:
+  # --- Tầng 1a: Bilateral Filter (G&W §5.3.4 — làm trơn bảo toàn biên) ---
   bilateral_filter:
-    d: 9                     # Đường kính vùng láng giềng pixel
-    sigma_color: 75.0        # Độ lệch chuẩn không gian màu
-    sigma_space: 75.0        # Độ lệch chuẩn không gian tọa độ
+    d: 9                     # Cửa sổ lẻ 9x9 (bán kính 4); cửa sổ này cắt cụt Gauss không gian
+    sigma_color: 75.0        # sigma_r ~ 0.3 x 255: chênh lệch >= ~1 sigma_r coi là "khác mô" -> giữ biên u
+    sigma_space: 75.0        # sigma_s chuẩn OpenCV cho ảnh 8-bit; do sigma_s >> d/2 nên d mới là giới hạn không gian hiệu dụng
+
+  # --- Tầng 1b: CLAHE (G&W §3.3.3 — cân bằng histogram thích ứng cục bộ) ---
   clahe:
-    clip_limit: 2.0          # Giới hạn độ tương phản thích ứng
-    tile_grid_size: [8, 8]   # Kích thước lưới chia ảnh
+    clip_limit: 2.0          # Chặn khuếch đại nhiễu vùng histogram thấp; 2.0 là mức tăng cường vừa phải
+    tile_grid_size: [8, 8]   # Lưới 8x8 -> mỗi ô 32x32 pixel trên ảnh 256x256, đủ lớn để histogram cục bộ ổn định
+
+  # --- Tầng 2: Tách sọ não (G&W §9.6 — hình thái học) ---
   skull_stripping:
-    kernel_size: 5           # Kích thước kernel phép mở/đóng hình thái học
-    morph_iterations: 2      # Số lần lặp phép toán hình thái học
+    kernel_size: 5           # Phần tử cấu trúc elip ~ đĩa bán kính 2: cắt cầu nối mô mỏng, không ăn mòn nhu mô
+    morph_iterations: 2      # 2 lần Opening ~ SE hiệu dụng 9x9; hiện cố định iterations=2 trong extract_brain_mask
 
 segmentation:
+  # --- Tầng 3a: Marker-controlled Watershed (G&W §10.5) ---
   watershed:
-    dist_thresh_ratio: 0.4   # Ngưỡng tỷ lệ bản đồ khoảng cách (Sure Foreground)
-    bg_dilate_kernel: 3      # Kernel giãn nở tạo Sure Background
+    dist_thresh_ratio: 0.4   # Sure FG = 0.4 x max(EDT): chỉ giữ đỉnh khoảng cách >= 40% bán kính u
+    bg_dilate_kernel: 3      # Dilation 3x3 (x2 vòng lặp) tạo dải Unknown hẹp quanh biên u
+
+  # --- Tầng 3b: Seeded Region Growing (G&W §10.4) ---
   region_growing:
-    intensity_tolerance: 15  # Ngưỡng dung sai độ sáng láng giềng thu nạp vào u
-    min_tumor_area: 50       # Diện tích u tối thiểu (pixel) để tránh nhiễu
-    max_tumor_area: 25000    # Diện tích u tối đa trong sọ
+    intensity_tolerance: 15  # |I(q) - I(seed)| <= 15 ~ 5.9% dải động 8-bit: thu nạp mô u, chặn lan sang nhu mô tối
+    min_tumor_area: 50       # 50 px ~ 0.076% diện tích 256x256: sàn loại nhiễu đốm
+    max_tumor_area: 25000    # 25000 px ~ 38.1% diện tích não: chặn hiện tượng tràn toàn bộ nhu mô
 
 measurement:
-  min_contour_area: 30       # Diện tích contour tối thiểu để xét là u
+  min_contour_area: 30       # Sàn công nhận u ở tầng đo lường; ràng buộc 0 < min_contour_area <= min_tumor_area
   bbox_color: [0, 0, 255]    # Màu Bounding Box (Đỏ BGR trong OpenCV)
   bbox_thickness: 2          # Độ dày nét vẽ bounding box (pixel)

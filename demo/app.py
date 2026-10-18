@@ -42,17 +42,39 @@ with st.sidebar:
     st.divider()
 
     st.subheader("1. Nạp Dữ Liệu Ảnh MRI")
-    data_mode = st.radio("Nguồn ảnh đầu vào:", ["Chọn từ 20 mẫu TCGA-LGG", "Tải ảnh từ máy tính (.png, .jpg)"])
+    has_full_data = os.path.exists("data/full/images") and len(os.listdir("data/full/images")) > 50
+    data_options = ["Chọn từ 20 mẫu thử nghiệm nhanh (data/sample)"]
+    if has_full_data:
+        data_options.insert(0, "Chọn từ kho toàn bộ 3,929 lát cắt (data/full)")
+    data_options.append("Tải ảnh từ máy tính (.png, .jpg)")
+
+    data_mode = st.radio("Nguồn ảnh đầu vào:", data_options)
 
     input_img = None
     input_gt_mask = None
 
-    if data_mode == "Chọn từ 20 mẫu TCGA-LGG":
-        sample_files = list_sample_cases()
+    if "3,929" in data_mode:
+        full_files = list_sample_cases("data/full/images")
+        if full_files:
+            # Cho phép tìm kiếm/lọc nhanh
+            search_patient = st.text_input("Lọc theo mã bệnh nhân (ví dụ: TCGA_CS_4941):", "")
+            if search_patient:
+                filtered_files = [f for f in full_files if search_patient.upper() in f.upper()]
+            else:
+                filtered_files = full_files[:100] # hiển thị 100 lát đầu để mượt giao diện
+            
+            selected_file = st.selectbox(f"Chọn lát cắt MRI ({len(filtered_files)}/{len(full_files)} khả dụng):", filtered_files)
+            if selected_file:
+                sample_id = selected_file.replace(".png", "")
+                input_img, input_gt_mask = load_image_and_mask(sample_id, base_dir="data/full")
+        else:
+            st.warning("Chưa có ảnh trong data/full/images")
+    elif "20 mẫu" in data_mode:
+        sample_files = list_sample_cases("data/sample/images")
         if sample_files:
             selected_file = st.selectbox("Chọn ca bệnh mẫu:", sample_files)
             sample_id = selected_file.replace(".png", "")
-            input_img, input_gt_mask = load_image_and_mask(sample_id)
+            input_img, input_gt_mask = load_image_and_mask(sample_id, base_dir="data/sample")
         else:
             st.warning("Chưa có ảnh trong data/sample/images")
     else:
