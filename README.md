@@ -94,9 +94,9 @@ brain-tumor-mri-segmentation/
 │   ├── raw/                        # (Đã gitignore) Nơi lưu toàn bộ dữ liệu tải về
 │   └── processed/                  # (Đã gitignore) Nơi lưu ảnh sau khi tách sọ/tiền xử lý
 │
-│   * 🔗 Kaggle Dataset: https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
-│   * 🔗 Hugging Face: https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research
-│   * 🔗 TCIA Archive: https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG
+│   * 🔗 Nguồn chính (Hugging Face Datasets): https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research
+│   * 🔗 Nguồn dự phòng (Kaggle Benchmark): https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
+│   * 🔗 Kho gốc y sinh (TCIA NIH/NCI): https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG
 ├── src/                            # Mã nguồn hệ thống (sẽ xây dựng theo các tuần)
 │   ├── preprocessing/              # Lọc nhiễu, CLAHE, Tách sọ (Skull Stripping)
 │   ├── segmentation/               # Watershed, Region Growing, K-Means

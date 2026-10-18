@@ -555,18 +555,18 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
         "được các chuyên gia giải phẫu bệnh và chẩn đoán hình ảnh khoanh vùng thủ công."
     )
     add_body_p(
-        "Kaggle Dataset (Kho dữ liệu benchmark đầy đủ 3,929 ảnh của 110 bệnh nhân): https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation",
-        bold_prefix="• Link tải Kaggle chính thức: ",
+        "Hugging Face Datasets (Nguồn dữ liệu chính thức của Đồ án - Kho chuẩn 3,929 ảnh tích hợp trong script download_sample_data.py): https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research",
+        bold_prefix="• Nguồn chính thức (Hugging Face): ",
         bullet=True
     )
     add_body_p(
-        "Hugging Face Mirror (Kho mirror dữ liệu tích hợp API tải tự động): https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research",
-        bold_prefix="• Link tải Hugging Face: ",
+        "Kaggle Dataset (Kho dữ liệu benchmark gốc của Mateusz Buda phục vụ đối chứng): https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation",
+        bold_prefix="• Kho đối chứng (Kaggle): ",
         bullet=True
     )
     add_body_p(
         "The Cancer Imaging Archive (TCIA) - Viện Ung thư Quốc gia Hoa Kỳ (NIH/NCI): https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG",
-        bold_prefix="• Kho lưu trữ gốc TCIA: ",
+        bold_prefix="• Kho lưu trữ gốc TCIA (NIH): ",
         bullet=True
     )
     add_body_p(

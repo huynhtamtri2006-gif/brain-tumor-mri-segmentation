@@ -11,13 +11,13 @@ Dữ liệu thực nghiệm của đồ án được trích xuất từ bộ d�
 * **Phương thái chụp:** Ảnh cộng hưởng từ sọ não chuỗi xung FLAIR (Fluid-Attenuated Inversion Recovery) và T1-weighted có cản từ.
 * **Gắn nhãn (Annotation):** Mỗi lát cắt MRI đi kèm mặt nạ phân đoạn nhị phân (Ground Truth Binary Mask) được các chuyên gia giải phẫu thần kinh và chẩn đoán hình ảnh khoanh vùng chi tiết.
 
-### 🔗 Các đường link nguồn trực tiếp:
-1. **Kaggle Dataset (Khuyên dùng - Tải trực tiếp 1-click):**  
-   👉 [https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation)  
-   *(Bộ dữ liệu gốc hoàn chỉnh gồm 3,929 lát cắt MRI kèm mặt nạ nhị phân của 110 bệnh nhân)*.
-2. **Hugging Face Datasets (Nguồn dùng cho script tải tự động):**  
+### 🔗 Nguồn dữ liệu chính thức & Liên kết truy cập:
+1. **Hugging Face Datasets (Nguồn dữ liệu chính thức của Đồ án):**  
    👉 [https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research](https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research)  
-   *(Được tích hợp sẵn trong script `python scripts/download_sample_data.py`)*.
+   *(Kho dữ liệu nghiên cứu chuẩn gồm 3,929 lát cắt MRI có mặt nạ u não Ground Truth; được tích hợp tự động trong script `python scripts/download_sample_data.py` của đồ án)*.
+2. **Kaggle Dataset (Kho dự phòng / Đối chứng):**  
+   👉 [https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation)  
+   *(Bộ dữ liệu gốc của Mateusz Buda trên nền tảng Kaggle)*.
 3. **The Cancer Imaging Archive (TCIA) - Nguồn viện Y tế Quốc gia Hoa Kỳ (NIH):**  
    👉 [https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG)  
    *(Kho lưu trữ ảnh y khoa lâm sàng gốc định dạng DICOM)*.

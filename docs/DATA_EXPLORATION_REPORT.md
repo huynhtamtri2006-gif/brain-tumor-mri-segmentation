@@ -9,6 +9,8 @@
 ## 📌 1. Nguồn Gốc & Quy Cách Dữ Liệu Y Khoa
 
 * **Tên bộ dữ liệu:** The Cancer Genome Atlas Low-Grade Glioma (**TCGA-LGG**) Brain MRI Dataset.
+* **Nguồn dữ liệu chính thức:** Hugging Face Datasets — [Ehsan-rmz/lgg-mri-segmentation-research](https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research) (Kho chuẩn 3,929 lát cắt tích hợp trong script `download_sample_data.py`).
+* **Kho đối chứng bổ trợ:** Kaggle — [mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation).
 * **Tài liệu khoa học công bố:** Buda, M., Saha, A., & Mazurowski, M. A. (2019). *Association of genomic subtypes of lower-grade gliomas with shape features automatically extracted by a deep learning algorithm.* Computers in Biology and Medicine, 109, 218-225.
 * **Phương thái chụp:** Ảnh cắt lát cộng hưởng từ sọ não (Axial MRI slices) chuỗi xung FLAIR (Fluid-Attenuated Inversion Recovery) và T1-weighted có tiêm thuốc cản từ (T1-CE).
 * **Quy cách chuẩn hóa trong đồ án:**

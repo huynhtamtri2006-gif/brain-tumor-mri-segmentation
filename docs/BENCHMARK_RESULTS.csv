@@ -3,4 +3,4 @@ Dice Score (DSC / F1),0.5413 +/- 0.2875,0.1327 +/- 0.3048
 IoU (Jaccard Index),0.4239 +/- 0.2862,0.1123 +/- 0.2668
 Sensitivity (Do nhay),0.5655 +/- 0.3069,0.1228 +/- 0.2956
 Specificity (Dac hieu),0.9856 +/- 0.0159,0.9993 +/- 0.0011
-Do tre trung binh (ms),3.15 +/- 6.22 ms,1.58 +/- 1.53 ms
+Do tre trung binh (ms),2.14 +/- 1.41 ms,1.16 +/- 0.92 ms
