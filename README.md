@@ -86,13 +86,17 @@ brain-tumor-mri-segmentation/
 │   ├── KHUNG_NOI_DUNG_TONG_QUAT... # Khung nội dung chuẩn hóa cho mọi đề tài (PDF + MD)
 │   └── agents/                     # Cấu hình issue tracker, triage labels, domain docs
 ├── data/                           # Dữ liệu ảnh MRI sọ não
-│   ├── README.md                   # Mô tả cấu trúc và quy cách dữ liệu
-│   ├── sample/                     # Tập ảnh mẫu phục vụ thử nghiệm nhanh
-│   │   ├── images/                 # Ảnh MRI sọ não gốc (.jpg/.png)
-│   │   ├── masks/                  # Mặt nạ nhị phân khối u Ground Truth (.png)
-│   │   └── metadata.csv            # Bảng thông tin ca bệnh
+│   ├── README.md                   # Mô tả cấu trúc, quy cách và các link tải nguồn
+│   ├── sample/                     # Tập ảnh mẫu phục vụ thử nghiệm nhanh (20 ca chuẩn)
+│   │   ├── images/                 # Ảnh MRI sọ não gốc (.png, 256x256)
+│   │   ├── masks/                  # Mặt nạ nhị phân khối u Ground Truth (.png, 256x256)
+│   │   └── metadata.csv            # Bảng thông tin ca bệnh và diện tích u
 │   ├── raw/                        # (Đã gitignore) Nơi lưu toàn bộ dữ liệu tải về
 │   └── processed/                  # (Đã gitignore) Nơi lưu ảnh sau khi tách sọ/tiền xử lý
+│
+│   * 🔗 Kaggle Dataset: https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
+│   * 🔗 Hugging Face: https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research
+│   * 🔗 TCIA Archive: https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG
 ├── src/                            # Mã nguồn hệ thống (sẽ xây dựng theo các tuần)
 │   ├── preprocessing/              # Lọc nhiễu, CLAHE, Tách sọ (Skull Stripping)
 │   ├── segmentation/               # Watershed, Region Growing, K-Means

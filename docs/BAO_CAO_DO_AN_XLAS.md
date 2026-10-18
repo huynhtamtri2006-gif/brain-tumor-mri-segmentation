@@ -76,7 +76,12 @@ $$\text{Dice} = \frac{2|P \cap G|}{|P| + |G|}, \quad \text{IoU} = \frac{|P \cap 
 ---
 
 ## 3. MÔ TẢ TẬP DỮ LIỆU THỰC NGHIỆM (TCGA-LGG)
-* **Nguồn gốc:** Bộ dữ liệu The Cancer Genome Atlas Low-Grade Glioma (**TCGA-LGG**), công bố bởi Buda et al. (2019).
+* **Nguồn gốc:** Bộ dữ liệu The Cancer Genome Atlas Low-Grade Glioma (**TCGA-LGG**), công bố bởi Buda et al. (2019) trên tạp chí *Computers in Biology and Medicine*.
+* **Các đường liên kết dữ liệu nguồn trực tiếp:**
+  * **Kaggle Benchmark Dataset (Khuyên dùng):** [https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation) (Gồm 3,929 lát cắt MRI có mặt nạ u từ 110 bệnh nhân).
+  * **Hugging Face Mirror (API tự động tải):** [https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research](https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research) (Dùng cho script `download_sample_data.py`).
+  * **Kho lưu trữ y sinh học quốc tế TCIA (NIH/NCI):** [https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG).
+  * **GitHub tác giả (Mateusz Buda):** [https://github.com/mateuszbuda/brain-segmentation-pytorch](https://github.com/mateuszbuda/brain-segmentation-pytorch).
 * **Quy mô tập mẫu:** 20 lát cắt MRI đại diện từ 10 bệnh nhân khác nhau, lưu trữ tại `data/sample/`.
 * **Phân bố kích thước u:**
   * Nhóm u nhỏ ($< 1.5\%$ diện tích): 7 ca (Ca 05, 11, 12, 13, 16, 19, 20).

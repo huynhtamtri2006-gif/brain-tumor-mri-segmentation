@@ -547,12 +547,32 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
     # =========================================================================
     add_chapter_title("3. MÔ TẢ TẬP DỮ LIỆU THỰC NGHIỆM (TCGA-LGG)")
 
-    add_section_title("3.1. Nguồn gốc dữ liệu")
+    add_section_title("3.1. Nguồn gốc dữ liệu & Các liên kết trực tiếp")
     add_body_p(
         "Nghiên cứu sử dụng tập dữ liệu ảnh MRI cộng hưởng từ não bộ công khai trích xuất từ dự án The Cancer Genome Atlas Low-Grade Glioma "
         "(TCGA-LGG), được công bố quốc tế bởi Buda et al. (2019) trên tạp chí Computers in Biology and Medicine. Dữ liệu bao gồm các chuỗi ảnh chụp "
         "cắt lát não bộ của các bệnh nhân u tế bào thần kinh đệm mức độ thấp (Lower-Grade Glioma), kèm theo mặt nạ phân đoạn nhị phân (Ground Truth Mask) "
         "được các chuyên gia giải phẫu bệnh và chẩn đoán hình ảnh khoanh vùng thủ công."
+    )
+    add_body_p(
+        "Kaggle Dataset (Kho dữ liệu benchmark đầy đủ 3,929 ảnh của 110 bệnh nhân): https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation",
+        bold_prefix="• Link tải Kaggle chính thức: ",
+        bullet=True
+    )
+    add_body_p(
+        "Hugging Face Mirror (Kho mirror dữ liệu tích hợp API tải tự động): https://huggingface.co/datasets/Ehsan-rmz/lgg-mri-segmentation-research",
+        bold_prefix="• Link tải Hugging Face: ",
+        bullet=True
+    )
+    add_body_p(
+        "The Cancer Imaging Archive (TCIA) - Viện Ung thư Quốc gia Hoa Kỳ (NIH/NCI): https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG",
+        bold_prefix="• Kho lưu trữ gốc TCIA: ",
+        bullet=True
+    )
+    add_body_p(
+        "Mã nguồn gốc & Mô hình của nhóm tác giả (Mateusz Buda): https://github.com/mateuszbuda/brain-segmentation-pytorch",
+        bold_prefix="• GitHub tác giả bài báo: ",
+        bullet=True
     )
 
     add_section_title("3.2. Cấu trúc và Phân bố tập mẫu thực nghiệm")
