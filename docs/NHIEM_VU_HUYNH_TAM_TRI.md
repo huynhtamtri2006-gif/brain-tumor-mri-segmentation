@@ -1,152 +1,150 @@
-# LỘ TRÌNH 7 NGÀY HOÀN THÀNH 100% ĐỒ ÁN — DÀNH CHO HUỲNH TÂM TRÍ
+# LỘ TRÌNH 7 NGÀY HOÀN THÀNH ĐỒ ÁN — HUỲNH TÂM TRÍ
 ## Thành viên phụ trách: HUỲNH TÂM TRÍ (MSSV: 2045240315)
-* **Vai trò:** Thành viên — Chịu trách nhiệm Dữ liệu thực nghiệm, Engine đo lường & Đánh giá định lượng (Dice/IoU), Ứng dụng Demo Streamlit GUI, Phần Đánh giá & Báo cáo Tổng quan, Slide thuyết trình.
-* **Thời gian hoàn thành:** 07 Ngày liên tục (Chiến dịch Sprint cán đích đồ án).
-* **Cam kết độc lập:** Trí làm việc độc lập 100% trên phần dữ liệu, độ đo toán học, giao diện web demo và phần thuyết trình, chỉ cần nhận ảnh dự đoán nhị phân từ module của Trường.
+* **Vai trò:** Thành viên — Chịu trách nhiệm Dữ liệu thực nghiệm, Engine đo lường & Rút trích đặc trưng hình học, Bộ đo định lượng y khoa, Ứng dụng Streamlit GUI, 5 Chương Tổng quan trong Báo cáo, Slide thuyết trình & Video demo.
+* **Thời gian thực hiện:** Chiến dịch 7 ngày liên tục.
+* **Phạm vi file phụ trách chính:**
+  * `data/README.md` & `data/sample/metadata.csv`
+  * `src/measurement/features.py` & `src/measurement/visualization.py`
+  * `src/evaluation/metrics.py` & `src/evaluation/benchmark.py`
+  * `demo/app.py` & `demo/utils.py` (Giao diện Streamlit)
+  * `notebooks/01_data_exploration.ipynb` & `notebooks/04_quantitative_evaluation.ipynb`
+  * `tests/test_measurement.py` & `tests/test_metrics.py`
+  * `docs/DATA_EXPLORATION_REPORT.md` & `docs/THEORY_EVALUATION_METRICS.md`
 
 ---
 
 ## 🗺️ TỔNG QUAN PHÂN CHIA TRÁCH NHIỆM 7 NGÀY (TRÍ)
 
 ```
-[NGÀY 1] Khảo Sát & Lập Báo Cáo Đặc Tính 20 Mẫu Dữ Liệu TCGA-LGG
+[NGÀY 1] Khảo Sát 20 Mẫu TCGA-LGG + Hoàn Thiện Notebook 01_data_exploration.ipynb
     │
-[NGÀY 2] Lập trình Engine Tính Bộ Đo Định Lượng (Dice, IoU, Sensitivity, Specificity)
+[NGÀY 2] Tinh Chỉnh Engine Đo Định Lượng (Dice, IoU, Sens, Spec) + Unit Test Metrics
     │
-[NGÀY 3] Lập trình Module Rút Trích Đặc Trưng U Não (Diện tích, Tỷ lệ %, Bounding Box, Độ tròn)
+[NGÀY 3] Hoàn Thiện Module Đo Đặc Trưng Hình Học (Circularity, Bounding Box) + Unit Test
     │
-[NGÀY 4] Dựng Khung Giao Diện Web Demo Tương Tác Streamlit (Base UI & Tải ảnh)
+[NGÀY 4] Hoàn Thiện Giao Diện Web Demo Streamlit (demo/app.py) & Kiểm Thử Tương Tác
     │
-[NGÀY 5] Hoàn Thiện Full Tính Năng Streamlit GUI: Hiển Thị 4 Bước Trung Gian + Card Chỉ Số
+[NGÀY 5] Chạy Batch Benchmark 20 Mẫu + Hoàn Thiện Notebook 04_quantitative_evaluation
     │
-[NGÀY 6] Viết Báo cáo Đồ án: Chương Giới thiệu, Mô tả dữ liệu, Kết quả định lượng & GUI
+[NGÀY 6] Viết Báo Cáo Đồ Án: 5 Chương Tổng Quan (Chương 1, 3, 6 Số Liệu, 7 GUI, 8)
     │
-[NGÀY 7] Thiết Kế Toàn Bộ Slide Thuyết Trình, Quay Video Demo & Đóng Gói Bộ Hồ Sơ Nộp
+[NGÀY 7] Thiết Kế Bộ Slide Thuyết Trình, Quay Video Demo 2 Phút & Đóng Gói Hồ Sơ Nộp
 ```
 
 ---
 
 ## 📋 CHI TIẾT TỪNG NGÀY & CHECKLIST CỦA TRÍ
 
-### 🔹 NGÀY 1: Khảo Sát & Báo Cáo Khám Phá Dữ Liệu Thực Nghiệm (TCGA-LGG)
-* **Nhiệm vụ:**
-  * Khảo sát toàn bộ 20 cặp ảnh và mặt nạ Ground Truth trong [data/sample/](file:///C:/Users/xpaga/Documents/xlas/data/sample/).
-  * Lập file tài liệu `docs/DATA_EXPLORATION_REPORT.md`:
-    * Nguồn gốc dữ liệu: Bộ dữ liệu The Cancer Genome Atlas Low-Grade Glioma (TCGA-LGG), nghiên cứu Buda et al. (2019).
-    * Phân tích thuộc tính: Ảnh cắt lát cộng hưởng từ sọ não chuỗi xung FLAIR/T1-CE, kích thước $256 \times 256$, định dạng grayscale uint8 $[0, 255]$.
-    * Phân nhóm dữ liệu theo độ khó phân đoạn:
-      * U nhỏ ($< 1.5\%$ diện tích): Ca 05, 11, 12, 13, 16, 19, 20 (Thách thức lớn về độ nhạy).
-      * U trung bình ($1.5\% - 5\%$): Ca 01, 02, 03, 04, 06, 14, 15, 17, 18.
-      * U lớn ($> 5\%$): Ca 07, 08, 09, 10 (U lan tỏa, hiệu ứng khối đè đẩy).
-    * Đánh giá độ tương phản: U tăng tín hiệu sáng rõ hay u bờ mờ.
+### 🔹 NGÀY 1: Khảo Sát Dữ Liệu TCGA-LGG & Hoàn Thiện Notebook 01
+* **Nhiệm vụ cụ thể:**
+  1. Kiểm tra tính toàn vẹn của 20 cặp ảnh MRI và mặt nạ Ground Truth trong `data/sample/images/` và `data/sample/masks/`.
+  2. Mở và chạy toàn bộ notebook `notebooks/01_data_exploration.ipynb`:
+     * Đọc `data/sample/metadata.csv`, vẽ biểu đồ phân bố diện tích khối u (Histogram).
+     * Trực quan hóa lưới $2 \times 6$ ảnh MRI gốc và mặt nạ Ground Truth.
+     * Thống kê các chỉ số mô tả: Min, Max, Mean, Median của diện tích u và tỷ lệ % u/não.
+  3. Xuất tài liệu báo cáo khám phá dữ liệu `docs/DATA_EXPLORATION_REPORT.md` có đầy đủ bảng số liệu chi tiết của 20 mẫu.
+* **Lệnh kiểm tra:** `python -c "import pandas as pd; df=pd.read_csv('data/sample/metadata.csv'); print(df.describe())"`
 * **Checklist hoàn thành Ngày 1:**
+  - [ ] Chạy thành công `notebooks/01_data_exploration.ipynb` không phát sinh lỗi.
   - [ ] Hoàn thành tài liệu `docs/DATA_EXPLORATION_REPORT.md`.
-  - [ ] Kiểm tra tính toàn vẹn của 20 ảnh và 20 mặt nạ (không có file nào bị lỗi mở).
+  - [ ] Lưu các biểu đồ phân bố kích thước u để đưa vào Chương 3 của Báo cáo.
 
 ---
 
-### 🔹 NGÀY 2: Cài Đặt Engine Đánh Giá Định Lượng (Quantitative Evaluation Engine)
-* **Nhiệm vụ:**
-  * Lập trình file `src/evaluation/metrics.py`:
-    * Hàm `calculate_dice_score(pred_mask, gt_mask)`:
-      $$\text{Dice} = \frac{2 \cdot \text{TP}}{2 \cdot \text{TP} + \text{FP} + \text{FN}}$$
-    * Hàm `calculate_iou(pred_mask, gt_mask)`:
-      $$\text{IoU} = \frac{\text{TP}}{\text{TP} + \text{FP} + \text{FN}}$$
-    * Hàm `calculate_sensitivity(pred_mask, gt_mask)`:
-      $$\text{Sensitivity} = \frac{\text{TP}}{\text{TP} + \text{FN}}$$
-    * Hàm `calculate_specificity(pred_mask, gt_mask)`:
-      $$\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}}$$
-    * Hàm `evaluate_batch(pred_masks_dir, gt_masks_dir)`: Tự động quét toàn bộ thư mục, so sánh từng cặp ảnh và xuất bảng thống kê trung bình (Mean $\pm$ Std) cùng độ trễ xử lý (Latency ms).
-  * Viết tài liệu giải thích công thức `docs/THEORY_EVALUATION_METRICS.md` kèm bảng tính ví dụ tay $4 \times 4$.
+### 🔹 NGÀY 2: Tinh Chỉnh Engine Đo Định Lượng Y Khoa & Unit Test Metrics
+* **Nhiệm vụ cụ thể:**
+  1. Rà soát và hoàn thiện mã nguồn tính toán 4 chỉ số trong `src/evaluation/metrics.py`:
+     * Dice Similarity Coefficient: $DSC = \frac{2 \cdot TP}{2 \cdot TP + FP + FN}$.
+     * Jaccard Index (IoU): $IoU = \frac{TP}{TP + FP + FN}$.
+     * Sensitivity (Độ nhạy): $Sens = \frac{TP}{TP + FN}$.
+     * Specificity (Độ đặc hiệu): $Spec = \frac{TN}{TN + FP}$.
+     * Xử lý ngoại lệ an toàn khi mặt nạ hoàn toàn rỗng ($0 / 0$).
+  2. Chạy kiểm thử tự động bộ đo y khoa: `pytest tests/test_metrics.py -v`.
+  3. Viết tài liệu cơ sở lý thuyết bộ đo `docs/THEORY_EVALUATION_METRICS.md` kèm bảng tính số học ví dụ tay trên ma trận nhỏ $4 \times 4$.
+* **Lệnh kiểm tra:** `pytest tests/test_metrics.py -v`
 * **Checklist hoàn thành Ngày 2:**
-  - [ ] File `src/evaluation/metrics.py` chạy độc lập, có thể test thử với 2 mặt nạ bất kỳ trong `data/sample/masks/`.
-  - [ ] Bổ sung cơ chế xử lý ngoại lệ chia cho 0 khi cả hai mặt nạ đều rỗng (Dice = 1.0).
+  - [ ] 100% test trong `test_metrics.py` đều đạt (PASSED).
+  - [ ] Hoàn thành tài liệu `docs/THEORY_EVALUATION_METRICS.md`.
+  - [ ] Chuẩn bị sẵn phần cơ sở lý thuyết độ đo cho Báo cáo.
 
 ---
 
-### 🔹 NGÀY 3: Cài Đặt Module Đo Lường & Rút Trích Đặc Trưng Khối U (Feature Extraction)
-* **Nhiệm vụ:**
-  * Lập trình file `src/measurement/features.py`:
-    * Hàm `measure_tumor_properties(tumor_mask, brain_mask=None)`:
-      1. Tìm đường bao khối u (`cv2.findContours` với cờ `RETR_EXTERNAL`).
-      2. Tính diện tích u: $S_{\text{tumor}} = \sum \text{pixel}$ (hoặc `cv2.contourArea`).
-      3. Tính chu vi u: $P_{\text{tumor}} = \text{cv2.arcLength(contour, True)}$.
-      4. Tính độ tròn (Circularity / Compactness):
-         $$C = \frac{4 \pi \cdot \text{Area}}{\text{Perimeter}^2}$$
-         *(Nếu $C \approx 1$: khối u tròn đều, thường là u màng não lành tính Meningioma; nếu $C \ll 1$: bờ u gồ ghề, xâm lấn, thường là u thần kinh đệm ác tính Glioma)*.
-      5. Tính tỷ lệ chiếm chỗ: $\text{Ratio} = \frac{S_{\text{tumor}}}{S_{\text{brain}}} \times 100\%$.
-    * Hàm `draw_tumor_bounding_box(original_image, tumor_mask)`:
-      * Trích xuất tọa độ $(x, y, w, h) = \text{cv2.boundingRect(contour)}$.
-      * Vẽ hình chữ nhật màu đỏ cảnh báo (`color=(0, 0, 255)`, nét vẽ $2\text{px}$) quanh vùng u.
-      * Thêm nhãn text: `"Tumor: Area = ... px, Circ = ..."`.
+### 🔹 NGÀY 3: Hoàn Thiện Module Đo Đặc Trưng Hình Học & Vẽ Bounding Box
+* **Nhiệm vụ cụ thể:**
+  1. Tinh chỉnh các hàm đo lường trong `src/measurement/features.py`:
+     * Hàm `calculate_circularity()`: Tính độ tròn $C = \frac{4\pi \cdot \text{Area}}{\text{Perimeter}^2}$, giải thích ý nghĩa y khoa về hình thái bờ u lành tính/ác tính.
+     * Hàm `extract_tumor_features()`: Trích xuất tọa độ Bounding Box `(x, y, w, h)`, diện tích u, tỷ lệ % u/não đóng gói vào dataclass `DiagnosticResult`.
+  2. Tinh chỉnh module trực quan hóa trong `src/measurement/visualization.py`:
+     * Hàm `draw_tumor_overlay()`: Vẽ Bounding Box màu đỏ cảnh báo (`color=(0, 0, 255)`) và viền u màu vàng.
+     * Hàm `create_comparison_quad()`: Ghép lưới 4 ảnh song song $[Gốc \mid Tách sọ \mid Mặt nạ \mid Bounding Box]$.
+  3. Chạy kiểm thử tự động: `pytest tests/test_measurement.py -v`.
+* **Lệnh kiểm tra:** `pytest tests/test_measurement.py -v`
 * **Checklist hoàn thành Ngày 3:**
-  - [ ] Chạy thử nghiệm trích xuất đặc trưng và vẽ Bounding Box trên toàn bộ 20 mặt nạ Ground Truth.
-  - [ ] Xuất ảnh minh họa u khoanh vùng lưu tại `data/processed/annotated_samples/`.
+  - [ ] 100% test trong `test_measurement.py` đều đạt (PASSED).
+  - [ ] Thử nghiệm vẽ Bounding Box thành công trên 20 ảnh mẫu, không bị lệch tọa độ.
 
 ---
 
-### 🔹 NGÀY 4: Xây Dựng Khung Giao Diện Web Demo (Streamlit Base UI)
-* **Nhiệm vụ:**
-  * Lập trình file `demo/app.py` bằng thư viện Streamlit (`streamlit run demo/app.py`):
-    * Sidebar:
-      * Logo và thông tin đề tài: Bộ môn Khoa học Dữ liệu — HUIT.
-      * Tên 2 sinh viên thực hiện: Hà Mạnh Trường & Huỳnh Tâm Trí.
-      * Chế độ nạp ảnh: Cho phép người dùng "Tải ảnh từ máy tính (.png, .jpg)" HOẶC "Chọn nhanh trong 20 ca bệnh mẫu TCGA-LGG".
-      * Hộp chọn thuật toán (Dropdown): "Phương án A: Marker-controlled Watershed" hoặc "Phương án B: Seeded Region Growing".
-    * Main Area:
-      * Tiêu đề chuyên nghiệp: "Hệ Thống Phân Đoạn & Phát Hiện Khối U Não MRI".
-      * Bố cục 2 cột ban đầu: Cột 1 hiển thị Ảnh MRI Gốc, Cột 2 hiển thị Thông tin ca chụp.
+### 🔹 NGÀY 4: Hoàn Thiện Ứng Dụng Web Demo Streamlit (`demo/app.py`)
+* **Nhiệm vụ cụ thể:**
+  1. Hoàn thiện toàn bộ tính năng của giao diện Web Demo trong `demo/app.py`:
+     * Thanh Sidebar: Logo trường, thông tin 2 sinh viên, chế độ chọn nhanh 20 ảnh mẫu hoặc tải ảnh tùy ý, chọn thuật toán (Watershed vs Region Growing), thanh trượt điều chỉnh siêu tham số.
+     * Main Area: Hiển thị 5 thẻ KPI chẩn đoán nổi bật (Trạng thái u, Diện tích px, Tỷ lệ %, Độ tròn, Điểm Dice).
+     * Lưới hiển thị trực quan 4 bước xử lý trung gian song song.
+     * Khung so sánh trực tiếp mặt nạ dự đoán với Ground Truth của chuyên gia.
+  2. Chạy thử nghiệm ứng dụng: `streamlit run demo/app.py`.
+  3. Kiểm tra tính ổn định: Thử lần lượt với tất cả 20 ảnh mẫu và tải thử một số ảnh bên ngoài, đảm bảo không bị crash giao diện.
+* **Lệnh kiểm tra:** `streamlit run demo/app.py`
 * **Checklist hoàn thành Ngày 4:**
-  - [ ] Khởi chạy giao diện thử nghiệm: `streamlit run demo/app.py` mở được trên trình duyệt (`http://localhost:8501`).
-  - [ ] Chức năng tải ảnh và chọn ca mẫu hoạt động mượt mà.
+  - [ ] Giao diện Web chạy mượt mà, phản hồi tức thì dưới 1 giây.
+  - [ ] Chụp lại 4 ảnh màn hình giao diện demo sắc nét để chuẩn bị đưa vào Chương 7 của Báo cáo.
 
 ---
 
-### 🔹 NGÀY 5: Tích Hợp Toàn Diện Pipeline & Hoàn Thiện GUI Demo
-* **Nhiệm vụ:**
-  * Tích hợp toàn bộ các module của Trường và Trí vào `demo/app.py`:
-    * Khi người dùng nhấn nút **"Tiến Hành Chẩn Đoán & Phân Đoạn"**:
-      * Gọi `apply_bilateral_filter` + `apply_skull_stripping` (từ module của Trường).
-      * Gọi thuật toán phân đoạn đã chọn (Watershed hoặc Region Growing).
-      * Gọi `measure_tumor_properties` + `draw_tumor_bounding_box` (từ module của Trí).
-      * Nếu có Ground Truth, gọi `calculate_dice_score` + `calculate_iou`.
-    * Trực quan hóa kết quả theo lưới 4 ảnh song song:
-      * `[Ảnh MRI Gốc]` $\rightarrow$ `[Ảnh Sau Tách Sọ Não]` $\rightarrow$ `[Mặt Nạ Phân Đoạn U]` $\rightarrow$ `[Ảnh Khoanh Vùng Bounding Box Đỏ]`.
-    * Hiển thị bảng số liệu chẩn đoán (Diagnostic Dashboard):
-      * Thẻ KPI nổi bật: Diện tích u, Tỷ lệ % u/não, Độ tròn u, Điểm Dice Score, Thời gian xử lý (ms).
-    * Bổ sung nút **"Tải Báo Cáo Chẩn Đoán (.png / .txt)"**.
+### 🔹 NGÀY 5: Thực Thi Benchmark 20 Mẫu & Hoàn Thiện Notebook 04
+* **Nhiệm vụ cụ thể:**
+  1. Mở và chạy toàn bộ notebook `notebooks/04_quantitative_evaluation.ipynb`:
+     * Chạy module `src/evaluation/benchmark.py` trên 20 mẫu ảnh cho cả 2 phương pháp Watershed và Region Growing.
+     * Tính toán bảng tổng hợp giá trị trung bình (Mean $\pm$ Std) của cả 4 chỉ số: Dice, IoU, Sensitivity, Specificity, và thời gian chạy trung bình (Latency ms/ảnh).
+     * Vẽ biểu đồ cột (Bar chart) so sánh trực quan điểm Dice của từng ca bệnh giữa 2 phương pháp.
+  2. Xuất bảng số liệu so sánh chi tiết ra file `docs/BENCHMARK_RESULTS.csv` hoặc bảng Markdown.
+* **Lệnh kiểm tra:** `python -c "from src.evaluation.benchmark import run_benchmark; print('Benchmark module OK')"`
 * **Checklist hoàn thành Ngày 5:**
-  - [ ] Ứng dụng chạy hoàn chỉnh, không phát sinh lỗi ngoại lệ khi nạp bất kỳ ảnh nào trong 20 mẫu.
-  - [ ] Giao diện trực quan, chuyên nghiệp, gây ấn tượng mạnh với người chấm.
+  - [ ] Chạy thành công toàn bộ `notebooks/04_quantitative_evaluation.ipynb`.
+  - [ ] Xuất bảng kết quả thực nghiệm hoàn chỉnh, có đầy đủ độ lệch chuẩn.
+  - [ ] Lưu biểu đồ so sánh độ phân giải cao phục vụ chèn vào Chương 6 của Báo cáo.
 
 ---
 
-### 🔹 NGÀY 6: Biên Soạn Báo Cáo Đồ Án (Phần Giới Thiệu, Dữ Liệu & Đánh Giá)
-* **Nhiệm vụ:**
-  * Phụ trách viết 5 chương quan trọng trong Báo cáo đồ án chuẩn Khoa CNTT:
-    1. **Chương 1: Giới thiệu đề tài:** Tính cấp thiết của chẩn đoán u não, vai trò của ảnh cộng hưởng từ MRI, mục tiêu và phạm vi đề tài.
-    2. **Chương 3: Mô tả và Phân tích Dữ liệu:** Thuyết minh bộ dữ liệu TCGA-LGG, bảng thống kê 20 mẫu ảnh, các biểu đồ phân bố kích thước u.
-    3. **Chương 6 (Phần định lượng): Kết quả Thực nghiệm & Đánh giá:** Lập bảng so sánh chi tiết điểm Dice, IoU, Sensitivity, Specificity và thời gian chạy của cả 2 phương pháp. Vẽ biểu đồ so sánh.
-    4. **Chương 7: Chương trình Ứng dụng Demo (GUI):** Giới thiệu chức năng, chụp các màn hình giao diện Streamlit khi phân đoạn thực tế các ca bệnh, hướng dẫn thao tác.
-    5. **Chương 8: Kết luận & Hướng phát triển:** Tóm tắt các kết quả đạt được, đóng góp của nhóm, các hạn chế còn tồn tại và hướng nâng cấp tiếp theo.
+### 🔹 NGÀY 6: Biên Soạn Báo Cáo Đồ Án (5 Chương Tổng Quan & Định Lượng)
+* **Nhiệm vụ cụ thể:**
+  * Chịu trách nhiệm viết 5 chương quan trọng trong Báo cáo đồ án chuẩn Khoa CNTT (Word/PDF):
+    1. **Trang bìa & Mục lục:** Chuẩn hóa thông tin đề tài, giảng viên hướng dẫn, thông tin 2 thành viên, mục lục tự động, danh mục hình ảnh và bảng biểu.
+    2. **Mục 1: Giới thiệu đề tài:** Tính cấp thiết của chẩn đoán khối u não trên ảnh cộng hưởng từ MRI, mục tiêu hệ thống (đầu vào ảnh xám, đầu ra mặt nạ và thông số chẩn đoán), phạm vi bài toán.
+    3. **Mục 3: Mô tả tập dữ liệu:** Thuyết minh chi tiết bộ dữ liệu benchmark quốc tế TCGA-LGG (Buda et al. 2019), bảng metadata 20 mẫu ảnh, biểu đồ phân bố kích thước u trích từ Notebook 01.
+    4. **Mục 6 (Phần định lượng): Bảng số liệu & Biểu đồ đánh giá:** Trình bày bảng so sánh Mean $\pm$ Std của Dice/IoU/Latency trích từ Notebook 04, biểu đồ so sánh cột giữa Watershed và Region Growing.
+    5. **Mục 7: Chương trình minh họa (Demo GUI):** Giới thiệu kiến trúc ứng dụng Streamlit, hướng dẫn chạy `streamlit run demo/app.py`, chèn các ảnh chụp màn hình thao tác thực tế.
+    6. **Mục 8: Kết luận & Hướng phát triển:** Tóm tắt kết quả đạt được, đóng góp của nhóm, hạn chế còn tồn tại và hướng nâng cấp tiếp theo.
 * **Checklist hoàn thành Ngày 6:**
-  - [ ] Hoàn tất nội dung 5 chương trong file Báo cáo đồ án.
-  - [ ] Ghép nối với các chương kỹ thuật của Trường thành một file Báo cáo duy nhất hoàn chỉnh.
+  * [ ] Hoàn tất nội dung 5 chương tổng quan.
+  * [ ] Ghép nối với 4 chương kỹ thuật của Trường thành một bản Báo cáo duy nhất, kiểm tra lỗi chính tả và định dạng.
 
 ---
 
 ### 🔹 NGÀY 7: Thiết Kế Slide Thuyết Trình, Quay Video Demo & Đóng Gói
-* **Nhiệm vụ:**
-  * Thiết kế toàn bộ Slide thuyết trình (PowerPoint hoặc Canva, khoảng 15–18 slides) chuẩn nhận diện Khoa CNTT: Bìa đề tài, Đặt vấn đề, Pipeline hệ thống, Minh họa tách sọ, Minh họa phân đoạn u, Bảng so sánh định lượng, Giới thiệu GUI Demo, Kết luận.
-  * Quay video ngắn (khoảng 2–3 phút) ghi lại màn hình chạy demo Streamlit trên 2–3 ca bệnh khác nhau để làm minh chứng nộp kèm.
-  * Kiểm tra trọn bộ sản phẩm nộp theo yêu cầu của Bộ môn:
-    * Thư mục `src/` sạch sẽ, chạy được.
-    * Thư mục `data/sample/` đầy đủ.
-    * Thư mục `demo/` khởi chạy ổn định.
-    * File Báo cáo `.pdf` và `.docx`.
-    * File Slide `.pdf` và `.pptx`.
-    * Link video demo.
-  * Nén toàn bộ thành file nộp đồ án chuẩn.
+* **Nhiệm vụ cụ thể:**
+  1. Thiết kế toàn bộ bộ Slide thuyết trình (PowerPoint / Canva, khoảng 15–18 slides) theo chuẩn nhận diện Khoa CNTT:
+     * Slide 1: Bìa đề tài và thành viên nhóm.
+     * Slide 2–3: Đặt vấn đề và mục tiêu đồ án.
+     * Slide 4: Bộ dữ liệu thực nghiệm TCGA-LGG.
+     * Slide 5: Sơ đồ kiến trúc pipeline 4 tầng.
+     * Slide 6–9: Kỹ thuật tách sọ và 2 thuật toán phân đoạn (Trường hỗ trợ nội dung).
+     * Slide 10–12: Bảng kết quả định lượng (Dice, IoU, Latency) và biểu đồ so sánh.
+     * Slide 13–15: Giới thiệu ứng dụng Streamlit GUI (hình ảnh trực quan).
+     * Slide 16: Kết luận và bài học kinh nghiệm.
+  2. Quay video clip ngắn (khoảng 2–3 phút) ghi lại màn hình thao tác trực tiếp trên giao diện Streamlit: Nạp ảnh mẫu, chọn Watershed, quan sát ảnh tách sọ và Bounding Box, thay đổi sang Region Growing.
+  3. Kiểm tra toàn bộ hồ sơ nộp đồ án: File Báo cáo (Word + PDF), Slide (PPTX + PDF), Video demo, Mã nguồn `src/` và `notebooks/`, đóng gói thành file ZIP hoàn chỉnh.
 * **Checklist hoàn thành Ngày 7:**
-  - [ ] Slide thuyết trình hoàn tất, đẹp mắt, mạch lạc.
-  - [ ] Trọn bộ hồ sơ đồ án sẵn sàng nộp đúng hạn.
+  - [ ] Slide thuyết trình hoàn tất, thiết kế chuyên nghiệp và ấn tượng.
+  - [ ] Video demo chạy mượt mà, âm thanh/thuyết minh rõ ràng.
+  - [ ] Bộ hồ sơ đồ án đóng gói sẵn sàng nộp đúng hạn.
