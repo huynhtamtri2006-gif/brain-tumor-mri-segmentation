@@ -1,0 +1,27 @@
+# default_params.yaml - Cấu hình tham số mặc định cho hệ thống xử lý ảnh số MRI
+
+preprocessing:
+  bilateral_filter:
+    d: 9                     # Đường kính vùng láng giềng pixel
+    sigma_color: 75.0        # Độ lệch chuẩn không gian màu
+    sigma_space: 75.0        # Độ lệch chuẩn không gian tọa độ
+  clahe:
+    clip_limit: 2.0          # Giới hạn độ tương phản thích ứng
+    tile_grid_size: [8, 8]   # Kích thước lưới chia ảnh
+  skull_stripping:
+    kernel_size: 5           # Kích thước kernel phép mở/đóng hình thái học
+    morph_iterations: 2      # Số lần lặp phép toán hình thái học
+
+segmentation:
+  watershed:
+    dist_thresh_ratio: 0.4   # Ngưỡng tỷ lệ bản đồ khoảng cách (Sure Foreground)
+    bg_dilate_kernel: 3      # Kernel giãn nở tạo Sure Background
+  region_growing:
+    intensity_tolerance: 15  # Ngưỡng dung sai độ sáng láng giềng thu nạp vào u
+    min_tumor_area: 50       # Diện tích u tối thiểu (pixel) để tránh nhiễu
+    max_tumor_area: 25000    # Diện tích u tối đa trong sọ
+
+measurement:
+  min_contour_area: 30       # Diện tích contour tối thiểu để xét là u
+  bbox_color: [0, 0, 255]    # Màu Bounding Box (Đỏ BGR trong OpenCV)
+  bbox_thickness: 2          # Độ dày nét vẽ bounding box (pixel)
