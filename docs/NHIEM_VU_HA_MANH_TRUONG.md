@@ -1,144 +1,191 @@
-# LỘ TRÌNH 7 NGÀY HOÀN THÀNH ĐỒ ÁN — HÀ MẠNH TRƯỜNG
-## Thành viên phụ trách: HÀ MẠNH TRƯỜNG (MSSV: 2045240326)
-* **Vai trò:** Nhóm trưởng — Chịu trách nhiệm kiến trúc kỹ thuật, Thuật toán Xử lý ảnh số (Core DIP), Pipeline Tách sọ & Phân đoạn u, Quản lý Unit Tests Kỹ thuật và 4 Chương Kỹ thuật trong Báo cáo.
-* **Thời gian thực hiện:** Chiến dịch 7 ngày liên tục.
-* **Phạm vi file phụ trách chính:**
-  * `configs/default_params.yaml` (Cấu hình tham số DIP)
-  * `src/preprocessing/filters.py` & `src/preprocessing/skull_strip.py`
-  * `src/segmentation/base.py`, `src/segmentation/watershed.py`, `src/segmentation/region_growing.py`
-  * `src/pipeline.py` (Lớp điều phối)
-  * `notebooks/02_skull_stripping.ipynb` & `notebooks/03_tumor_segmentation_comparison.ipynb`
-  * `tests/test_preprocessing.py` & `tests/test_segmentation.py`
-  * `docs/SPEC_PIPELINE_MRI.md`
+# KẾ HOẠCH & PHÂN CÔNG NHIỆM VỤ 15 TUẦN — HÀ MẠNH TRƯỜNG
+### Học phần: Xử lý ảnh số (0101006276) — Học kỳ 2026–2027
+**Đơn vị:** Bộ môn Khoa học Dữ liệu — Khoa Công nghệ Thông tin — Trường ĐH Công Thương TP.HCM (HUIT)  
+**Đề tài:** Phân đoạn và phát hiện khối u não trên ảnh cộng hưởng từ MRI (TCGA-LGG Benchmark)
 
 ---
 
-## 🗺️ TỔNG QUAN PHÂN CHIA TRÁCH NHIỆM 7 NGÀY (TRƯỜNG)
+## 👤 THÔNG TIN SINH VIÊN
+* **Họ và tên:** **HÀ MẠNH TRƯỜNG**
+* **Mã số sinh viên:** **2045240326**
+* **Lớp sinh hoạt:** 15DHKHDL03
+* **Vai trò:** **Nhóm trưởng**
+* **Trách nhiệm trọng tâm:**
+  * Điều phối chung tiến độ làm việc của nhóm theo đúng kế hoạch 15 tuần của Bộ môn.
+  * Thiết kế kiến trúc tổng thể pipeline Xử lý ảnh số (DIP).
+  * Nghiên cứu cơ sở lý thuyết toán học và cài đặt module Tiền xử lý & Tách sọ não (*Skull Stripping*).
+  * Cài đặt giải thuật phân đoạn u não lõi Baseline (*Marker-controlled Watershed*) và Phương án đối chứng (*Seeded Region Growing*).
+  * Viết các chương kỹ thuật trong Báo cáo đồ án (Chương 2, 4, 6 và phân tích kỹ thuật Chương 8).
+  * Đảm bảo tính toàn vẹn của mã nguồn xử lý ảnh và hệ thống kiểm thử đơn vị (*Unit Tests*).
+
+---
+
+## 🎯 ĐỐI CHIẾU VỚI RUBRIC ĐÁNH GIÁ ĐỒ ÁN MÔN HỌC (KHOA CNTT - HUIT)
+
+Đồ án được chấm theo thang điểm 10 theo đúng Mục III trong `9. Ke_hoach_thuc_ĐA__XLAS_2026-2027.pdf`:
+
+| Tiêu chí đánh giá | Trọng số | Đóng góp và minh chứng chính của Hà Mạnh Trường |
+| :--- | :---: | :--- |
+| **1. Phân tích & lựa chọn đúng phương pháp (PLO2, CLO1)** | **15% (1.5đ)** | - Phân tích đặc trưng ảnh MRI FLAIR/T1-CE, đề xuất giải pháp tách sọ não bằng hình thái học.<br>- Lựa chọn và so sánh 2 giải thuật phân đoạn kinh điển: Watershed phân thủy và Region Growing. |
+| **2. Áp dụng được các phương pháp xử lý (PLO2, CLO2)** *(Trọng tâm)* | **50% (5.0đ)** | - Cài đặt bộ lọc Bilateral khử nhiễu Rician bảo toàn biên và CLAHE tăng tương phản mô não.<br>- Xây dựng pipeline 6 bước tách sọ não kinh điển triệt tiêu xương sọ.<br>- Cài đặt thuật toán phân đoạn Watershed và Region Growing kèm khảo sát siêu tham số.<br>- Đạt 100% test cases trong `tests/test_preprocessing.py` và `tests/test_segmentation.py`. |
+| **3. Đọc tài liệu, nghiên cứu giải quyết bài toán (PLO4, CLO3)** | **10% (1.0đ)** | - Nghiên cứu sâu giáo trình chuẩn *Gonzalez & Woods, Digital Image Processing (4th Ed.)* các Chương 3, 5, 9, 10.<br>- Soạn thảo tài liệu đặc tả kỹ thuật toán học chi tiết [SPEC_PIPELINE_MRI.md](file:///C:/Users/xpaga/Documents/xlas/docs/SPEC_PIPELINE_MRI.md). |
+| **4. Trình bày báo cáo (PLO7, CLO5)** | **15% (1.5đ)** | - Chịu trách nhiệm biên soạn 4 chương kỹ thuật trọng tâm trong Báo cáo toàn văn (Word/PDF).<br>- Trình bày sơ đồ khối pipeline, công thức toán học và ảnh chụp thực nghiệm minh chứng. |
+| **5. Phân công & phối hợp làm việc nhóm (PLO6, CLO4)** | **10% (1.0đ)** | - Đảm nhiệm vai trò Nhóm trưởng: Lập kế hoạch 15 tuần, phân công rõ ràng cho thành viên.<br>- Duy trì kho mã nguồn Git, quản lý issues và review chất lượng sản phẩm trước khi tích hợp. |
+
+---
+
+## 🗺️ LỘ TRÌNH 15 TUẦN CHI TIẾT CỦA HÀ MẠNH TRƯỜNG
 
 ```
-[NGÀY 1] Rà Soát Config & Soạn Thảo Đặc Tả Kỹ Thuật Pipeline (SPEC_PIPELINE_MRI.md)
-    │
-[NGÀY 2] Hoàn Thiện Module Tiền Xử Lý & Tách Sọ Não + Notebook 02_skull_stripping.ipynb
-    │
-[NGÀY 3] Hoàn Thiện Thuật Toán Phân Đoạn Baseline 1: Watershed + Unit Test
-    │
-[NGÀY 4] Hoàn Thiện Thuật Toán Phân Đoạn Đối Chứng 2: Region Growing + Notebook 03
-    │
-[NGÀY 5] Chạy Pipeline Trên 20 Mẫu, Phân Tích Các Ca Lỗi (Failure Cases) & Ca U Nhỏ
-    │
-[NGÀY 6] Viết Báo Cáo Đồ Án: 4 Chương Kỹ Thuật (Chương 2, 4, 5 & Phần Kỹ Thuật Chương 6)
-    │
-[NGÀY 7] Soạn Slide Kỹ Thuật DIP, Rà Soát Docstring Toàn Bộ src/ & Tổng Duyệt Hệ Thống
+[Tuần 1]      Đăng ký đề tài, phân công vai trò & lập kế hoạch 15 tuần
+   │
+[Tuần 2–3]    Nghiên cứu lý thuyết DIP (Gonzalez & Woods), xây dựng pipeline dự kiến & SPEC
+   │
+[Tuần 4]      Phối hợp rà soát tập dữ liệu 3,929 lát cắt TCGA-LGG & thống nhất chuẩn nhãn
+   │
+[Tuần 5]      Cài đặt module Tiền xử lý & Tách sọ não (Skull Stripping) + Notebook 02
+   │
+[Tuần 6]      Cài đặt phương pháp chính 1 (Baseline): Marker-controlled Watershed + Unit Test
+   │
+[Tuần 7]      Hoàn thiện Pipeline cơ sở từ ảnh thô đến u não phân đoạn (BrainTumorPipeline)
+   │
+[Tuần 8]      BÁO CÁO TIẾN ĐỘ NỘI BỘ VỚI GIẢNG VIÊN (Dữ liệu, pipeline, kết quả baseline)
+   │
+[Tuần 9]      Cài đặt phương pháp đối chứng 2: Seeded Region Growing & khảo sát siêu tham số
+   │
+[Tuần 10]     Tối ưu hóa hậu xử lý hình thái học & khớp nối module đo đặc trưng của Trí
+   │
+[Tuần 11]     Phối hợp tích hợp toàn bộ pipeline DIP vào ứng dụng tương tác Streamlit GUI
+   │
+[Tuần 12]     Phân tích chuyên sâu các ca thất bại (Failure Cases) trên dữ liệu quy mô lớn
+   │
+[Tuần 13]     Biên soạn bản nháp Báo cáo đồ án: 4 Chương Kỹ thuật (Chương 2, 4, 6, 8 kỹ thuật)
+   │
+[Tuần 14]     Rà soát mã nguồn toàn bộ src/, chuẩn hóa docstrings & đảm bảo 12/12 unit tests đạt
+   │
+[Tuần 15]     Hoàn thiện Báo cáo bản cuối, slide thuyết trình kỹ thuật & đóng gói hồ sơ nộp
+   │
+[Sau kết thúc 01 tuần] NỘP TRỌN BỘ HỒ SƠ ĐỒ ÁN HOÀN CHỈNH
 ```
 
 ---
 
-## 📋 CHI TIẾT TỪNG NGÀY & CHECKLIST CỦA TRƯỜNG
+## 📋 NỘI DUNG THỰC HIỆN CHI TIẾT TỪNG TUẦN
 
-### 🔹 NGÀY 1: Rà Soát Kiến Trúc & Biên Soạn Đặc Tả Kỹ Thuật (`SPEC_PIPELINE_MRI.md`)
-* **Nhiệm vụ cụ thể:**
-  1. Kiểm tra file cấu hình `configs/default_params.yaml`, đảm bảo các giá trị mặc định (kernel size, clip limit, dist ratio, tolerance) khớp với lý thuyết Gonzalez & Woods.
-  2. Soạn thảo tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`:
-     * Nguyên lý toán học của bộ lọc Bilateral: hàm trọng số không gian và hàm trọng số mức xám.
-     * Thuật toán tách sọ não: Giải thích chi tiết phép toán hình thái học Opening, cấu trúc phần tử đĩa elip và thuật toán tìm thành phần liên thông lớn nhất (LCC).
-     * Thuật toán Marker-controlled Watershed: Biến đổi khoảng cách Euclidean Distance Transform, cách tạo Sure Foreground và Sure Background.
-     * Thuật toán Seeded Region Growing: Tiêu chuẩn tìm cực đại cường độ và điều kiện thu nạp láng giềng 8 điểm.
-* **Lệnh kiểm tra:** `python -c "import yaml; print(yaml.safe_load(open('configs/default_params.yaml')))"`
-* **Checklist hoàn thành Ngày 1:**
-  - [ ] Nộp xác nhận đề tài trên Google Classroom.
-  - [ ] Hoàn thành tài liệu `docs/SPEC_PIPELINE_MRI.md`.
-  - [ ] Khớp nối hợp đồng hàm với Trí (không thay đổi signature trong `src/`).
+### 🔹 Tuần 1: Khởi động Đề tài, Phân công Nhóm & Lập Kế hoạch
+* **Nhiệm vụ:**
+  1. Thống nhất chọn đề tài *Phân đoạn và phát hiện khối u não trên ảnh MRI*, đăng ký lên hệ thống của Bộ môn.
+  2. Bầu Nhóm trưởng, phân chia phạm vi trách nhiệm giữa Trường và Trí theo đúng sở trường và năng lực.
+  3. Lập bản kế hoạch làm việc 15 tuần chi tiết kèm tiêu chí nghiệm thu rõ ràng.
+* **Sản phẩm đạt được:** Đề tài được phê duyệt; Bản phân công công việc chi tiết.
 
----
+### 🔹 Tuần 2 – Tuần 3: Nghiên cứu Lý thuyết Xử lý ảnh số & Soạn thảo Đặc tả
+* **Nhiệm vụ:**
+  1. Đọc và tổng hợp kiến thức từ giáo trình *Digital Image Processing (4th Ed.)* của Gonzalez & Woods:
+     * Chương 3: Biến đổi cường độ sáng & cân bằng thích nghi tương phản (CLAHE).
+     * Chương 5: Khôi phục ảnh, lọc Bilateral bảo toàn biên đối tượng.
+     * Chương 9: Hình thái học ảnh nhị phân & xám (Opening, Closing, phần tử cấu trúc đĩa elip).
+     * Chương 10: Phân đoạn ảnh (Distance Transform, Watershed, Region Growing).
+  2. Xây dựng sơ đồ khối quy trình xử lý 7 bước chuẩn HUIT.
+  3. Soạn thảo tài liệu đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md` với 13 chữ ký hàm, 7 bất biến dữ liệu (I1–I7) và giải thích toán học chặt chẽ.
+* **Sản phẩm đạt được:** `docs/SPEC_PIPELINE_MRI.md`, sơ đồ khối quy trình xử lý.
 
-### 🔹 NGÀY 2: Hoàn Thiện Module Tiền Xử Lý, Tách Sọ Não & Notebook 02
-* **Nhiệm vụ cụ thể:**
-  1. Rà soát và tối ưu mã nguồn trong `src/preprocessing/filters.py` và `src/preprocessing/skull_strip.py`.
-  2. Chạy kiểm thử tự động module tiền xử lý: `pytest tests/test_preprocessing.py -v`.
-  3. Mở và chạy toàn bộ notebook `notebooks/02_skull_stripping.ipynb`:
-     * Kiểm tra hiển thị trực quan 6 bước tách sọ trên ca mẫu 01.
-     * Chạy kiểm thử tính bền vững trên 4 ca bệnh khác nhau (u ở các vị trí khác nhau).
-     * Xuất các hình ảnh trung gian lưu vào thư mục báo cáo.
-* **Lệnh kiểm tra:** `pytest tests/test_preprocessing.py -v`
-* **Checklist hoàn thành Ngày 2:**
-  - [ ] 100% test trong `test_preprocessing.py` đều đạt (PASSED).
-  - [ ] Chạy mượt mà `notebooks/02_skull_stripping.ipynb` không phát sinh lỗi.
-  - [ ] Lưu bộ ảnh 6 bước tách sọ chất lượng cao để chèn vào Báo cáo Chương 4.
+### 🔹 Tuần 4: Phối hợp Chuẩn bị Dữ liệu Thực nghiệm
+* **Nhiệm vụ:**
+  1. Phối hợp cùng Trí kiểm tra chất lượng dữ liệu đầu vào (ảnh cộng hưởng từ FLAIR/T1-CE, kích thước $256 \times 256$, dải mức xám uint8).
+  2. Kiểm tra tính hợp lệ của mặt nạ nhãn Ground Truth (chỉ chứa giá trị nhị phân $\{0, 255\}$).
+  3. Xác nhận hai tầng dữ liệu: `data/sample/` (20 mẫu kiểm thử nhanh) và `data/full/` (3,929 lát cắt chuẩn TCGA-LGG).
+* **Sản phẩm đạt được:** Bộ dữ liệu kiểm thử được xác nhận hợp lệ.
 
----
+### 🔹 Tuần 5: Cài đặt Module Tiền xử lý & Tách sọ não (Skull Stripping)
+* **Nhiệm vụ:**
+  1. Cài đặt các hàm lọc trong `src/preprocessing/filters.py`: `apply_bilateral_filter` ($d=9, \sigma_c=75, \sigma_s=75$) và `apply_clahe` ($\text{clip}=2.0, \text{grid}=8\times 8$).
+  2. Cài đặt kỹ thuật Tách sọ não trong `src/preprocessing/skull_strip.py`:
+     * Phân ngưỡng Otsu tạo mask thô.
+     * Phép toán hình thái học Opening với phần tử đĩa elip ($5 \times 5$, 2 lần lặp) để cắt đứt cầu nối mô liên kết giữa hộp sọ và não.
+     * Thuật toán tìm thành phần liên thông lớn nhất (Largest Connected Component - LCC) để giữ lại nhu mô não nguyên vẹn.
+     * Phép toán Closing lấp đầy các rãnh vỏ não.
+  3. Xây dựng và chạy hoàn thiện `notebooks/02_skull_stripping.ipynb`, xuất bộ ảnh 6 bước tách sọ chất lượng cao.
+* **Sản phẩm đạt được:** `src/preprocessing/`, `notebooks/02_skull_stripping.ipynb`, `tests/test_preprocessing.py` (3/3 passed).
 
-### 🔹 NGÀY 3: Hoàn Thiện Thuật Toán Phân Đoạn Baseline 1 — Watershed Phân Thủy
-* **Nhiệm vụ cụ thể:**
-  1. Tinh chỉnh thuật toán Watershed trong `src/segmentation/watershed.py`:
-     * Khảo sát tham số `dist_thresh_ratio` từ 0.2 đến 0.6 để tìm ngưỡng tối ưu cho u não.
-     * Xử lý trường hợp đặc biệt: vùng não không chứa điểm u (trả về mặt nạ rỗng an toàn).
-  2. Chạy kiểm thử tự động: `pytest tests/test_segmentation.py -k watershed -v`.
-  3. Bắt đầu chạy thử nghiệm phần Watershed trong `notebooks/03_tumor_segmentation_comparison.ipynb`.
-* **Lệnh kiểm tra:** `pytest tests/test_segmentation.py -v`
-* **Checklist hoàn thành Ngày 3:**
-  - [ ] Test `test_watershed_segmentation` đạt kết quả PASSED.
-  - [ ] Thuật toán Watershed phân đoạn thành công trên các ca u kích thước trung bình và lớn.
+### 🔹 Tuần 6: Cài đặt Phương pháp Phân đoạn Chính 1 — Marker-controlled Watershed
+* **Nhiệm vụ:**
+  1. Cài đặt lớp `WatershedSegmenter` trong `src/segmentation/watershed.py`:
+     * Áp dụng biến đổi khoảng cách Euclidean (`cv2.distanceTransform`) trên vùng não đã tách sọ.
+     * Xác định vùng chắc chắn u (Sure Foreground) qua ngưỡng tỷ lệ `dist_thresh_ratio = 0.4` so với cực đại khoảng cách.
+     * Xác định vùng chắc chắn nền (Sure Background) bằng phép giãn nở hình thái học (`cv2.dilate`).
+     * Xác định vùng không chắc chắn (Unknown) và đánh số nhãn hạt giống (Markers).
+     * Áp dụng thuật toán phân thủy `cv2.watershed` để tìm ranh giới chính xác của khối u.
+  2. Xử lý an toàn các ca âm tính (lát não lành không có u).
+* **Sản phẩm đạt được:** `src/segmentation/watershed.py`, `tests/test_segmentation.py` (test Watershed passed).
 
----
+### 🔹 Tuần 7: Hoàn thiện Pipeline Cơ sở Từ Đầu vào Đến Đầu ra
+* **Nhiệm vụ:**
+  1. Xây dựng lớp điều phối trung tâm `BrainTumorPipeline` trong `src/pipeline.py`:
+     * Nhận ảnh đầu vào $\rightarrow$ Lọc Bilateral $\rightarrow$ Tách sọ não $\rightarrow$ Cân bằng CLAHE $\rightarrow$ Phân đoạn u não $\rightarrow$ Trích xuất đặc trưng $\rightarrow$ Vẽ trực quan hóa cảnh báo.
+  2. Kiểm tra khả năng chạy liên tục, không rò rỉ bộ nhớ, bắt lỗi ngoại lệ an toàn khi nhận ảnh rỗng hoặc sai kích thước.
+* **Sản phẩm đạt được:** `src/pipeline.py` chạy ổn định trên toàn bộ các ca thử nghiệm ban đầu.
 
-### 🔹 NGÀY 4: Hoàn Thiện Thuật Toán Đối Chứng 2 — Region Growing & Notebook 03
-* **Nhiệm vụ cụ thể:**
-  1. Tinh chỉnh thuật toán phát triển vùng trong `src/segmentation/region_growing.py`:
-     * Tối ưu hóa hàm `find_seed_point()`: Đảm bảo hạt giống luôn rơi vào tâm vùng u sáng nhất.
-     * Khảo sát tham số `tolerance` từ 10 đến 25 trong `configs/default_params.yaml`.
-  2. Chạy kiểm thử tự động: `pytest tests/test_segmentation.py -k region_growing -v`.
-  3. Hoàn thiện toàn bộ nội dung notebook `notebooks/03_tumor_segmentation_comparison.ipynb`:
-     * So sánh song song Watershed vs Region Growing trên 3 nhóm: Ca u nhỏ (ca 11), Ca u trung bình (ca 02), Ca u lớn (ca 07).
-     * Xuất lưới ảnh so sánh chất lượng cao để chuẩn bị cho Báo cáo Chương 5.
-* **Lệnh kiểm tra:** `pytest tests/test_segmentation.py -v`
-* **Checklist hoàn thành Ngày 4:**
-  - [ ] 100% test trong `test_segmentation.py` đều đạt (PASSED).
-  - [ ] Chạy thành công toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
-  - [ ] Đúc kết bảng nhận xét ưu nhược điểm định tính giữa 2 phương pháp.
+### 🔹 Tuần 8: Báo Cáo Tiến Độ Nội Bộ Với Giảng Viên Hướng Dẫn
+* **Nhiệm vụ:**
+  1. Tổng hợp bản báo cáo tiến độ ngắn: Tình hình dữ liệu, sơ đồ pipeline, kết quả ban đầu của phương pháp Baseline (Watershed), các vấn đề tồn tại cần cải thiện.
+  2. Báo cáo trực tiếp với Giảng viên trong buổi hướng dẫn Tuần 8, tiếp thu các ý kiến đóng góp về cách xử lý các ca u bờ mờ.
+  3. Lập kế hoạch tinh chỉnh cho giai đoạn nửa sau học phần.
+* **Sản phẩm đạt được:** Báo cáo tiến độ nội bộ hoàn thành; Biên bản ghi nhận ý kiến giảng viên.
 
----
+### 🔹 Tuần 9: Cài đặt Phương pháp Đối chứng 2 — Seeded Region Growing & Tinh chỉnh
+* **Nhiệm vụ:**
+  1. Cài đặt lớp `RegionGrowingSegmenter` trong `src/segmentation/region_growing.py`:
+     * Hàm tự động tìm điểm hạt giống cực đại cường độ `find_seed_point()` trong vùng não đã lọc sọ.
+     * Thuật toán lan truyền vùng theo láng giềng 8 điểm (8-connectivity) dựa trên ngưỡng dung sai `intensity_tolerance = 15`.
+     * Bộ lọc diện tích u hợp lệ `[min_tumor_area, max_tumor_area] = [50, 25000]` pixels.
+  2. Khảo sát siêu tham số: Thay đổi tolerance từ 10 đến 25, kích thước kernel từ 3 đến 7.
+  3. Xây dựng và chạy hoàn thiện `notebooks/03_tumor_segmentation_comparison.ipynb`, tạo lưới ảnh so sánh song song giữa Watershed và Region Growing.
+* **Sản phẩm đạt được:** `src/segmentation/region_growing.py`, `notebooks/03_tumor_segmentation_comparison.ipynb`.
 
-### 🔹 NGÀY 5: Phân Tích Chuyên Sâu Các Ca Lỗi (Failure Cases) & Tích Hợp Pipeline
-* **Nhiệm vụ cụ thể:**
-  1. Phối hợp cùng Trí chạy đánh giá toàn diện trên 20 mẫu ảnh thông qua `src/pipeline.py`.
-  2. Lập danh sách phân tích chuyên sâu các ca lỗi điển hình (Failure Cases):
-     * **Ca u nhỏ (< 1.5% diện tích):** Phân tích nguyên nhân tại sao Watershed dễ bị over-segmentation hoặc under-segmentation khi gradient bờ u yếu.
-     * **Ca u bờ mờ / xâm lấn:** Phân tích tại sao Region Growing có xu hướng lan truyền ra mô xám bình thường nếu đặt dung sai quá cao.
-     * **Giải pháp khắc phục:** Đề xuất giải pháp cải tiến (ví dụ: tinh chỉnh ngưỡng thích ứng cục bộ, kết hợp thông tin gradient).
-* **Lệnh kiểm tra:** `python -c "from src.pipeline import BrainTumorPipeline; print('Pipeline OK')"`
-* **Checklist hoàn thành Ngày 5:**
-  - [ ] Hoàn thành bảng phân tích 3 ca bệnh đặc biệt (1 ca xuất sắc, 1 ca trung bình, 1 ca thất bại).
-  - [ ] Soạn thảo bản nháp phần "Phân tích trường hợp thất bại" để đưa vào Mục 6 của Báo cáo.
+### 🔹 Tuần 10: Tối ưu Hậu xử lý & Khớp nối Hệ thống Đo lường
+* **Nhiệm vụ:**
+  1. Bổ sung các bước hậu xử lý hình thái học (Morphological Filtering) để làm mịn đường biên u và xóa các đảo pixel cô lập sau phân đoạn.
+  2. Khớp nối mặt nạ u đầu ra với module đo đặc trưng hình học của Trí (`src/measurement/features.py`), đảm bảo định dạng contour và bounding box chuẩn.
+* **Sản phẩm đạt được:** Pipeline liên kết mượt mà với module đo lường.
 
----
+### 🔹 Tuần 11: Phối hợp Tích hợp Demo Streamlit GUI Hoàn Chỉnh
+* **Nhiệm vụ:**
+  1. Hỗ trợ Trí tích hợp `BrainTumorPipeline` vào giao diện web Streamlit `demo/app.py`.
+  2. Tối ưu hóa hiệu năng nạp ảnh và hiển thị các bước trung gian (ảnh gốc, ảnh tách sọ, mặt nạ u, ảnh phủ viền đỏ cảnh báo) theo thời gian thực (< 100 ms).
+* **Sản phẩm đạt được:** Ứng dụng demo tương tác hoàn chỉnh.
 
-### 🔹 NGÀY 6: Biên Soạn Báo Cáo Đồ Án (4 Chương Kỹ Thuật Trọng Tâm)
-* **Nhiệm vụ cụ thể:**
-  * Chịu trách nhiệm viết 4 chương nòng cốt trong Báo cáo đồ án chuẩn Khoa CNTT (Word/PDF):
-    1. **Mục 2: Cơ sở lý thuyết:** Trình bày chi tiết toán học của phép toán hình thái học (Erosion, Dilation, Opening, Closing), biến đổi khoảng cách Euclidean, giải thuật phân thủy Watershed và nguyên lý phát triển vùng Region Growing. Có sơ đồ khối và hình minh họa.
-    2. **Mục 4: Tiền xử lý ảnh:** Thuyết minh quy trình khử nhiễu Bilateral và kỹ thuật Tách sọ não (Skull Stripping), chèn hình minh họa 6 bước trích xuất từ Notebook 02.
-    3. **Mục 5: Phương pháp và quy trình thực nghiệm:** Trình bày sơ đồ khối pipeline tổng thể, mô tả chi tiết 2 phương pháp đối chứng (Watershed vs Region Growing), bảng tham số đã chọn từ `configs/default_params.yaml`.
-    4. **Mục 6 (Phần kỹ thuật): Phân tích định tính & Các trường hợp thất bại:** Bình luận chi tiết hình ảnh kết quả phân đoạn, phân tích nguyên nhân lỗi và so sánh bản chất 2 thuật toán.
-* **Checklist hoàn thành Ngày 6:**
-  - [ ] Hoàn tất 4 chương kỹ thuật, đảm bảo đầy đủ hình ảnh minh chứng và công thức toán học gõ chuẩn Equation.
-  - [ ] Chuyển giao các chương kỹ thuật cho Trí để ghép nối vào bản báo cáo tổng hợp duy nhất.
+### 🔹 Tuần 12: Đánh Giá Quy Mô Lớn & Phân Tích Chuyên Sâu Các Ca Thất Bại
+* **Nhiệm vụ:**
+  1. Chạy thực nghiệm phân đoạn trên toàn bộ 3,929 lát cắt dữ liệu TCGA-LGG thông qua script xử lý đa tiến trình `scripts/run_all_experiments.py`.
+  2. Thực hiện phân tích chuyên sâu các ca thất bại (Failure Cases):
+     * *Nhóm u nhỏ (< 1.5% diện tích não):* Phân tích hiện tượng mất dấu vết biên khi độ chênh lệch mức xám thấp.
+     * *Nhóm u lớn (> 5% diện tích não):* Phân tích hiệu ứng chèn ép não thất và phù não quanh u.
+     * *Lát não lành (không u):* Khẳng định độ đặc hiệu Specificity đạt 99.04%, chứng minh bước tách sọ não loại bỏ 100% báo động giả ngoài sọ.
+* **Sản phẩm đạt được:** Bảng phân tích chi tiết các ca thất bại, nguyên nhân và bài học kinh nghiệm.
 
----
+### 🔹 Tuần 13: Biên Soạn Bản Nháp Báo Cáo Đồ Án (4 Chương Kỹ Thuật Trọng Tâm)
+* **Nhiệm vụ:**
+  * Trực tiếp biên soạn 4 chương kỹ thuật trọng tâm theo cấu trúc 12 mục chuẩn của Bộ môn:
+    * **Mục 4: Cơ sở lý thuyết:** Trình bày toán học phép toán hình thái học, biến đổi khoảng cách Euclidean, thuật toán Watershed và nguyên lý Region Growing.
+    * **Mục 6: Tiền xử lý ảnh:** Mô tả chi tiết kỹ thuật khử nhiễu Bilateral và thuật toán Tách sọ não (Skull Stripping), đính kèm sơ đồ khối và hình ảnh 6 bước thực nghiệm.
+    * **Mục 7: Phương pháp và quy trình thực nghiệm:** Trình bày sơ đồ pipeline 7 bước, bảng thông số cấu hình và so sánh chi tiết giữa 2 giải thuật.
+    * **Mục 8 (Phần phân tích kỹ thuật):** Bình luận định tính về hình ảnh kết quả phân đoạn, đối chiếu ưu/nhược điểm bản chất giữa Watershed và Region Growing.
+* **Sản phẩm đạt được:** Bản nháp 4 chương kỹ thuật đầy đủ công thức toán và hình ảnh minh chứng.
 
-### 🔹 NGÀY 7: Soạn Slide Thuyết Trình Kỹ Thuật, Tối Ưu Mã Nguồn & Đóng Gói
-* **Nhiệm vụ cụ thể:**
-  1. Soạn phần Slide thuyết trình của mình (khoảng 8–10 slides):
-     * Bối cảnh kỹ thuật và mục tiêu xử lý ảnh y tế.
-     * Sơ đồ khối pipeline 4 tầng của hệ thống.
-     * Trực quan hóa quy trình tách sọ não kinh điển.
-     * So sánh cơ chế Watershed vs Region Growing.
-     * Minh họa các ca phân đoạn thành công và phân tích ca lỗi.
-  2. Rà soát, dọn dẹp mã nguồn trong `src/preprocessing/` và `src/segmentation/`:
-     * Đảm bảo 100% hàm có docstring chuẩn tiếng Việt và type hints.
-     * Xóa các biến thừa, đảm bảo tuân thủ chuẩn PEP8.
-  3. Chạy lại toàn bộ test suite lần cuối: `pytest tests/ -v` (đảm bảo 12/12 test PASSED).
-* **Lệnh kiểm tra:** `pytest tests/ -v`
-* **Checklist hoàn thành Ngày 7:**
-  - [ ] Slide phần kỹ thuật hoàn tất, sẵn sàng thuyết trình trước hội đồng.
-  - [ ] Mã nguồn sạch sẽ, vượt qua 100% unit tests.
-  - [ ] Họp tổng kết cùng Trí, sẵn sàng nộp đồ án.
+### 🔹 Tuần 14: Rà Soát Mã Nguồn Kỹ Thuật, Chuẩn Hóa Docstrings & Chốt Kết Quả
+* **Nhiệm vụ:**
+  1. Kiểm tra toàn bộ mã nguồn trong `src/`: Bổ sung 100% chú thích tiếng Việt, chuẩn hóa type hints, loại bỏ mã thừa, tuân thủ nghiêm ngặt chuẩn PEP8.
+  2. Chạy toàn bộ bộ kiểm thử tự động: `pytest -v` (đảm bảo 12/12 unit tests đều PASSED).
+  3. Cùng Trí chốt lại toàn bộ các bảng số liệu định lượng (Dice, IoU, Sensitivity, Specificity, Latency) đưa vào báo cáo bản cuối.
+* **Sản phẩm đạt được:** Bộ mã nguồn kỹ thuật chuẩn hóa, kiểm thử tự động đạt 100%.
+
+### 🔹 Tuần 15: Hoàn Thiện Báo Cáo Bản Cuối, Slide Thuyết Trình & Đóng Gói
+* **Nhiệm vụ:**
+  1. Ghép nối và rà soát Báo cáo toàn văn bản cuối, xuất file Word `BAO_CAO_DO_AN_XLAS.docx` chuẩn lề 3-3-3-2 cm và xuất file PDF.
+  2. Thiết kế phần Slide thuyết trình kỹ thuật (8–10 slides): Bối cảnh đề tài, quy trình tách sọ não, nguyên lý 2 thuật toán phân đoạn, hình ảnh minh chứng và phân tích ca lỗi.
+  3. Đóng gói toàn bộ sản phẩm theo đúng cấu trúc thư mục quy định của Bộ môn.
+* **Sản phẩm đạt được:** Báo cáo bản cuối (Word + PDF), Slide thuyết trình, Bộ hồ sơ đóng gói hoàn chỉnh.
+
+### 🔹 Sau Khi Kết Thúc Học Phần 01 Tuần: Nộp Đồ Án Chính Thức
+* **Nhiệm vụ:** Nộp trọn bộ hồ sơ đồ án đúng hạn trên hệ thống của Trường: Code + Dữ liệu/Link + Demo GUI + Báo cáo + Slide. Sẵn sàng cho buổi bảo vệ đồ án trước Hội đồng chấm thi.

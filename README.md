@@ -173,10 +173,40 @@ pytest -v
 
 ---
 
-## 📋 6. Kế hoạch Nộp Sản phẩm theo chuẩn Khoa CNTT
+## 📋 6. Kế hoạch 15 Tuần & Khung Đánh Giá Đồ Án Chuẩn HUIT
 
-* **Báo cáo đồ án:** Soạn thảo theo chuẩn 10 mục của Khoa CNTT (Word và PDF).
-* **Mã nguồn:** Toàn bộ pipeline xử lý ảnh số sạch, có chú thích chi tiết, kèm demo tương tác.
-* **Tập dữ liệu:** Bộ dữ liệu kiểm thử kèm ground truth mask khối u não.
-* **Slide thuyết trình:** Tóm tắt bối cảnh, phương pháp, kết quả định lượng và kết luận.
+### 6.1. Khung Tiêu Chí Đánh Giá (Rubric 5 Tiêu Chí - Thang Điểm 10)
+> Theo *Kế hoạch thực hiện Đồ án Xử lý ảnh số năm học 2026–2027* của Khoa CNTT — HUIT, điểm đồ án chiếm **100% điểm thi kết thúc học phần** (tương đương **70% tổng điểm học phần**):
+
+| STT | Tiêu chí đánh giá | Chuẩn đầu ra (PLO/CLO) | Trọng số | Điểm tối đa |
+| :---: | :--- | :---: | :---: | :---: |
+| 1 | Phân tích và lựa chọn đúng phương pháp | PLO2 / CLO1 | 15% | 1.5 điểm |
+| 2 | **Áp dụng được các phương pháp xử lý (Trọng tâm)** | PLO2 / CLO2 | **50%** | **5.0 điểm** |
+| 3 | Đọc tài liệu, nghiên cứu giải quyết bài toán | PLO4 / CLO3 | 10% | 1.0 điểm |
+| 4 | Trình bày báo cáo | PLO7 / CLO5 | 15% | 1.5 điểm |
+| 5 | Phân công và phối hợp làm việc nhóm | PLO6 / CLO4 | 10% | 1.0 điểm |
+| **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | **ĐẠT CHUẨN ĐẦU RA** | **100%** | **10.0 điểm** |
+
+### 6.2. Lộ Trình 15 Tuần Triển Khai Chi Tiết
+* **Tuần 1:** Đăng ký đề tài, phân công vai trò 50%-50%, lập kế hoạch 15 tuần.
+* **Tuần 2–3:** Nghiên cứu lý thuyết DIP (Bilateral, Morphology, Watershed, Region Growing) và các chỉ số y tế.
+* **Tuần 4:** Thu thập, kiểm tra và chuẩn hóa 3,929 lát cắt dữ liệu TCGA-LGG (2 tầng dữ liệu: sample/full).
+* **Tuần 5:** Hiện thực hóa module Tiền xử lý & Quy trình 6 bước Tách sọ não (Skull Stripping).
+* **Tuần 6:** Hiện thực hóa Phương án A (Marker-controlled Watershed với biến đổi khoảng cách EDT) và Unit tests.
+* **Tuần 7:** Tích hợp pipeline xử lý hoàn chỉnh từ ảnh thô đến u não (`BrainTumorPipeline`).
+* **Tuần 8:** **Báo cáo tiến độ nội bộ với Giảng viên hướng dẫn.**
+* **Tuần 9:** Hiện thực hóa Phương án B (Seeded Region Growing đối chứng) và module benchmark tự động.
+* **Tuần 10:** Rút trích đặc trưng hình học khối u (Diện tích, Tỷ lệ u/não, Circularity) và Bounding Box.
+* **Tuần 11:** Tích hợp ứng dụng Web Demo GUI tương tác Streamlit (`demo/app.py`).
+* **Tuần 12:** Đánh giá định lượng quy mô lớn trên toàn bộ 3,929 lát cắt TCGA-LGG và phân tích Failure cases.
+* **Tuần 13:** Biên soạn bản nháp Báo cáo đồ án đầy đủ 12 mục chuẩn HUIT.
+* **Tuần 14:** Rà soát mã nguồn, tối ưu hóa hiệu năng, bảo đảm 100% Unit tests đạt.
+* **Tuần 15:** Hoàn thiện Báo cáo bản cuối (Word/PDF), thiết kế bộ Slide 20 trang, quay Video demo 3 phút và đóng gói hồ sơ.
+* **Sau kết thúc:** Nộp trọn bộ hồ sơ đồ án lên cổng Trường và bảo vệ trước Hội đồng.
+
+### 6.3. Chi Tiết Nhiệm Vụ Từng Sinh Viên
+* [Nhiệm vụ 15 tuần chi tiết của Hà Mạnh Trường (Nhóm trưởng)](docs/NHIEM_VU_HA_MANH_TRUONG.md)
+* [Nhiệm vụ 15 tuần chi tiết của Huỳnh Tâm Trí (Thành viên)](docs/NHIEM_VU_HUYNH_TAM_TRI.md)
+* [Báo cáo toàn văn đồ án 12 mục (Markdown)](docs/BAO_CAO_DO_AN_XLAS.md)
+* [Báo cáo đồ án định dạng Microsoft Word chuẩn HUIT](docs/BAO_CAO_DO_AN_XLAS.docx)
 
