@@ -31,3 +31,8 @@ Thumbs.db
 
 # Agent scratch directory (work-in-progress issues/notes)
 .scratch/
+
+# Large dataset directories (keep only data/sample in git)
+data/raw/
+data/processed/
+*.parquet
