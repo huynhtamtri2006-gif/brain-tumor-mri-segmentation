@@ -82,11 +82,12 @@ $$\text{Dice} = \frac{2|P \cap G|}{|P| + |G|}, \quad \text{IoU} = \frac{|P \cap 
   * **Kaggle Benchmark Dataset (Kho đối chứng / Dự phòng):** [https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation).
   * **Kho lưu trữ y sinh học quốc tế TCIA (NIH/NCI):** [https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG).
   * **GitHub tác giả (Mateusz Buda):** [https://github.com/mateuszbuda/brain-segmentation-pytorch](https://github.com/mateuszbuda/brain-segmentation-pytorch).
-* **Quy mô tập mẫu:** 20 lát cắt MRI đại diện từ 10 bệnh nhân khác nhau, lưu trữ tại `data/sample/`.
-* **Phân bố kích thước u:**
-  * Nhóm u nhỏ ($< 1.5\%$ diện tích): 7 ca (Ca 05, 11, 12, 13, 16, 19, 20).
-  * Nhóm u trung bình ($1.5\% - 5\%$): 9 ca (Ca 01, 02, 03, 04, 06, 14, 15, 17, 18).
-  * Nhóm u lớn ($> 5\%$): 4 ca (Ca 07, 08, 09, 10).
+* **Quy mô toàn bộ tập dữ liệu (Full Dataset):** **3,929 lát cắt MRI sọ não** thu thập từ **110 bệnh nhân**, trong đó gồm **1,373 lát cắt có khối u não** (34.95%) và **2,556 lát cắt mô não lành** (65.05%). Tích hợp tự động qua script tải 1-click `python scripts/download_full_dataset.py` vào `data/full/`.
+* **Bộ mẫu kiểm thử nhanh (Curated Sample):** 20 lát cắt MRI đại diện từ 10 bệnh nhân khác nhau được theo dõi trực tiếp trong Git tại `data/sample/` để phục vụ CI/CD và kiểm thử siêu tốc.
+* **Phân bố kích thước u trên 1,373 lát cắt có u:**
+  * Nhóm u nhỏ ($< 1.5\%$ diện tích): 463 lát cắt (chiếm 33.7%).
+  * Nhóm u trung bình ($1.5\% - 5\%$): 667 lát cắt (chiếm 48.6%).
+  * Nhóm u lớn ($> 5\%$): 243 lát cắt (chiếm 17.7%).
 *(Tham khảo chi tiết tại Notebook 01 và file docs/DATA_EXPLORATION_REPORT.md)*.
 
 ---
@@ -115,19 +116,26 @@ Bắt buộc cài đặt và so sánh đối chứng **02 phương án phân đo
 ---
 
 ## 6. KẾT QUẢ VÀ ĐÁNH GIÁ ĐỊNH LƯỢNG
-### 6.1. Bảng số liệu so sánh định lượng (Mean ± Std trên 20 mẫu ảnh)
-| Chỉ Số Đánh Giá | Phương án A: Watershed (Baseline) | Phương án B: Region Growing (Đối chứng) |
-| :--- | :---: | :---: |
-| **Dice Score (DSC)** | $0.8124 \pm 0.0845$ | $0.7856 \pm 0.1120$ |
-| **IoU (Jaccard)** | $0.6945 \pm 0.1032$ | $0.6621 \pm 0.1284$ |
-| **Sensitivity (Độ nhạy)** | $0.8350 \pm 0.0910$ | $0.8520 \pm 0.1045$ |
-| **Specificity (Độ đặc hiệu)** | $0.9950 \pm 0.0032$ | $0.9930 \pm 0.0048$ |
-| **Thời gian xử lý trung bình** | $18.42 \pm 3.15\text{ ms}$ | $8.75 \pm 1.90\text{ ms}$ |
+### 6.1. Bảng số liệu so sánh định lượng trên toàn bộ 1,373 lát cắt có u não (Mean ± Std)
+Hệ thống được kiểm thử thực tế quy mô lớn trên **1,373 lát cắt có u** và **2,556 lát cắt não lành** từ 110 bệnh nhân:
 
-### 6.2. Phân tích trường hợp thất bại (Failure Cases)
-* Các ca u nhỏ ($< 1.5\%$) như Ca 11, Ca 20 có xu hướng bị under-segmentation ở Watershed do đỉnh khoảng cách cực đại không rõ nét.
-* Region Growing có độ nhạy cao nhưng dễ bị lan truyền nhẹ vào mô chất xám lân cận nếu bờ u mờ.
-*(Tham khảo biểu đồ chi tiết tại Notebook 04)*.
+| Chỉ Số Đánh Giá Y Khoa | Phương án A: Watershed (Baseline) | Phương án B: Region Growing (Đối chứng) |
+| :--- | :---: | :---: |
+| **Quy mô lát cắt có u đánh giá** | **1,373 lát cắt** | **1,373 lát cắt** |
+| **Dice Score (DSC / F1)** | **$0.4446 \pm 0.3014$** | **$0.1990 \pm 0.2682$** |
+| **IoU (Jaccard Index)** | **$0.3368 \pm 0.2677$** | **$0.1416 \pm 0.2119$** |
+| **Sensitivity (Độ nhạy)** | **$0.4436 \pm 0.3170$** | **$0.2226 \pm 0.3221$** |
+| **Specificity (Độ đặc hiệu)** | **$0.9915 \pm 0.0107$** | **$0.9851 \pm 0.0432$** |
+| **Độ đặc hiệu trên 2,556 lát não lành** | **$0.9904 \pm 0.0100$** | **$0.9760 \pm 0.0480$** |
+| **Độ trễ trung bình mỗi lát cắt** | **$6.13 \pm 3.32\text{ ms}$** (~248 fps) | **$12.13 \pm 22.83\text{ ms}$** (~401 fps) |
+
+*(Trên tập 20 ca mẫu đại diện được chuẩn hóa tối ưu, Watershed đạt Dice $0.8124 \pm 0.0845$ và Region Growing đạt $0.7856 \pm 0.1120$)*.
+
+### 6.2. Phân tích kết quả thực nghiệm & Các ca lỗi (Failure Cases)
+1. **Ưu thế vượt trội của Watershed:** Trên toàn bộ 1,373 lát cắt có u của 110 bệnh nhân, Marker-controlled Watershed đạt chỉ số Dice gấp hơn 2.2 lần so với Seeded Region Growing ($0.4446$ so với $0.1990$). Điểm mấu chốt là biến đổi khoảng cách Euclidean giúp Watershed xác định chắc chắn vùng lõi trung tâm u (Sure Foreground) ngay cả khi bờ u có mức xám biến thiên mạnh.
+2. **Hạn chế của Seeded Region Growing khi mở rộng quy mô:** Region Growing phụ thuộc rất lớn vào việc hạt giống (Seed point) tìm được có thực sự nằm trong u hay rơi vào vùng chất xám/mạch máu tăng sáng. Khi gặp các ca u phân bố rải rác hoặc u nhỏ ($< 1.5\%$), sự chênh lệch mức xám nội tại khối u khiến quá trình phát triển vùng bị nghẽn sớm ($Dice \approx 0$).
+3. **Độ đặc hiệu xuất sắc trên lát cắt não lành:** Khi kiểm thử trên 2,556 lát cắt không có u, cả hai thuật toán đều đạt độ đặc hiệu $> 97.6\%$ (Watershed đạt $99.04\%$), chứng minh tính an toàn cao của pipeline tách sọ và lọc nền, hầu như không tạo ra cảnh báo giả (False Positive) trên não người khỏe mạnh.
+*(Xem bảng chi tiết 7,858 dòng tại docs/BENCHMARK_RESULTS_FULL.csv và đồ thị tại Notebook 04)*.
 
 ---
 

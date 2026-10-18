@@ -75,13 +75,15 @@ plt.rcParams['figure.figsize'] = (12, 6)
 plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 print("Môi trường sẵn sàng. Đang nạp dữ liệu...")"""),
 
-    md_cell("""## 📊 2. Khảo sát Metadata 20 Ca Bệnh Chuẩn Hóa
-Đọc bảng `data/sample/metadata.csv` chứa thông tin chi tiết về diện tích và tỷ lệ u của 20 ca mẫu từ 10 bệnh nhân khác nhau:"""),
+    md_cell("""## 📊 2. Khảo sát Metadata Tập Dữ Liệu
+Đọc bảng metadata (`data/full/metadata.csv` hoặc fallback `data/sample/metadata.csv`) chứa thông tin chi tiết về diện tích và tỷ lệ u của các ca bệnh:"""),
 
-    code_cell("""meta_path = "../data/sample/metadata.csv"
+    code_cell("""base_dir = "../data/full" if os.path.exists("../data/full/metadata.csv") else "../data/sample"
+meta_path = os.path.join(base_dir, "metadata.csv")
 df = pd.read_csv(meta_path)
-print(f"Tổng số lát cắt MRI mẫu: {len(df)}")
-df[['sample_id', 'patient_id', 'width', 'height', 'tumor_area_pixels', 'tumor_ratio_percent']]"""),
+print(f"Nguồn dữ liệu đang nạp: {base_dir}")
+print(f"Tổng số lát cắt MRI: {len(df)}")
+df[['sample_id', 'patient_id', 'width', 'height', 'tumor_area_pixels', 'tumor_ratio_percent']].head(10)"""),
 
     md_cell("""## 📈 3. Phân Tích Thống Kê Phân Bố Khối U
 Đánh giá độ phân tán của diện tích u và tỷ lệ % u trên thiết diện não:"""),
@@ -120,14 +122,14 @@ print(f"- Nhóm U Lớn (> 5.0% - Hiệu ứng chèn ép não thất): {len(larg
     md_cell("""## 🖼️ 5. Trực Quan Hóa Lưới Ảnh MRI & Ground Truth Mask
 Hiển thị 6 ca đại diện cho 3 nhóm kích thước u để làm minh chứng cho Báo cáo (Mục 3):"""),
 
-    code_cell("""sample_indices = [0, 4, 6, 8, 10, 19]
+    code_cell("""sample_indices = [0, 4, 6, 8, 10, min(19, len(df)-1)]
 
-fig, axes = plt.subplots(2, 6, figsize=(18, 6))
+fig, axes = plt.subplots(2, len(sample_indices), figsize=(18, 6))
 
 for col_idx, idx in enumerate(sample_indices):
     row = df.iloc[idx]
-    img_p = os.path.join("../data/sample/images", row['image_file'])
-    mask_p = os.path.join("../data/sample/masks", row['mask_file'])
+    img_p = os.path.join(base_dir, "images", row['image_file'])
+    mask_p = os.path.join(base_dir, "masks", row['mask_file'])
     
     img = cv2.imread(img_p, cv2.IMREAD_GRAYSCALE)
     mask = cv2.imread(mask_p, cv2.IMREAD_GRAYSCALE)
@@ -443,11 +445,10 @@ from src.preprocessing.skull_strip import strip_skull
 from src.segmentation.watershed import segment_watershed
 from src.segmentation.region_growing import segment_region_growing
 from src.evaluation.benchmark import run_benchmark
-from src.evaluation.metrics import calculate_dice, calculate_iou, calculate_sensitivity, calculate_specificity
-
-img_dir = "../data/sample/images"
-mask_dir = "../data/sample/masks"
-print("Sẵn sàng thực thi benchmark trên toàn bộ 20 mẫu ảnh TCGA-LGG...")"""),
+base_dir = "../data/full" if os.path.exists("../data/full/images") and len(os.listdir("../data/full/images")) > 50 else "../data/sample"
+img_dir = os.path.join(base_dir, "images")
+mask_dir = os.path.join(base_dir, "masks")
+print(f"Sẵn sàng thực thi benchmark trên tập dữ liệu: {base_dir} ({len(os.listdir(img_dir))} lát cắt)...")"""),
 
     md_cell("""## 🚀 2. Chạy Thực Nghiệm Đánh Giá Hàng Loạt (Batch Benchmark) 20 Mẫu"""),
 
@@ -532,8 +533,8 @@ print(worst_cases)
 
 # Hiển thị trực quan ca lỗi nặng nhất
 worst_id = worst_cases.iloc[0]['sample_id']
-w_img = cv2.imread(f"../data/sample/images/{worst_id}.png", cv2.IMREAD_GRAYSCALE)
-w_gt = cv2.imread(f"../data/sample/masks/{worst_id}_mask.png", cv2.IMREAD_GRAYSCALE)
+w_img = cv2.imread(os.path.join(img_dir, f"{worst_id}.png"), cv2.IMREAD_GRAYSCALE)
+w_gt = cv2.imread(os.path.join(mask_dir, f"{worst_id}_mask.png"), cv2.IMREAD_GRAYSCALE)
 w_stripped, _ = strip_skull(w_img)
 w_pred_ws = segment_watershed(w_stripped)
 w_pred_rg = segment_region_growing(w_stripped)

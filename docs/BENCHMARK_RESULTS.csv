@@ -1,6 +1,7 @@
-Chi So Danh Gia Y Khoa,Watershed (Baseline),Region Growing (Doi chung)
-Dice Score (DSC / F1),0.5413 +/- 0.2875,0.1327 +/- 0.3048
-IoU (Jaccard Index),0.4239 +/- 0.2862,0.1123 +/- 0.2668
-Sensitivity (Do nhay),0.5655 +/- 0.3069,0.1228 +/- 0.2956
-Specificity (Dac hieu),0.9856 +/- 0.0159,0.9993 +/- 0.0011
-Do tre trung binh (ms),2.14 +/- 1.41 ms,1.16 +/- 0.92 ms
+Chỉ Số Đánh Giá Y Khoa,Watershed (Baseline),Region Growing (Đối chứng)
+Quy mô lát cắt có u đánh giá,1373 lát cắt,1373 lát cắt
+Dice Score (DSC / F1),0.4446 +/- 0.3014,0.1990 +/- 0.2682
+IoU (Jaccard Index),0.3368 +/- 0.2677,0.1416 +/- 0.2119
+Sensitivity (Độ nhạy),0.4436 +/- 0.3170,0.2226 +/- 0.3221
+Specificity (Độ đặc hiệu),0.9915 +/- 0.0107,0.9851 +/- 0.0432
+Độ trễ trung bình (ms/ảnh),6.13 +/- 3.32 ms,12.13 +/- 22.83 ms
