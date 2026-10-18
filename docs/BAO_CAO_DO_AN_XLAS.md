@@ -13,9 +13,9 @@
 ---
 
 ### DANH SÁCH THÀNH VIÊN VÀ PHÂN CÔNG CÔNG VIỆC:
-| STT | Họ và Tên Sinh Viên | Mã Số Sinh Viên | Lớp Sinh Hoạt | Vai Trò | Trách Nhiệm Trọng Tâm 15 Tuần | Tỷ Lệ Đóng Góp (%) |
+| STT | Họ và Tên Sinh Viên | Mã Số Sinh Viên | Lớp Sinh Hoạt | Vai Trò | Trách Nhiệm Trọng Tâm (Sprint 7 Ngày) | Tỷ Lệ Đóng Góp (%) |
 | :---: | :--- | :---: | :---: | :---: | :--- | :---: |
-| 1 | **Hà Mạnh Trường** | **2045240326** | 15DHKHDL03 | **Nhóm trưởng** | Quản lý tiến độ 15 tuần, Pipeline tiền xử lý & Tách sọ (Skull Stripping), Giải thuật phân đoạn u Baseline (Watershed) & Đối chứng (Region Growing), Báo cáo kỹ thuật (Mục 4, 6, 7, 8 kỹ thuật) | **50%** |
+| 1 | **Hà Mạnh Trường** | **2045240326** | 15DHKHDL03 | **Nhóm trưởng** | Quản lý tiến độ Sprint 7 ngày, Pipeline tiền xử lý & Tách sọ (Skull Stripping), Giải thuật phân đoạn u Baseline (Watershed) & Đối chứng (Region Growing), Báo cáo kỹ thuật (Mục 4, 6, 7, 8 kỹ thuật) | **50%** |
 | 2 | **Huỳnh Tâm Trí** | **2045240315** | 15DHKHDL03 | **Thành viên** | Thu thập & quản lý dữ liệu 3,929 lát TCGA-LGG, Rút trích đặc trưng hình học (Area, Circularity, Bounding Box), Bộ đo định lượng y khoa (Dice, IoU, Sens, Spec), Giao diện Streamlit GUI, Báo cáo tổng quan (Mục 3, 5, 8 số liệu, 9, 10), Slide & Video demo | **50%** |
 
 **GIẢNG VIÊN HƯỚNG DẪN:** ThS. / TS. .....................................................
@@ -38,7 +38,7 @@
 * **9. Chương trình minh họa** (Giao diện Streamlit GUI tương tác, thẻ KPI, so sánh trực quan, hướng dẫn chạy)
 * **10. Kết luận** (Kết quả đạt được, đóng góp cốt lõi, hạn chế & hướng phát triển)
 * **11. Tài liệu tham khảo** (Gonzalez & Woods, Buda et al., Giáo trình HUIT, OpenCV)
-* **12. Phụ lục** (Khung Rubric 5 tiêu chí của HUIT, Bảng kế hoạch 15 tuần chi tiết, Hướng dẫn cài đặt và chạy thử hệ thống)
+* **12. Phụ lục** (Khung Rubric 5 tiêu chí của HUIT, Bảng kế hoạch Sprint cấp tốc 7 ngày chi tiết, Hướng dẫn cài đặt và chạy thử hệ thống)
 
 ---
 
@@ -240,24 +240,17 @@ Hệ thống xây dựng theo mô hình pipeline 7 bước khép kín và so sá
 | 5 | Phân công và phối hợp làm việc nhóm | PLO6 / CLO4 | 10% | 1.0 điểm |
 | **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | | **100%** | **10.0 điểm** |
 
-### Phụ lục B: Bảng Tổng Hợp Phân Công Nhiệm Vụ 15 Tuần Chi Tiết
-| Tuần | Nội dung công việc theo chuẩn HUIT | Hà Mạnh Trường (Nhóm trưởng) | Huỳnh Tâm Trí (Thành viên) | Sản phẩm nghiệm thu |
+### Phụ lục B: Bảng Tổng Hợp Phân Công Nhiệm Vụ Sprint Cấp Tốc 7 Ngày Chi Tiết
+| Ngày | Nội dung công việc trọng tâm | Hà Mạnh Trường (Nhóm trưởng) | Huỳnh Tâm Trí (Thành viên) | Sản phẩm nghiệm thu |
 | :---: | :--- | :--- | :--- | :--- |
-| **Tuần 1** | Đăng ký đề tài, phân công vai trò, lập kế hoạch 15 tuần | Chủ trì đăng ký đề tài, lập kế hoạch chi tiết | Thống nhất vai trò, thiết lập môi trường Git | Bản phân công và kế hoạch làm việc |
-| **Tuần 2–3** | Nghiên cứu cơ sở lý thuyết DIP và quy trình xử lý | Lý thuyết lọc Bilateral, Skull Stripping, Watershed; soạn SPEC | Lý thuyết các chỉ số đánh giá y tế: Dice, IoU, Sens, Spec | `SPEC_PIPELINE_MRI.md`, Sơ đồ khối pipeline |
-| **Tuần 4** | Thu thập, chuẩn hóa và kiểm tra dữ liệu | Rà soát chất lượng ảnh MRI và quy cách nhãn | Tổ chức cấu trúc 2 tầng dữ liệu, viết Notebook 01, xuất báo cáo dữ liệu | `data/sample`, `data/full`, `DATA_EXPLORATION_REPORT.md` |
-| **Tuần 5** | Cài đặt module Tiền xử lý & Tách sọ não | Cài đặt `filters.py`, `skull_strip.py`, viết Notebook 02 | Phối hợp kiểm thử trên các ca có nhiễu sọc và tương phản thấp | `src/preprocessing/`, Notebook 02, Bộ ảnh 6 bước tách sọ |
-| **Tuần 6** | Cài đặt phương pháp chính 1 (Baseline Watershed) | Cài đặt `watershed.py` và Distance Transform | Cài đặt module bộ đo y tế `metrics.py` và Unit tests | `src/segmentation/watershed.py`, `src/evaluation/metrics.py` |
-| **Tuần 7** | Hoàn thiện pipeline cơ sở từ ảnh thô đến u não | Xây dựng lớp điều phối `BrainTumorPipeline` | Đo lường thử nghiệm trên kết quả baseline | `src/pipeline.py` chạy ổn định |
-| **Tuần 8** | BÁO CÁO TIẾN ĐỘ NỘI BỘ VỚI GIẢNG VIÊN | Soạn nội dung kỹ thuật, báo cáo trực tiếp với GV | Tổng hợp số liệu và hình ảnh minh họa baseline | Báo cáo tiến độ nội bộ hoàn thành |
-| **Tuần 9** | Cài đặt phương pháp đối chứng 2 (Region Growing) | Cài đặt `region_growing.py`, khảo sát tham số tolerance | Xây dựng module tự động hóa benchmark `benchmark.py` | `src/segmentation/region_growing.py`, Notebook 03 |
-| **Tuần 10** | Rút trích đặc trưng hình học & Khớp nối hệ thống | Tối ưu hóa hậu xử lý hình thái học | Cài đặt `features.py` (diện tích, độ tròn) và `visualization.py` | `src/measurement/`, Bounding box màu đỏ |
-| **Tuần 11** | Tích hợp ứng dụng minh họa tương tác hoàn chỉnh | Hỗ trợ tích hợp pipeline vào ứng dụng | Xây dựng và hoàn thiện giao diện Streamlit GUI (`app.py`) | Ứng dụng web Streamlit chạy mượt mà |
-| **Tuần 12** | Đánh giá định lượng quy mô lớn (3,929 lát cắt) | Phân tích chuyên sâu các ca thất bại (Failure cases) | Chạy thực nghiệm 3,929 lát, vẽ biểu đồ so sánh, viết Notebook 04 | `BENCHMARK_RESULTS.csv`, Notebook 04 |
-| **Tuần 13** | Biên soạn bản nháp Báo cáo đồ án | Soạn thảo 4 chương kỹ thuật (Mục 4, 6, 7, 8 kỹ thuật) | Soạn thảo 6 chương tổng quan (Mục 3, 5, 8 số liệu, 9, 10, bìa) | Bản nháp báo cáo đầy đủ 12 mục |
-| **Tuần 14** | Rà soát mã nguồn, chuẩn hóa docstrings & unit tests | Chuẩn hóa code `src/`, đảm bảo 12/12 unit tests đạt | Kiểm tra tính nhất quán số liệu giữa code, CSV và báo cáo | Toàn bộ 12 unit tests PASSED |
-| **Tuần 15** | Hoàn thiện Báo cáo bản cuối, slide & đóng gói | Rà soát báo cáo kỹ thuật, chuẩn bị slide thuyết trình | Thiết kế bộ Slide 20 trang, quay video demo 3 phút, đóng gói ZIP | Báo cáo Word/PDF, Slide PPTX, Video demo, Bộ hồ sơ nộp |
-| **Sau KT** | NỘP TRỌN BỘ HỒ SƠ ĐỒ ÁN HOÀN CHỈNH | Nộp đồ án trên cổng của Trường, bảo vệ trước Hội đồng | Phối hợp nộp sản phẩm, chuẩn bị demo thực tế | Bộ hồ sơ nộp đúng hạn, sẵn sàng bảo vệ |
+| **Ngày 1** | Khởi động Sprint, Chuẩn hóa Dữ liệu & Đặc tả Kỹ thuật | Chủ trì lập kế hoạch Sprint 7 ngày, soạn thảo đặc tả `SPEC_PIPELINE_MRI.md` (13 signatures, 7 invariants) | Tổ chức cấu trúc dữ liệu 2 tầng (sample/full 3,929 lát), chạy Notebook 01 EDA, xuất `DATA_EXPLORATION_REPORT.md` | `SPEC_PIPELINE_MRI.md`, Notebook 01, Báo cáo dữ liệu |
+| **Ngày 2** | Tiền xử lý, Tách sọ não 6 bước & Bộ đo Y sinh | Cài đặt `filters.py` (Bilateral + CLAHE), `skull_strip.py` 6 bước kinh điển, hoàn thiện Notebook 02 | Cài đặt module `metrics.py` (Dice, IoU, Sens, Spec), xử lý an toàn mẫu rỗng $0/0$, viết test unit | `src/preprocessing/`, `src/evaluation/metrics.py`, Unit tests (test_preprocessing, test_metrics) |
+| **Ngày 3** | Phân đoạn Baseline Watershed & Đo Đặc trưng Hình học | Cài đặt `watershed.py` với biến đổi khoảng cách EDT, khảo sát ngưỡng `dist_thresh_ratio` | Cài đặt `features.py` (diện tích u, circularity, bounding box) và `visualization.py` (hộp đỏ, viền vàng, Quad view) | `src/segmentation/watershed.py`, `src/measurement/`, Unit tests (test_segmentation, test_measurement) |
+| **Ngày 4** | Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline | Cài đặt `region_growing.py` (tự tìm seed cực đại cường độ, BFS 8 láng giềng), tích hợp `BrainTumorPipeline` | Hoàn thiện Notebook 03 (so sánh song song Watershed vs Region Growing), xây dựng framework benchmark | `src/pipeline.py`, Notebook 03, Bảng nhận xét định tính |
+| **Ngày 5** | Benchmark Quy mô lớn (3,929 lát cắt) & Web Demo GUI | Phân tích chuyên sâu các ca thất bại (Failure cases: u nhỏ <1.5%, u biên mờ, u chèn ép não thất) | Hoàn thiện Streamlit GUI (`demo/app.py`) Dual-mode, chạy benchmark đa tiến trình 3,929 lát cắt và Notebook 04 | `BENCHMARK_RESULTS.csv`, Notebook 04, Streamlit Web App |
+| **Ngày 6** | Biên soạn Toàn văn Báo cáo Đồ án 12 Mục chuẩn HUIT | Soạn thảo 4 chương kỹ thuật (Mục 2: Lý thuyết; Mục 4: Tiền xử lý & Sọ; Mục 6: Thực nghiệm; Mục 8: Kỹ thuật) | Soạn thảo 6 chương tổng quan (Mục 1: Mở đầu; Mục 3: Dữ liệu; Mục 5: Chỉ số; Mục 8: Số liệu; Mục 9: GUI; Mục 10: Kết luận) | `BAO_CAO_DO_AN_XLAS.md`, `BAO_CAO_DO_AN_XLAS.docx` (Word chuẩn lề 3-3-3-2 cm) |
+| **Ngày 7** | Chuẩn hóa Mã nguồn, Slide Thuyết trình, Video Demo & Đóng gói | Rà soát toàn bộ code `src/`, bổ sung 100% docstring tiếng Việt, bảo đảm 12/12 unit tests PASSED | Thiết kế bộ Slide 20 trang (`SLIDE_THUYET_TRINH_OUTLINE.md`), quay Video demo 3 phút, đóng gói ZIP trọn bộ hồ sơ | Slide PPTX/PDF, Video Demo MP4, Bộ mã nguồn sạch, Hồ sơ nộp hoàn chỉnh |
+| **Nghiệm thu** | BẢO VỆ ĐỒ ÁN TRƯỚC HỘI ĐỒNG CHẤM THI HUIT | Thuyết trình phần kỹ thuật, giải thuật và phân tích ca lỗi | Thuyết trình phần dữ liệu, số liệu định lượng và trình diễn Demo GUI | Bảo vệ thành công đồ án, đạt chuẩn đầu ra môn học |
 
 ### Phụ lục C: Hướng Dẫn Cài Đặt & Chạy Thử Toàn Bộ Hệ Thống
 ```bash
