@@ -173,7 +173,7 @@ pytest -v
 
 ---
 
-## 📋 6. Kế hoạch 15 Tuần & Khung Đánh Giá Đồ Án Chuẩn HUIT
+## 📋 6. Kế Hoạch Triển Khai Cấp Tốc 7 Ngày & Khung Đánh Giá Đồ Án Chuẩn HUIT
 
 ### 6.1. Khung Tiêu Chí Đánh Giá (Rubric 5 Tiêu Chí - Thang Điểm 10)
 > Theo *Kế hoạch thực hiện Đồ án Xử lý ảnh số năm học 2026–2027* của Khoa CNTT — HUIT, điểm đồ án chiếm **100% điểm thi kết thúc học phần** (tương đương **70% tổng điểm học phần**):
@@ -187,26 +187,18 @@ pytest -v
 | 5 | Phân công và phối hợp làm việc nhóm | PLO6 / CLO4 | 10% | 1.0 điểm |
 | **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | **ĐẠT CHUẨN ĐẦU RA** | **100%** | **10.0 điểm** |
 
-### 6.2. Lộ Trình 15 Tuần Triển Khai Chi Tiết
-* **Tuần 1:** Đăng ký đề tài, phân công vai trò 50%-50%, lập kế hoạch 15 tuần.
-* **Tuần 2–3:** Nghiên cứu lý thuyết DIP (Bilateral, Morphology, Watershed, Region Growing) và các chỉ số y tế.
-* **Tuần 4:** Thu thập, kiểm tra và chuẩn hóa 3,929 lát cắt dữ liệu TCGA-LGG (2 tầng dữ liệu: sample/full).
-* **Tuần 5:** Hiện thực hóa module Tiền xử lý & Quy trình 6 bước Tách sọ não (Skull Stripping).
-* **Tuần 6:** Hiện thực hóa Phương án A (Marker-controlled Watershed với biến đổi khoảng cách EDT) và Unit tests.
-* **Tuần 7:** Tích hợp pipeline xử lý hoàn chỉnh từ ảnh thô đến u não (`BrainTumorPipeline`).
-* **Tuần 8:** **Báo cáo tiến độ nội bộ với Giảng viên hướng dẫn.**
-* **Tuần 9:** Hiện thực hóa Phương án B (Seeded Region Growing đối chứng) và module benchmark tự động.
-* **Tuần 10:** Rút trích đặc trưng hình học khối u (Diện tích, Tỷ lệ u/não, Circularity) và Bounding Box.
-* **Tuần 11:** Tích hợp ứng dụng Web Demo GUI tương tác Streamlit (`demo/app.py`).
-* **Tuần 12:** Đánh giá định lượng quy mô lớn trên toàn bộ 3,929 lát cắt TCGA-LGG và phân tích Failure cases.
-* **Tuần 13:** Biên soạn bản nháp Báo cáo đồ án đầy đủ 12 mục chuẩn HUIT.
-* **Tuần 14:** Rà soát mã nguồn, tối ưu hóa hiệu năng, bảo đảm 100% Unit tests đạt.
-* **Tuần 15:** Hoàn thiện Báo cáo bản cuối (Word/PDF), thiết kế bộ Slide 20 trang, quay Video demo 3 phút và đóng gói hồ sơ.
-* **Sau kết thúc:** Nộp trọn bộ hồ sơ đồ án lên cổng Trường và bảo vệ trước Hội đồng.
+### 6.2. Lộ Trình Sprint Cấp Tốc 7 Ngày Triển Khai Chi Tiết
+* **Ngày 1 (Khởi động, Dữ liệu & Đặc tả toán học):** Phân công vai trò 50%-50%, chuẩn hóa 3,929 lát cắt dữ liệu TCGA-LGG (2 tầng: sample/full), chạy Notebook 01 EDA và soạn thảo đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+* **Ngày 2 (Tiền xử lý, Tách sọ não & Bộ đo y sinh):** Hiện thực hóa quy trình 6 bước Tách sọ não (*Skull Stripping*) loại bỏ xương sọ, lọc Bilateral + CLAHE, hoàn thiện Notebook 02 và cài đặt module `src/evaluation/metrics.py` (Dice, IoU, Sensitivity, Specificity).
+* **Ngày 3 (Phân đoạn Baseline Watershed & Đo đặc trưng hình học):** Hiện thực hóa Marker-controlled Watershed với biến đổi khoảng cách EDT, cài đặt module `src/measurement/features.py` (Diện tích, Tỷ lệ u/não, Circularity) và trực quan hóa Bounding Box cảnh báo đỏ.
+* **Ngày 4 (Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline):** Hiện thực hóa Seeded Region Growing (tự tìm seed cực đại cường độ, lan truyền 8 láng giềng BFS), hoàn thiện Notebook 03 và tích hợp lớp điều phối `BrainTumorPipeline` trong `src/pipeline.py`.
+* **Ngày 5 (Benchmark 3,929 lát cắt & Ứng dụng Web Demo):** Chạy thực nghiệm định lượng đa tiến trình trên toàn bộ 3,929 lát cắt, phân tích chuyên sâu các ca thất bại (*Failure Cases*), hoàn thiện Notebook 04 và hoàn thành giao diện Web Streamlit GUI (`demo/app.py`).
+* **Ngày 6 (Biên soạn Báo cáo Đồ án 12 Mục):** Soạn thảo 4 chương kỹ thuật và 6 chương tổng quan, ghép nối hoàn chỉnh Báo cáo toàn văn `docs/BAO_CAO_DO_AN_XLAS.md` và xuất file Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức HUIT.
+* **Ngày 7 (Slide thuyết trình, Video Demo, Test 12/12 & Đóng gói):** Rà soát mã nguồn `src/` (12/12 unit tests PASSED), thiết kế bộ Slide 20 trang (`docs/SLIDE_THUYET_TRINH_OUTLINE.md`), quay Video demo 3 phút và đóng gói hồ sơ nộp đồ án.
 
 ### 6.3. Chi Tiết Nhiệm Vụ Từng Sinh Viên
-* [Nhiệm vụ 15 tuần chi tiết của Hà Mạnh Trường (Nhóm trưởng)](docs/NHIEM_VU_HA_MANH_TRUONG.md)
-* [Nhiệm vụ 15 tuần chi tiết của Huỳnh Tâm Trí (Thành viên)](docs/NHIEM_VU_HUYNH_TAM_TRI.md)
+* [Kế hoạch nhiệm vụ cấp tốc 7 ngày của Hà Mạnh Trường (Nhóm trưởng)](docs/NHIEM_VU_HA_MANH_TRUONG.md)
+* [Kế hoạch nhiệm vụ cấp tốc 7 ngày của Huỳnh Tâm Trí (Thành viên)](docs/NHIEM_VU_HUYNH_TAM_TRI.md)
 * [Báo cáo toàn văn đồ án 12 mục (Markdown)](docs/BAO_CAO_DO_AN_XLAS.md)
 * [Báo cáo đồ án định dạng Microsoft Word chuẩn HUIT](docs/BAO_CAO_DO_AN_XLAS.docx)
 

@@ -318,14 +318,14 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
     
     add_body_p(
         "Nhóm sinh viên thực hiện đề tài gồm 02 thành viên, phân chia nhiệm vụ độc lập, minh bạch và bổ trợ "
-        "lẫn nhau nhằm hoàn thành trọn vẹn toàn bộ các mục tiêu trong lộ trình 15 tuần làm việc theo chuẩn Bộ môn Khoa học Dữ liệu - Khoa CNTT - HUIT:"
+        "lẫn nhau nhằm hoàn thành trọn vẹn toàn bộ các mục tiêu trong lộ trình Sprint cấp tốc 7 ngày làm việc theo chuẩn Bộ môn Khoa học Dữ liệu - Khoa CNTT - HUIT:"
     )
 
     tbl_team = doc.add_table(rows=3, cols=6)
     tbl_team.alignment = WD_TABLE_ALIGNMENT.CENTER
     set_table_borders(tbl_team)
 
-    headers = ["STT", "Họ và Tên", "MSSV", "Lớp", "Vai Trò & Phân Công Nhiệm Vụ 15 Tuần", "Đóng Góp"]
+    headers = ["STT", "Họ và Tên", "MSSV", "Lớp", "Vai Trò & Phân Công Nhiệm Vụ (Sprint 7 Ngày)", "Đóng Góp"]
     for i, title in enumerate(headers):
         cell = tbl_team.cell(0, i)
         set_cell_background(cell, "EAEAEA")
@@ -339,7 +339,7 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
 
     data_team = [
         ("1", "Hà Mạnh Trường", "2045240326", "15DHKHDL03", 
-         "Nhóm trưởng: Điều phối 15 tuần, cấu trúc mã nguồn src/preprocessing, pipeline tách sọ não (Skull Stripping), "
+         "Nhóm trưởng: Điều phối Sprint 7 ngày, cấu trúc mã nguồn src/preprocessing, pipeline tách sọ não (Skull Stripping), "
          "cài đặt giải thuật phân đoạn u Baseline (Watershed) & Đối chứng (Region Growing), tổng hợp báo cáo kỹ thuật.", 
          "50%"),
         ("2", "Huỳnh Tâm Trí", "2045240315", "15DHKHDL03", 
@@ -368,7 +368,7 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
     # =========================================================================
     add_chapter_title("2. MỤC LỤC BÁO CÁO")
     toc_items = [
-        ("1. TRANG BÌA", "Tên đề tài, Giảng viên hướng dẫn, Danh sách sinh viên, Phân công 15 tuần & Tỷ lệ đóng góp"),
+        ("1. TRANG BÌA", "Tên đề tài, Giảng viên hướng dẫn, Danh sách sinh viên, Phân công Sprint 7 ngày & Tỷ lệ đóng góp"),
         ("2. MỤC LỤC", "Cấu trúc chuẩn hóa 12 mục theo quy chuẩn Khoa CNTT - HUIT"),
         ("3. GIỚI THIỆU ĐỀ TÀI", "3.1. Bối cảnh thực tế & Tính cấp thiết — 3.2. Mục tiêu — 3.3. Phạm vi & Giới hạn"),
         ("4. CƠ SỞ LÝ THUYẾT XỬ LÝ ẢNH SỐ", "4.1. Lọc Bilateral — 4.2. Hình thái học — 4.3. Watershed — 4.4. Region Growing — 4.5. Chỉ số y khoa"),
@@ -379,7 +379,7 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
         ("9. CHƯƠNG TRÌNH MINH HỌA (DEMO GUI)", "9.1. Kiến trúc Streamlit Web GUI — 9.2. Hướng dẫn khởi chạy và thao tác"),
         ("10. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN", "10.1. Kết quả đạt được — 10.2. Hạn chế và hướng mở rộng"),
         ("11. TÀI LIỆU THAM KHẢO", "Giáo trình Gonzalez & Woods, Buda et al., Giáo trình HUIT, OpenCV"),
-        ("12. PHỤ LỤC", "Phụ lục A: Rubric 5 tiêu chí HUIT — Phụ lục B: Kế hoạch 15 tuần — Phụ lục C: Hướng dẫn cài đặt")
+        ("12. PHỤ LỤC", "Phụ lục A: Rubric 5 tiêu chí HUIT — Phụ lục B: Kế hoạch Sprint 7 ngày — Phụ lục C: Hướng dẫn cài đặt")
     ]
     for major, minor in toc_items:
         add_body_p(minor, bold_prefix=f"{major}: ", bullet=True)
@@ -969,7 +969,7 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
     # =========================================================================
     # MỤC 12: PHỤ LỤC
     # =========================================================================
-    add_chapter_title("12. PHỤ LỤC: KHUNG RUBRIC ĐÁNH GIÁ, KẾ HOẠCH 15 TUẦN & HƯỚNG DẪN CÀI ĐẶT")
+    add_chapter_title("12. PHỤ LỤC: KHUNG RUBRIC ĐÁNH GIÁ, KẾ HOẠCH SPRINT 7 NGÀY & HƯỚNG DẪN CÀI ĐẶT")
 
     # 12.1. Phụ lục A: Rubric 5 tiêu chí HUIT
     add_section_title("12.1. Phụ lục A: Khung Rubric Đánh Giá Đồ Án Môn Học Của Khoa CNTT — HUIT (Thang điểm 10)")
@@ -1017,19 +1017,19 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
     p_space_rub = doc.add_paragraph()
     p_space_rub.paragraph_format.space_before = Pt(8)
 
-    # 12.2. Phụ lục B: Bảng 15 tuần
-    add_section_title("12.2. Phụ lục B: Bảng Tổng Hợp Phân Công Nhiệm Vụ 15 Tuần Chi Tiết")
+    # 12.2. Phụ lục B: Bảng 7 ngày
+    add_section_title("12.2. Phụ lục B: Bảng Tổng Hợp Phân Công Nhiệm Vụ Sprint Cấp Tốc 7 Ngày Chi Tiết")
     add_body_p(
-        "Kế hoạch triển khai xuyên suốt 15 tuần học kỳ theo tiến độ của Nhà trường, kèm mốc đánh giá tiến độ nội bộ vào Tuần 8:"
+        "Kế hoạch triển khai cấp tốc trong 7 ngày theo chuẩn mực của Bộ môn Khoa học Dữ liệu - Khoa CNTT - HUIT, đảm bảo khối lượng thực nghiệm và tính toàn diện của đồ án:"
     )
 
-    tbl_15w = doc.add_table(rows=17, cols=5)
-    tbl_15w.alignment = WD_TABLE_ALIGNMENT.CENTER
-    set_table_borders(tbl_15w)
+    tbl_7d = doc.add_table(rows=9, cols=5)
+    tbl_7d.alignment = WD_TABLE_ALIGNMENT.CENTER
+    set_table_borders(tbl_7d)
 
-    h_15w = ["Tuần", "Nội dung công việc chuẩn HUIT", "Hà Mạnh Trường (Nhóm trưởng)", "Huỳnh Tâm Trí (Thành viên)", "Sản phẩm nghiệm thu"]
-    for i, title in enumerate(h_15w):
-        cell = tbl_15w.cell(0, i)
+    h_7d = ["Ngày", "Nội dung công việc trọng tâm", "Hà Mạnh Trường (Nhóm trưởng)", "Huỳnh Tâm Trí (Thành viên)", "Sản phẩm nghiệm thu"]
+    for i, title in enumerate(h_7d):
+        cell = tbl_7d.cell(0, i)
         set_cell_background(cell, "EAEAEA")
         set_cell_margins(cell, top=100, bottom=100, left=60, right=60)
         p = cell.paragraphs[0]
@@ -1039,37 +1039,54 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
         run.font.name = 'Times New Roman'
         run.font.size = Pt(10)
 
-    data_15w = [
-        ("Tuần 1", "Đăng ký đề tài, phân công vai trò, lập kế hoạch 15 tuần", "Chủ trì đăng ký đề tài, lập kế hoạch chi tiết", "Thống nhất vai trò, thiết lập môi trường Git", "Bản phân công và kế hoạch làm việc"),
-        ("Tuần 2–3", "Nghiên cứu cơ sở lý thuyết DIP và quy trình xử lý", "Lý thuyết lọc Bilateral, Skull Stripping, Watershed; soạn SPEC", "Lý thuyết các chỉ số đánh giá y tế: Dice, IoU, Sens, Spec", "SPEC_PIPELINE_MRI.md, Sơ đồ khối pipeline"),
-        ("Tuần 4", "Thu thập, chuẩn hóa và kiểm tra dữ liệu", "Rà soát chất lượng ảnh MRI và quy cách nhãn", "Tổ chức cấu trúc 2 tầng dữ liệu, viết Notebook 01, xuất báo cáo dữ liệu", "data/sample, data/full, DATA_EXPLORATION_REPORT.md"),
-        ("Tuần 5", "Cài đặt module Tiền xử lý & Tách sọ não", "Cài đặt filters.py, skull_strip.py, viết Notebook 02", "Phối hợp kiểm thử trên các ca có nhiễu sọc và tương phản thấp", "src/preprocessing/, Notebook 02, Bộ ảnh 6 bước tách sọ"),
-        ("Tuần 6", "Cài đặt phương pháp chính 1 (Baseline Watershed)", "Cài đặt watershed.py và Distance Transform", "Cài đặt module bộ đo y tế metrics.py và Unit tests", "src/segmentation/watershed.py, src/evaluation/metrics.py"),
-        ("Tuần 7", "Hoàn thiện pipeline cơ sở từ ảnh thô đến u não", "Xây dựng lớp điều phối BrainTumorPipeline", "Đo lường thử nghiệm trên kết quả baseline", "src/pipeline.py chạy ổn định"),
-        ("Tuần 8", "BÁO CÁO TIẾN ĐỘ NỘI BỘ VỚI GIẢNG VIÊN", "Soạn nội dung kỹ thuật, báo cáo trực tiếp với GV", "Tổng hợp số liệu và hình ảnh minh họa baseline", "Báo cáo tiến độ nội bộ hoàn thành"),
-        ("Tuần 9", "Cài đặt phương pháp đối chứng 2 (Region Growing)", "Cài đặt region_growing.py, khảo sát tham số tolerance", "Xây dựng module tự động hóa benchmark benchmark.py", "src/segmentation/region_growing.py, Notebook 03"),
-        ("Tuần 10", "Rút trích đặc trưng hình học & Khớp nối hệ thống", "Tối ưu hóa hậu xử lý hình thái học", "Cài đặt features.py (diện tích, độ tròn) và visualization.py", "src/measurement/, Bounding box màu đỏ"),
-        ("Tuần 11", "Tích hợp ứng dụng minh họa tương tác hoàn chỉnh", "Hỗ trợ tích hợp pipeline vào ứng dụng", "Xây dựng và hoàn thiện giao diện Streamlit GUI (app.py)", "Ứng dụng web Streamlit chạy mượt mà"),
-        ("Tuần 12", "Đánh giá định lượng quy mô lớn (3,929 lát cắt)", "Phân tích chuyên sâu các ca thất bại (Failure cases)", "Chạy thực nghiệm 3,929 lát, vẽ biểu đồ so sánh, viết Notebook 04", "BENCHMARK_RESULTS.csv, Notebook 04"),
-        ("Tuần 13", "Biên soạn bản nháp Báo cáo đồ án", "Soạn thảo 4 chương kỹ thuật (Mục 4, 6, 7, 8 kỹ thuật)", "Soạn thảo 6 chương tổng quan (Mục 3, 5, 8 số liệu, 9, 10, bìa)", "Bản nháp báo cáo đầy đủ 12 mục"),
-        ("Tuần 14", "Rà soát mã nguồn, chuẩn hóa docstrings & unit tests", "Chuẩn hóa code src/, đảm bảo 12/12 unit tests đạt", "Kiểm tra tính nhất quán số liệu giữa code, CSV và báo cáo", "Toàn bộ 12 unit tests PASSED"),
-        ("Tuần 15", "Hoàn thiện Báo cáo bản cuối, slide & đóng gói", "Rà soát báo cáo kỹ thuật, chuẩn bị slide thuyết trình", "Thiết kế bộ Slide 20 trang, quay video demo 3 phút, đóng gói ZIP", "Báo cáo Word/PDF, Slide PPTX, Video demo, Bộ hồ sơ nộp"),
-        ("Sau KT", "NỘP TRỌN BỘ HỒ SƠ ĐỒ ÁN HOÀN CHỈNH", "Nộp đồ án trên cổng của Trường, bảo vệ trước Hội đồng", "Phối hợp nộp sản phẩm, chuẩn bị demo thực tế", "Bộ hồ sơ nộp đúng hạn, sẵn sàng bảo vệ")
+    data_7d = [
+        ("Ngày 1", "Khởi động Sprint, Chuẩn hóa Dữ liệu & Đặc tả Kỹ thuật", 
+         "Chủ trì lập kế hoạch Sprint 7 ngày, soạn thảo đặc tả SPEC_PIPELINE_MRI.md (13 signatures, 7 invariants)", 
+         "Tổ chức cấu trúc dữ liệu 2 tầng (sample/full 3,929 lát), chạy Notebook 01 EDA, xuất DATA_EXPLORATION_REPORT.md", 
+         "SPEC_PIPELINE_MRI.md, Notebook 01, Báo cáo dữ liệu"),
+        ("Ngày 2", "Tiền xử lý, Tách sọ não 6 bước & Bộ đo Y sinh", 
+         "Cài đặt filters.py (Bilateral + CLAHE), skull_strip.py 6 bước kinh điển, hoàn thiện Notebook 02", 
+         "Cài đặt module metrics.py (Dice, IoU, Sens, Spec), xử lý an toàn mẫu rỗng 0/0, viết test unit", 
+         "src/preprocessing/, src/evaluation/metrics.py, Unit tests (test_preprocessing, test_metrics)"),
+        ("Ngày 3", "Phân đoạn Baseline Watershed & Đo Đặc trưng Hình học", 
+         "Cài đặt watershed.py với biến đổi khoảng cách EDT, khảo sát ngưỡng dist_thresh_ratio", 
+         "Cài đặt features.py (diện tích u, circularity, bounding box) và visualization.py (hộp đỏ, viền vàng, Quad view)", 
+         "src/segmentation/watershed.py, src/measurement/, Unit tests (test_segmentation, test_measurement)"),
+        ("Ngày 4", "Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline", 
+         "Cài đặt region_growing.py (tự tìm seed cực đại cường độ, BFS 8 láng giềng), tích hợp BrainTumorPipeline", 
+         "Hoàn thiện Notebook 03 (so sánh song song Watershed vs Region Growing), xây dựng framework benchmark", 
+         "src/pipeline.py, Notebook 03, Bảng nhận xét định tính"),
+        ("Ngày 5", "Benchmark Quy mô lớn (3,929 lát cắt) & Web Demo GUI", 
+         "Phân tích chuyên sâu các ca thất bại (Failure cases: u nhỏ <1.5%, u biên mờ, u chèn ép não thất)", 
+         "Hoàn thiện Streamlit GUI (demo/app.py) Dual-mode, chạy benchmark đa tiến trình 3,929 lát cắt và Notebook 04", 
+         "BENCHMARK_RESULTS.csv, Notebook 04, Streamlit Web App"),
+        ("Ngày 6", "Biên soạn Toàn văn Báo cáo Đồ án 12 Mục chuẩn HUIT", 
+         "Soạn thảo 4 chương kỹ thuật (Mục 2: Lý thuyết; Mục 4: Tiền xử lý & Sọ; Mục 6: Thực nghiệm; Mục 8: Kỹ thuật)", 
+         "Soạn thảo 6 chương tổng quan (Mục 1: Mở đầu; Mục 3: Dữ liệu; Mục 5: Chỉ số; Mục 8: Số liệu; Mục 9: GUI; Mục 10: Kết luận)", 
+         "BAO_CAO_DO_AN_XLAS.md, BAO_CAO_DO_AN_XLAS.docx (Word chuẩn lề 3-3-3-2 cm)"),
+        ("Ngày 7", "Chuẩn hóa Mã nguồn, Slide Thuyết trình, Video Demo & Đóng gói", 
+         "Rà soát toàn bộ code src/, bổ sung 100% docstring tiếng Việt, bảo đảm 12/12 unit tests PASSED", 
+         "Thiết kế bộ Slide 20 trang (SLIDE_THUYET_TRINH_OUTLINE.md), quay Video demo 3 phút, đóng gói ZIP trọn bộ hồ sơ", 
+         "Slide PPTX/PDF, Video Demo MP4, Bộ mã nguồn sạch, Hồ sơ nộp hoàn chỉnh"),
+        ("Nghiệm thu", "BẢO VỆ ĐỒ ÁN TRƯỚC HỘI ĐỒNG CHẤM THI HUIT", 
+         "Thuyết trình phần kỹ thuật, giải thuật và phân tích ca lỗi", 
+         "Thuyết trình phần dữ liệu, số liệu định lượng và trình diễn Demo GUI", 
+         "Bảo vệ thành công đồ án, đạt chuẩn đầu ra môn học")
     ]
-    for row_idx, row_data in enumerate(data_15w, start=1):
+    for row_idx, row_data in enumerate(data_7d, start=1):
         for col_idx, text in enumerate(row_data):
-            cell = tbl_15w.cell(row_idx, col_idx)
+            cell = tbl_7d.cell(row_idx, col_idx)
             set_cell_margins(cell, top=60, bottom=60, left=60, right=60)
             p = cell.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER if col_idx == 0 else WD_ALIGN_PARAGRAPH.LEFT
             run = p.add_run(text)
             run.font.name = 'Times New Roman'
             run.font.size = Pt(10)
-            if col_idx == 0 or row_idx in [7, 14, 15]:
+            if col_idx == 0 or row_idx == 8:
                 run.bold = True
 
-    p_space_15w = doc.add_paragraph()
-    p_space_15w.paragraph_format.space_before = Pt(8)
+    p_space_7d = doc.add_paragraph()
+    p_space_7d.paragraph_format.space_before = Pt(8)
 
     # 12.3. Phụ lục C: Hướng dẫn cài đặt
     add_section_title("12.3. Phụ lục C: Hướng Dẫn Cài Đặt & Chạy Thử Toàn Bộ Hệ Thống")
