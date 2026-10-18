@@ -1,13 +1,13 @@
-# Đồ án Xử lý ảnh số: Phân đoạn và phát hiện tổn thương trên ảnh y tế
+# Đồ án Xử lý ảnh số: Phân đoạn và phát hiện khối u não trên ảnh cộng hưởng từ MRI
 **Học phần:** Xử lý ảnh số — Bộ môn Khoa học Dữ liệu — Khoa CNTT — Trường ĐH Công Thương TP.HCM (HUIT)  
 **Năm học:** 2026–2027  
-**Repository:** [medical-image-lesion-segmentation](https://github.com/mtzwyu/medical-image-lesion-segmentation)
+**Repository:** [brain-tumor-mri-segmentation](https://github.com/mtzwyu/brain-tumor-mri-segmentation)
 
 ## Thông tin nhóm thực hiện
 | STT | Họ và Tên | Mã số sinh viên | Vai trò |
 | :---: | :--- | :---: | :--- |
-| 1 | **Hà Mạnh Trường** | **2045240326** | Nhóm trưởng, Thiết kế pipeline tiền xử lý DIP, Thuật toán phân đoạn lõi (Otsu/Watershed), Báo cáo khoa học |
-| 2 | **Huỳnh Tâm Trí** | **2045240315** | Thành viên, Dữ liệu & Ground truth, Rút trích đặc trưng hình học/kết cấu, Đánh giá định lượng (Dice/IoU), Demo GUI |
+| 1 | **Hà Mạnh Trường** | **2045240326** | Nhóm trưởng, Pipeline tiền xử lý & Tách sọ (Skull Stripping), Thuật toán phân đoạn u lõi (Watershed/Region Growing), Báo cáo khoa học |
+| 2 | **Huỳnh Tâm Trí** | **2045240315** | Thành viên, Dữ liệu MRI & Ground truth, Rút trích đặc trưng hình học khối u, Đánh giá định lượng (Dice/IoU), Demo GUI |
 
 ---
 
