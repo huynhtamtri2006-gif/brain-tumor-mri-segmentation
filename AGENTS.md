@@ -120,3 +120,23 @@ Uses the default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready
 ### Domain docs
 
 Single-context layout using root `GLOSSARY.md` and `docs/adr/`. See `docs/agents/domain.md`.
+
+---
+
+## 7. Quy chuẩn Định dạng Văn bản Báo cáo Đồ án (Word / DOCX Format)
+**Áp dụng bắt buộc cho toàn bộ báo cáo đồ án, thuyết minh chuyên đề khi xuất định dạng Microsoft Word (`.docx`):**
+* **Kỹ năng Word bắt buộc:** Bắt buộc sử dụng skill `docx` (`python-docx` / `docx-js`) để sinh và thao tác văn bản Word.
+* **Quy chuẩn Font chữ & Giãn dòng:**
+  * Font chữ: **Times New Roman** thống nhất toàn bộ văn bản.
+  * Cỡ chữ nội dung (Body text): **13pt**.
+  * Giãn cách dòng (Line spacing): **1.5 lines** (không dùng giãn dòng đơn hay 1.15).
+* **Quy chuẩn Căn lề trang in (Page Margins theo chuẩn NXB/Bộ Giáo dục):**
+  * Lề trên (Top): **3.0 cm**
+  * Lề dưới (Bottom): **3.0 cm**
+  * Lề trái (Left): **3.0 cm** (khoảng cách đóng gáy hồ sơ)
+  * Lề phải (Right): **2.0 cm**
+* **Quy tắc phân cấp Tiêu đề (Heading Hierarchy):**
+  * **Mục lớn / Chương:** Đánh số thứ tự 1, 2, ... hoặc CHƯƠNG 1, CHƯƠNG 2... — **IN HOA, IN ĐẬM, ĐỨNG THẲNG** (ví dụ: **1. GIỚI THIỆU ĐỀ TÀI**).
+  * **Tiểu mục cấp 1:** Thể hiện là 1.1; 1.2,... 2.1; 2.2.... — **Chữ thường, in đậm** (ví dụ: **1.1. Bối cảnh nghiên cứu**).
+  * **Tiểu mục cấp 2 (Tiểu tiết):** Thể hiện là 1.1.1, 1.2.1, 2.1.1.... — **Chữ thường, in nghiêng** (ví dụ: *1.1.1. Đặc điểm ảnh cộng hưởng từ MRI*).
+
