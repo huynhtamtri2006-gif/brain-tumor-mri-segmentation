@@ -73,9 +73,9 @@
      * Xuất tài liệu thống kê chuyên sâu `docs/DATA_EXPLORATION_REPORT.md`.
 * **Lệnh kiểm tra:** `python -c "import os; print('Sample images:', len(os.listdir('data/sample/images')))"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Cấu trúc thư mục dữ liệu 2 tầng được thiết lập chuẩn mực.
-  - [ ] Chạy hoàn thiện `notebooks/01_data_exploration.ipynb`.
-  - [ ] Hoàn tất tài liệu phân tích dữ liệu `docs/DATA_EXPLORATION_REPORT.md`.
+  - [x] Cấu trúc thư mục dữ liệu 2 tầng được thiết lập chuẩn mực.
+  - [x] Chạy hoàn thiện `notebooks/01_data_exploration.ipynb`.
+  - [x] Hoàn tất tài liệu phân tích dữ liệu `docs/DATA_EXPLORATION_REPORT.md`.
 
 ---
 
