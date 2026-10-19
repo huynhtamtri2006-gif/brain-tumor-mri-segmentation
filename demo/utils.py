@@ -7,16 +7,14 @@ import numpy as np
 
 
 def get_default_base_dir() -> str:
-    """Trả về thư mục dữ liệu cơ sở mặc định (ưu tiên data/full, fallback data/sample)."""
-    full_dir = "data/full"
-    if os.path.exists(os.path.join(full_dir, "images")) and len(os.listdir(os.path.join(full_dir, "images"))) > 50:
-        return full_dir
-    return "data/sample"
+    """Trả về thư mục dữ liệu cơ sở (data/full)."""
+    return "data/full"
 
 
 def get_default_data_dir() -> str:
-    """Trả về thư mục ảnh mặc định (ưu tiên data/full/images, fallback data/sample/images)."""
-    return os.path.join(get_default_base_dir(), "images")
+    """Trả về thư mục ảnh (data/full/images)."""
+    return "data/full/images"
+
 
 
 def list_sample_cases(data_dir: Optional[str] = None) -> List[str]:

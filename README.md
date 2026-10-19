@@ -88,23 +88,20 @@ brain-tumor-mri-segmentation/
 │   ├── DATA_EXPLORATION_REPORT.md  # Báo cáo thống kê dữ liệu 110 bệnh nhân TCGA-LGG
 │   └── KHUNG_NOI_DUNG_TONG_QUAT... # Khung nội dung chuẩn hóa của Bộ môn
 ├── data/                           # Dữ liệu ảnh MRI sọ não
-│   ├── README.md                   # Mô tả cấu trúc hai tầng và quy cách mặt nạ u
-│   ├── sample/                     # [Tầng 1 - In Git] 20 ca mẫu kiểm thử nhanh
-│   │   ├── images/                 # Ảnh MRI sọ não gốc (.png, 256x256)
-│   │   ├── masks/                  # Mặt nạ Ground Truth u não (.png, 256x256)
-│   │   └── metadata.csv            # Metadata diện tích u của 20 mẫu
-│   └── full/                       # [Tầng 2 - Gitignored] Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
+│   ├── README.md                   # Mô tả cấu trúc dữ liệu và quy cách mặt nạ u
+│   └── full/                       # Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
 │       ├── images/                 # 3,929 ảnh MRI (.png, 256x256)
 │       ├── masks/                  # 3,929 mặt nạ Ground Truth (.png, 256x256)
-│       └── metadata.csv            # Metadata chi tiết 110 bệnh nhân (3,929 lát)
+│       └── metadata.csv            # Metadata chi tiết 110 bệnh nhân (được track trên Git)
 ├── src/                            # Mã nguồn module xử lý ảnh số lõi
 │   ├── preprocessing/              # Lọc nhiễu Rician, CLAHE, Tách sọ (Skull Stripping)
 │   ├── segmentation/               # Watershed & Marker Distance Transform, Region Growing
 │   ├── measurement/                # Đo diện tích u, độ tròn Circularity, Bounding Box
 │   └── evaluation/                 # Tính Dice, IoU, Sensitivity, Specificity
 ├── demo/                           # Ứng dụng giao diện minh họa (Streamlit GUI tương tác)
-│   ├── app.py                      # Giao diện chính hỗ trợ chuyển đổi data/full và data/sample
-│   └── utils.py                    # Tiện ích hiển thị và xuất báo cáo PDF/Excel
+│   ├── app.py                      # Giao diện chính phân đoạn tương tác trên kho 3,929 lát cắt
+│   └── utils.py                    # Tiện ích nạp ảnh và hiển thị
+
 ├── notebooks/                      # 4 Jupyter Notebooks thực nghiệm trực quan
 │   ├── 01_data_exploration.ipynb   # Khám phá và phân tích phân bố dữ liệu
 │   ├── 02_preprocessing_and_skull_stripping.ipynb # Khử nhiễu & tách sọ não
@@ -188,7 +185,8 @@ pytest -v
 | **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | **ĐẠT CHUẨN ĐẦU RA** | **100%** | **10.0 điểm** |
 
 ### 6.2. Lộ Trình Sprint Cấp Tốc 7 Ngày Triển Khai Chi Tiết
-* **Ngày 1 (Khởi động, Dữ liệu & Đặc tả toán học):** Phân công vai trò 50%-50%, chuẩn hóa 3,929 lát cắt dữ liệu TCGA-LGG (2 tầng: sample/full), chạy Notebook 01 EDA và soạn thảo đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+* **Ngày 1 (Khởi động, Dữ liệu & Đặc tả toán học):** Phân công vai trò 50%-50%, chuẩn hóa toàn bộ 3,929 lát cắt dữ liệu TCGA-LGG, chạy Notebook 01 EDA và soạn thảo đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+
 * **Ngày 2 (Tiền xử lý, Tách sọ não & Bộ đo y sinh):** Hiện thực hóa quy trình 6 bước Tách sọ não (*Skull Stripping*) loại bỏ xương sọ, lọc Bilateral + CLAHE, hoàn thiện Notebook 02 và cài đặt module `src/evaluation/metrics.py` (Dice, IoU, Sensitivity, Specificity).
 * **Ngày 3 (Phân đoạn Baseline Watershed & Đo đặc trưng hình học):** Hiện thực hóa Marker-controlled Watershed với biến đổi khoảng cách EDT, cài đặt module `src/measurement/features.py` (Diện tích, Tỷ lệ u/não, Circularity) và trực quan hóa Bounding Box cảnh báo đỏ.
 * **Ngày 4 (Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline):** Hiện thực hóa Seeded Region Growing (tự tìm seed cực đại cường độ, lan truyền 8 láng giềng BFS), hoàn thiện Notebook 03 và tích hợp lớp điều phối `BrainTumorPipeline` trong `src/pipeline.py`.

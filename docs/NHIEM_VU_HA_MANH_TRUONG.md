@@ -187,7 +187,7 @@
      * Dọn dẹp các biến tạm, hàm thừa không sử dụng.
   2. Chạy toàn bộ bộ kiểm thử tự động: `pytest -v` (đảm bảo cả 12/12 unit tests PASSED).
   3. Soạn phần Slide thuyết trình kỹ thuật (8–10 slides): Bối cảnh đề tài, quy trình 6 bước tách sọ não, nguyên lý 2 thuật toán phân đoạn, hình ảnh minh chứng định tính và phân tích ca lỗi.
-  4. Đóng gói trọn bộ sản phẩm theo đúng quy định nộp đồ án: Mã nguồn `src/`, Notebooks, Dữ liệu mẫu `data/sample/`, Báo cáo (Word + PDF), Slide (PPTX + PDF), Video demo.
+  4. Đóng gói trọn bộ sản phẩm theo đúng quy định nộp đồ án: Mã nguồn `src/`, Notebooks, Dữ liệu thực nghiệm `data/full/`, Báo cáo (Word + PDF), Slide (PPTX + PDF), Video demo.
 * **Lệnh kiểm tra:** `pytest -v`
 * **Tiêu chí nghiệm thu & Checklist:**
   - [ ] Toàn bộ 12/12 unit tests PASSED (100% green).

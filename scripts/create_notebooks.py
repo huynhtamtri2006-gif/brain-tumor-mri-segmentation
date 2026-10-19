@@ -76,9 +76,9 @@ plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.
 print("Môi trường sẵn sàng. Đang nạp dữ liệu...")"""),
 
     md_cell("""## 📊 2. Khảo sát Metadata Tập Dữ Liệu
-Đọc bảng metadata (`data/full/metadata.csv` hoặc fallback `data/sample/metadata.csv`) chứa thông tin chi tiết về diện tích và tỷ lệ u của các ca bệnh:"""),
+Đọc bảng metadata (`data/full/metadata.csv` hoặc fallback `data/full/metadata.csv`) chứa thông tin chi tiết về diện tích và tỷ lệ u của các ca bệnh:"""),
 
-    code_cell("""base_dir = "../data/full" if os.path.exists("../data/full/metadata.csv") else "../data/sample"
+    code_cell("""base_dir = "../data/full" if os.path.exists("../data/full/metadata.csv") else "../data/full"
 meta_path = os.path.join(base_dir, "metadata.csv")
 df = pd.read_csv(meta_path)
 print(f"Nguồn dữ liệu đang nạp: {base_dir}")
@@ -188,7 +188,7 @@ print("Module tiền xử lý và tách sọ đã được nạp thành công.")
     md_cell("""## 🔬 2. Thử Nghiệm Chi Tiết Từng Bước Tách Sọ Trên Ca Mẫu
 Phân tích trực quan 6 giai đoạn xử lý từ ảnh MRI gốc đến ảnh sạch sọ:"""),
 
-    code_cell("""img_path = "../data/sample/images/mri_brain_tumor_01.png"
+    code_cell("""img_path = "../data/full/images/mri_brain_tumor_01.png"
 orig_img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 
 # 1. Khử nhiễu Bilateral
@@ -259,7 +259,7 @@ Chứng minh thuật toán hoạt động ổn định trên nhiều kích thư�
 fig, axes = plt.subplots(4, 3, figsize=(12, 13))
 
 for idx, case_id in enumerate(test_cases):
-    im_path = f"../data/sample/images/{case_id}.png"
+    im_path = f"../data/full/images/{case_id}.png"
     im = cv2.imread(im_path, cv2.IMREAD_GRAYSCALE)
     b_mask = extract_brain_mask(im)
     res_stripped, _ = strip_skull(im, b_mask)
@@ -337,8 +337,8 @@ Thực nghiệm so sánh Watershed vs. Region Growing trên Ca u nhỏ, Ca u tru
 fig, axes = plt.subplots(3, 5, figsize=(18, 11))
 
 for row_idx, (case_id, desc) in enumerate(test_cases):
-    img_p = f"../data/sample/images/{case_id}.png"
-    mask_p = f"../data/sample/masks/{case_id}_mask.png"
+    img_p = f"../data/full/images/{case_id}.png"
+    mask_p = f"../data/full/masks/{case_id}_mask.png"
     
     orig = cv2.imread(img_p, cv2.IMREAD_GRAYSCALE)
     gt = cv2.imread(mask_p, cv2.IMREAD_GRAYSCALE)
@@ -445,7 +445,7 @@ from src.preprocessing.skull_strip import strip_skull
 from src.segmentation.watershed import segment_watershed
 from src.segmentation.region_growing import segment_region_growing
 from src.evaluation.benchmark import run_benchmark
-base_dir = "../data/full" if os.path.exists("../data/full/images") and len(os.listdir("../data/full/images")) > 50 else "../data/sample"
+base_dir = "../data/full" if os.path.exists("../data/full/images") and len(os.listdir("../data/full/images")) > 50 else "../data/full"
 img_dir = os.path.join(base_dir, "images")
 mask_dir = os.path.join(base_dir, "masks")
 print(f"Sẵn sàng thực thi benchmark trên tập dữ liệu: {base_dir} ({len(os.listdir(img_dir))} lát cắt)...")"""),
