@@ -33,18 +33,21 @@ for _stream in (sys.stdout, sys.stderr):
 from src.preprocessing.skull_strip import strip_skull  # noqa: E402
 
 OUTPUT_PATH = ROOT / "reports" / "figures" / "skull_stripping_steps.png"
-PREFERRED_IMAGE = ROOT / "data" / "sample" / "images" / "mri_brain_tumor_01.png"
+PREFERRED_FULL_IMAGE = ROOT / "data" / "full" / "images" / "TCGA_CS_4941_19960909_13.png"
+FALLBACK_SAMPLE_IMAGE = ROOT / "data" / "sample" / "images" / "mri_brain_tumor_01.png"
 
 
 def resolve_sample_image() -> Path:
-    """Chọn ảnh mẫu: ưu tiên ca 01, sau đó ảnh PNG đầu tiên có sẵn."""
-    if PREFERRED_IMAGE.is_file():
-        return PREFERRED_IMAGE
-    for directory in (ROOT / "data" / "sample" / "images", ROOT / "data" / "full" / "images"):
+    """Chọn ảnh mẫu: ưu tiên tập full TCGA-LGG thực tế, fallback sang sample."""
+    if PREFERRED_FULL_IMAGE.is_file():
+        return PREFERRED_FULL_IMAGE
+    if FALLBACK_SAMPLE_IMAGE.is_file():
+        return FALLBACK_SAMPLE_IMAGE
+    for directory in (ROOT / "data" / "full" / "images", ROOT / "data" / "sample" / "images"):
         if directory.is_dir():
             for candidate in sorted(directory.glob("*.png")):
                 return candidate
-    raise FileNotFoundError("Không tìm thấy ảnh MRI mẫu trong data/sample/images hoặc data/full/images")
+    raise FileNotFoundError("Không tìm thấy ảnh MRI mẫu trong data/full/images hoặc data/sample/images")
 
 
 def main() -> int:

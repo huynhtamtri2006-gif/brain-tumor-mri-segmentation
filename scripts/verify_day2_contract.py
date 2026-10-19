@@ -48,7 +48,11 @@ if str(ROOT) not in sys.path:
 from src.preprocessing.filters import apply_bilateral_filter, apply_clahe  # noqa: E402
 from src.preprocessing.skull_strip import extract_brain_mask, strip_skull  # noqa: E402
 
-SAMPLE_IMAGE = ROOT / "data" / "sample" / "images" / "mri_brain_tumor_01.png"
+SAMPLE_IMAGE = (
+    ROOT / "data" / "full" / "images" / "TCGA_CS_4941_19960909_13.png"
+    if (ROOT / "data" / "full" / "images" / "TCGA_CS_4941_19960909_13.png").is_file()
+    else ROOT / "data" / "sample" / "images" / "mri_brain_tumor_01.png"
+)
 FIGURE_PATH = ROOT / "reports" / "figures" / "skull_stripping_steps.png"
 NOTEBOOKS = (
     ROOT / "notebooks" / "02_preprocessing_and_skull_stripping.ipynb",
@@ -493,10 +497,11 @@ def main() -> int:
     image = _load_image()
     if image is None:
         checks.append(Check("INV", "Nạp ảnh mẫu", False,
-                            "không tìm thấy data/sample/images/mri_brain_tumor_01.png"))
+                            f"không tìm thấy {SAMPLE_IMAGE}"))
     else:
+        rel_path = SAMPLE_IMAGE.relative_to(ROOT) if SAMPLE_IMAGE.is_relative_to(ROOT) else SAMPLE_IMAGE.name
         checks.append(Check("INV", "Nạp ảnh mẫu", image.shape == TARGET_SHAPE,
-                            f"mri_brain_tumor_01.png • shape={image.shape} • dtype={image.dtype}"))
+                            f"{rel_path} • shape={image.shape} • dtype={image.dtype}"))
         check_backward_compatibility(checks, image)
         check_intermediates(checks, image)
 
