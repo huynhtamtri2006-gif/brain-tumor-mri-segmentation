@@ -1,202 +1,284 @@
-# Phân Đoạn & Phát Hiện Khối U Não Trên Ảnh Cộng Hưởng Từ (MRI)
-### Brain Tumor Segmentation and Detection in Magnetic Resonance Imaging (MRI)
+# Brain Tumor MRI Segmentation & Quantitative Analysis Pipeline
 
-> **Đồ án kết thúc học phần:** Xử lý ảnh số (Digital Image Processing)  
-> **Đơn vị:** Bộ môn Khoa học Dữ liệu — Khoa Công nghệ Thông tin — Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)  
-> **Năm học:** 2026–2027  
-> **Repository:** [brain-tumor-mri-segmentation](https://github.com/mtzwyu/brain-tumor-mri-segmentation)
+### Hệ thống Phân đoạn và Phân tích Định lượng Khối u Não trên Ảnh Cộng hưởng từ (MRI) bằng Kỹ thuật Xử lý Ảnh số Cổ điển (DIP)
 
----
-
-## 👥 Nhóm sinh viên thực hiện
-
-| STT | Họ và Tên | Mã số sinh viên (MSSV) | Vai trò / Phân công chính |
-| :---: | :--- | :---: | :--- |
-| 1 | **Hà Mạnh Trường** | **2045240326** | **Trưởng nhóm**, Pipeline tiền xử lý & Tách sọ não (Skull Stripping), Thuật toán phân đoạn u não lõi (Watershed/Region Growing), Báo cáo khoa học |
-| 2 | **Huỳnh Tâm Trí** | **2045240315** | **Thành viên**, Thu thập & chuẩn hóa dữ liệu MRI Ground Truth, Rút trích đặc trưng hình học khối u, Đánh giá định lượng (Dice/IoU), Demo GUI |
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests: Passing](https://img.shields.io/badge/Tests-16%20Passed-brightgreen.svg)](tests/)
+[![Framework: OpenCV](https://img.shields.io/badge/Computer%20Vision-OpenCV-orange.svg)](https://opencv.org/)
+[![GUI: Streamlit](https://img.shields.io/badge/Web%20GUI-Streamlit-red.svg)](https://streamlit.io/)
+[![Dataset: TCGA-LGG](https://img.shields.io/badge/Dataset-TCGA--LGG%20(3%2C929%20slices)-blueviolet.svg)](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG)
 
 ---
 
-## 🎯 1. Mục tiêu và Ý nghĩa Đề tài
+## 1. Tổng quan Dự án (Project Overview)
 
-* **Bối cảnh y tế:** Khối u não (Brain Tumor: u tế bào đệm - Glioma, u màng não - Meningioma, u tuyến yên - Pituitary) là một trong những bệnh lý thần kinh nguy hiểm nhất. Ảnh cộng hưởng từ (MRI) là tiêu chuẩn vàng trong chẩn đoán, nhưng việc khoanh vùng thủ công tốn nhiều thời gian và phụ thuộc chủ quan vào kinh nghiệm bác sĩ.
-* **Mục tiêu đầu vào:** Ảnh chụp MRI sọ não 2D lát cắt (Axial/Coronal/Sagittal) ở chuỗi xung T1-CE hoặc FLAIR (định dạng JPG, PNG).
-* **Mục tiêu đầu ra:**
-  1. Mặt nạ phân đoạn khối u não (Binary Segmentation Mask).
-  2. Hộp giới hạn (Bounding Box) và đường bao (Contour) định vị ổ u não.
-  3. Báo cáo định lượng y tế: Diện tích khối u ($S_{\text{tumor}}$), tọa độ tâm u (Centroid), độ gồ ghề bờ u (Circularity), và tỷ lệ % u/nhu mô não.
-  4. Đánh giá so sánh với Ground Truth chuyên gia qua: **Dice Score, IoU, Sensitivity, Specificity**.
-* **Nguyên tắc kỹ thuật cốt lõi:** Lấy kỹ thuật **Xử lý ảnh số cổ điển (Digital Image Processing - DIP)** làm trọng tâm thực nghiệm, xây dựng bước tách hộp sọ (**Skull Stripping**) bằng hình thái học và so sánh tối thiểu 2 phương án phân đoạn theo đúng đề cương Bộ môn.
+Chẩn đoán và khoanh vùng khối u não (Brain Tumor: U tế bào đệm - Glioma, U màng não - Meningioma, U tuyến yên - Pituitary) từ ảnh chụp cộng hưởng từ (MRI) là bài toán then chốt trong hỗ trợ điều trị y khoa thần kinh. Thông thường, việc xác định đường biên u bằng tay đòi hỏi nhiều thời gian và phụ thuộc lớn vào đánh giá chủ quan của bác sĩ chuyên khoa.
+
+Dự án này phát triển một hệ thống mã nguồn mở hoàn chỉnh nhằm **tự động tách sọ não, phân đoạn khối u và trích xuất các thông số hình học lâm sàng** trên chuỗi xung MRI FLAIR (Fluid-Attenuated Inversion Recovery). Thay vì sử dụng các mạng nơ-ron tích chập sâu (Deep Learning) cồng kềnh đòi hỏi năng lực phần cứng GPU đắt đỏ và thiếu tính minh bạch (black-box), hệ thống ứng dụng toàn diện các giải thuật **Xử lý Ảnh số Cổ điển (Classical Digital Image Processing - DIP)** kết hợp hình thái học toán học và phân thủy có hạt giống kiểm soát.
+
+### Ưu điểm kỹ thuật cốt lõi:
+- **Tốc độ thời gian thực (Real-time Latency):** Thời gian xử lý trung bình chỉ **~6.13 ms / lát cắt**, hoàn toàn khả thi để nhúng vào các trạm làm việc lâm sàng tiêu chuẩn hoặc thiết bị y tế biên (Edge Computing) không có GPU rời.
+- **Tính minh bạch toán học (Explainability):** Mọi công đoạn từ lọc nhiễu, tăng độ tương phản, tách màng não đến phát triển vùng đều được giải thích rõ ràng dựa trên lý thuyết giải tích không gian ảnh và hình thái học toán học.
+- **Khả năng kiểm soát dương tính giả cao:** Đạt độ đặc hiệu (Specificity) **99.04%** trên lát cắt não lành, loại bỏ triệt để các phản xạ giả tạo từ xương sọ và mô mềm da đầu.
 
 ---
 
-## 🔬 2. Sơ đồ Pipeline Xử lý 7 Bước
+## 2. Tính năng Nổi bật (Key Features)
+
+- **Quy trình Tách sọ Não 6 Bước (6-Stage Skull Stripping Pipeline):**
+  - Tích hợp bộ lọc Bilateral Filter bảo toàn đường biên mô mềm kết hợp cân bằng biểu đồ mức xám thích ứng cục bộ (CLAHE).
+  - Phân ngưỡng Otsu toàn cục kết hợp đóng/mở hình thái học (Morphological Opening & Closing) cắt đứt cầu nối mô.
+  - Phép lọc thành phần liên thông lớn nhất (Largest Connected Component - LCC) bóc tách chính xác toàn bộ hộp sọ và màng não.
+- **Động cơ Phân đoạn Đối chứng (Dual-Method Segmentation Engine):**
+  - **Marker-controlled Watershed:** Ứng dụng biến đổi khoảng cách Euclid (Euclidean Distance Transform - EDT), tự động sinh mầm hạt giống cực đại cục bộ, ngăn chặn hoàn toàn hiện tượng quá phân đoạn (over-segmentation).
+  - **Seeded Region Growing:** Tự động phát hiện hạt giống cường độ cực đại trong nhu mô não đã bóc sọ, lan truyền vùng theo kết nối 8 láng giềng dựa trên ngưỡng dung sai cường độ động.
+- **Đo lường & Trích xuất Đặc trưng Hình học Y sinh (Clinical Geometric Metrics):**
+  - Tự động trích xuất diện tích khối u ($S_{\text{tumor}}$ theo pixel và mm²), diện tích não ($S_{\text{brain}}$).
+  - Tính toán tỷ lệ phần trăm u chiếm dụng thể tích não (Tumor-to-Brain Ratio).
+  - Đánh giá độ gồ ghề của bờ viền u qua chỉ số hình học Circularity Index ($C = \frac{4\pi \cdot \text{Area}}{\text{Perimeter}^2}$) và bao lồi (Convex Hull).
+- **Trực quan hóa & Cảnh báo Chẩn đoán (Diagnostic Visualization):**
+  - Đóng khung Bounding Box cảnh báo màu đỏ xung quanh tổn thương.
+  - Lớp phủ màu bán trong suốt (Alpha Blended Overlay) giúp bác sĩ đối chiếu trực tiếp vị trí u trên ảnh gốc.
+- **Hệ thống Đánh giá Định lượng Y sinh Chuẩn mực (Medical Evaluation Framework):**
+  - Cung cấp module kiểm chuẩn toàn diện: Dice Similarity Coefficient ($F_1$), IoU (Jaccard Index), Độ nhạy (Sensitivity/Recall), Độ đặc hiệu (Specificity), Độ chính xác (Accuracy).
+- **Ứng dụng Web Tương tác (Streamlit Interactive Web App):**
+  - Giao diện thân thiện cho phép tải ảnh MRI bất kỳ hoặc duyệt nhanh kho dữ liệu 3.929 lát cắt, điều chỉnh tham số tương tác và xem toàn bộ các bước xử lý trung gian.
+
+---
+
+## 3. Kiến trúc Pipeline Xử lý (Architecture Pipeline)
 
 ```
-[Ảnh MRI Sọ Não Gốc (T1-CE / FLAIR)]
-                │
-                ▼
-1. 【Tiền xử lý & Cải thiện chất lượng ảnh】
-   ├── Chuẩn hóa kích thước (512x512) & dải pixel [0, 255]
-   ├── Khử nhiễu Rician: Lọc trung vị (Median Filter) & Lọc Bilateral bảo toàn biên u
-   └── Tăng cường tương phản mô mềm não: CLAHE (kênh xám)
-                │
-                ▼
-2. 【Tách sọ não (Skull Stripping - Kỹ thuật DIP kinh điển)】
-   ├── Phân ngưỡng nhị phân loại bỏ nền ngoài sọ
-   ├── Phép toán hình thái học (Morphological Opening/Closing) cắt cầu nối mô
-   ├── Tìm thành phần liên thông lớn nhất (Largest Connected Component)
-   └── Sinh mặt nạ nhu mô não (Brain Mask) loại bỏ hoàn toàn xương sọ và da đầu
-                │
-                ▼
-3. 【Phân đoạn khối u lõi (Core Tumor Segmentation) — So sánh 2 phương án】
-   ├── Phương án A (Baseline DIP cổ điển):
-   │     Distance Transform ➔ Điểm hạt giống (Markers) ➔ Phân thủy Watershed
-   │     HOẶC Phát triển vùng (Region Growing) từ điểm cực đại cường độ
-   └── Phương án B (Cải tiến / Đối chứng):
-         Phân cụm K-Means pixel trên không gian cường độ/kết cấu GLCM HOẶC Mạng U-Net
-                │
-                ▼
-4. 【Định vị & Đo lường đặc trưng khối u】
-   ├── Trích xuất Contour và Bounding Box màu đỏ cảnh báo quanh khối u
-   ├── Tính toán diện tích khối u (S_tumor) và tỷ lệ % u / diện tích não
-   └── Tính độ tròn (Circularity = 4π * Area / Perimeter^2) đánh giá độ gồ ghề bờ u
-                │
-                ▼
-5. 【Đánh giá định lượng & Trực quan hóa】
-   ├── So sánh mặt nạ dự đoán với Ground Truth: Dice (F1), IoU, Sensitivity, Specificity
-   ├── Phân tích các ca u nhỏ, u bờ mờ (Failure Cases)
-   └── Đo thời gian xử lý trung bình mỗi ca chụp (ms)
-                │
-                ▼
-6. 【Chương trình ứng dụng Demo (GUI)】
-   └── Giao diện web Streamlit cho phép bác sĩ nạp ảnh MRI, chọn phương pháp, xem ảnh tách sọ, mặt nạ u và tải báo cáo kết quả
+[Ảnh MRI Sọ Não Gốc (FLAIR / T1-CE)]
+               │
+               ▼
+1. 【TIỀN XỬ LÝ (PREPROCESSING)】
+   ├── Chuẩn hóa kích thước không gian (256x256) & dải giá trị [0, 255]
+   ├── Lọc song phương Bilateral Filter khử nhiễu Rician và bảo toàn biên u
+   └── Tăng cường tương phản cục bộ bằng CLAHE (Clip Limit = 2.0, Grid = 8x8)
+               │
+               ▼
+2. 【TÁCH SỌ NÃO (SKULL STRIPPING)】
+   ├── Phân ngưỡng Otsu tìm vùng mô tiềm năng
+   ├── Phép mở hình thái học (Opening 5x5) loại bỏ cầu nối xương sọ
+   ├── Trích xuất thành phần liên thông lớn nhất (Largest Connected Component)
+   ├── Phép đóng hình thái học (Closing) lấp đầy khoang nội sọ
+   └── Nhân chập mặt nạ sinh ảnh não đã bóc sọ (Stripped Brain)
+               │
+               ▼
+3. 【PHÂN ĐOẠN Ổ U (CORE TUMOR SEGMENTATION)】
+   ├── Tuyến A: Marker-controlled Watershed (Biến đổi khoảng cách EDT + Hạt giống)
+   └── Tuyến B: Seeded Region Growing (Lan truyền 8 láng giềng từ cực đại cường độ)
+               │
+               ▼
+4. 【TRÍCH XUẤT ĐẶC TRƯNG & TRỰC QUAN HÓA】
+   ├── Định vị đường bao Contour, tính Bounding Box màu đỏ cảnh báo
+   ├── Đo lường hình học: Diện tích u, Tỷ lệ u/não (%), Độ tròn Circularity
+   └── Lớp phủ Overlay màu RGBA trên nền ảnh sọ não
+               │
+               ▼
+5. 【ĐÁNH GIÁ ĐỊNH LƯỢNG LÂM SÀNG】
+   └── So sánh định lượng với Ground Truth: Dice, IoU, Sensitivity, Specificity
 ```
 
 ---
 
-## 📂 3. Cấu trúc Thư mục Dự án
+## 4. Tập dữ liệu Thực nghiệm (Dataset)
+
+Dự án sử dụng bộ dữ liệu chuẩn y sinh quốc tế **TCGA-LGG (The Cancer Genome Atlas Low-Grade Glioma)** được công bố bởi Buda et al. (2019):
+- **Quy mô:** Bao gồm **3.929 lát cắt MRI** (kích thước 256x256 pixel) thu thập từ **110 bệnh nhân** mắc u tế bào đệm cấp độ thấp.
+- **Phân loại lát cắt:**
+  - **1.373 lát cắt bệnh lý** có chứa khối u não (đi kèm mặt nạ Ground Truth do chuyên gia X-quang thần kinh khoanh vùng).
+  - **2.556 lát cắt nhu mô não lành** không chứa tổn thương (dùng để kiểm thử tỷ lệ dương tính giả).
+- **Metadata đi kèm:** File `data/full/metadata.csv` lưu trữ thông tin định danh bệnh nhân, mã lát cắt, tình trạng có/không có u và diện tích u Ground Truth.
+
+### Tải nhanh bộ dữ liệu:
+Hệ thống cung cấp sẵn script tải và giải nén tự động 1 lệnh từ kho lưu trữ Hugging Face:
+```bash
+python scripts/download_full_dataset.py
+```
+
+---
+
+## 5. Kết quả Thực nghiệm Định lượng (Benchmark Results)
+
+Toàn bộ **3.929 lát cắt** được xử lý và đánh giá tự động đa tiến trình, so sánh giữa giải thuật **Marker-controlled Watershed** và **Seeded Region Growing**:
+
+| Tập dữ liệu kiểm thử | Phương pháp | Dice Score ($F_1$) | IoU (Jaccard) | Độ nhạy (Sensitivity) | Độ đặc hiệu (Specificity) | Tốc độ xử lý (ms/ảnh) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Lát có u (1.373 lát)** | **Marker Watershed** | **0.4446 ± 0.3014** | **0.3368 ± 0.2677** | **0.4436 ± 0.3170** | **0.9915 ± 0.0107** | **6.13 ± 3.32 ms** |
+| | Region Growing | 0.1990 ± 0.2682 | 0.1416 ± 0.2119 | 0.2226 ± 0.3221 | 0.9851 ± 0.0432 | 12.13 ± 22.83 ms |
+| **Lát não lành (2.556 lát)** | **Marker Watershed** | N/A (Không u) | N/A | N/A | **0.9904 ± 0.0100** | **6.15 ± 3.40 ms** |
+| | Region Growing | N/A (Không u) | N/A | N/A | 0.9760 ± 0.0480 | 12.05 ± 21.50 ms |
+
+### Nhận xét thực nghiệm chuyên sâu:
+1. **Watershed vượt trội về độ chính xác và tính ổn định:** Nhờ cơ chế gieo mầm dựa trên khoảng cách Euclidean Distance Transform, Marker Watershed đạt điểm Dice gấp **2.23 lần** so với Region Growing, đồng thời tốc độ thực thi nhanh hơn gấp 2 lần (~6.13 ms so với ~12.13 ms).
+2. **Khả năng triệt tiêu dương tính giả xuất sắc:** Cả hai phương pháp đều đạt độ đặc hiệu trên **97.6% - 99.0%** trên toàn bộ 2.556 lát cắt não lành, minh chứng tính hiệu quả vượt bậc của bước tách sọ não (Skull Stripping) trong việc ngăn chặn bắt nhầm tín hiệu xương sọ.
+3. **Phân tích các ca thách thức (Failure Cases):** Khối u có độ tương phản thấp hoặc nằm sát biên não thất có thể dẫn đến hiện tượng rò rỉ đường biên (leakage) ở Region Growing. Watershed xử lý tốt hơn nhưng vẫn gặp thách thức với các ổ u kích thước cực nhỏ (< 50 pixel).
+
+---
+
+## 6. Hướng dẫn Cài đặt & Khởi chạy (Quickstart)
+
+### 6.1. Yêu cầu Hệ thống
+- Hệ điều hành: Windows 10/11, macOS, hoặc Linux.
+- Python: Phiên bản **3.10** trở lên.
+- RAM: Tối thiểu 4 GB (Khuyến nghị 8 GB để benchmark đa tiến trình tốc độ cao).
+
+### 6.2. Cài đặt Môi trường
+```bash
+# 1. Clone repository về máy
+git clone https://github.com/mtzwyu/brain-tumor-mri-segmentation.git
+cd brain-tumor-mri-segmentation
+
+# 2. Tạo môi trường ảo (khuyến nghị)
+python -m venv venv
+# Trên Windows:
+.\venv\Scripts\activate
+# Trên Linux/macOS:
+source venv/bin/activate
+
+# 3. Cài đặt các thư viện phụ thuộc
+pip install -r requirements.txt
+```
+
+### 6.3. Tải Dữ liệu Đầy đủ
+```bash
+python scripts/download_full_dataset.py
+```
+
+### 6.4. Khởi chạy Ứng dụng Web Demo (Streamlit)
+```bash
+streamlit run demo/app.py
+```
+Ứng dụng sẽ tự động mở tại địa chỉ `http://localhost:8501`. Bạn có thể:
+- Chọn lát cắt ngẫu nhiên hoặc chỉ định từ kho 3.929 ảnh TCGA-LGG.
+- Tải lên ảnh MRI tùy ý (JPG, PNG).
+- Chuyển đổi giữa 2 thuật toán Watershed và Region Growing.
+- Xem chi tiết 8 bước ảnh trung gian của quá trình tách sọ và phân đoạn.
+- Đọc bảng thông số định lượng và tải báo cáo chẩn đoán.
+
+### 6.5. Chạy Đánh giá Toàn bộ Tập Dữ liệu (Benchmark CLI)
+```bash
+python scripts/run_all_experiments.py
+```
+Script sử dụng kỹ thuật xử lý đa tiến trình (`multiprocessing`), hoàn thành quét và đánh giá toàn bộ 3.929 lát cắt chỉ trong vòng **~20 - 25 giây**, tự động xuất bảng số liệu ra thư mục `docs/BENCHMARK_RESULTS.csv`.
+
+### 6.6. Chạy Bộ Kiểm thử Tự động (Unit Tests)
+```bash
+pytest -v
+```
+Kiểm thử toàn diện 16 bài test bao quát các trường hợp biên: ma trận rỗng, mặt nạ hoàn hảo, mặt nạ lệch hoàn toàn, phép tính y sinh phân đoạn và kiểm định bất biến DIP.
+
+---
+
+## 7. Cấu trúc Thư mục Dự án (Repository Structure)
 
 ```
 brain-tumor-mri-segmentation/
-├── .agents/                        # Bộ kỹ năng AI Agent hỗ trợ phát triển (Matt Pocock Skills)
-├── docs/                           # Tài liệu đề cương, báo cáo đồ án và kết quả thực nghiệm
-│   ├── BAO_CAO_DO_AN_XLAS.md       # Báo cáo toàn văn đồ án định dạng Markdown
-│   ├── BAO_CAO_DO_AN_XLAS.docx     # Báo cáo chuẩn thể thức Bộ Giáo dục (Times New Roman 13pt, lề 3-3-3-2 cm)
-│   ├── BENCHMARK_RESULTS.csv       # Tổng hợp định lượng 3,929 lát cắt theo lát bệnh lý & não lành
-│   ├── BENCHMARK_RESULTS_FULL.csv  # Chi tiết 7,858 kết quả thực nghiệm từng lát cắt
-│   ├── DATA_EXPLORATION_REPORT.md  # Báo cáo thống kê dữ liệu 110 bệnh nhân TCGA-LGG
-│   └── KHUNG_NOI_DUNG_TONG_QUAT... # Khung nội dung chuẩn hóa của Bộ môn
-├── data/                           # Dữ liệu ảnh MRI sọ não
-│   ├── README.md                   # Mô tả cấu trúc dữ liệu và quy cách mặt nạ u
-│   └── full/                       # Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
-│       ├── images/                 # 3,929 ảnh MRI (.png, 256x256)
-│       ├── masks/                  # 3,929 mặt nạ Ground Truth (.png, 256x256)
-│       └── metadata.csv            # Metadata chi tiết 110 bệnh nhân (được track trên Git)
-├── src/                            # Mã nguồn module xử lý ảnh số lõi
-│   ├── preprocessing/              # Lọc nhiễu Rician, CLAHE, Tách sọ (Skull Stripping)
-│   ├── segmentation/               # Watershed & Marker Distance Transform, Region Growing
-│   ├── measurement/                # Đo diện tích u, độ tròn Circularity, Bounding Box
-│   └── evaluation/                 # Tính Dice, IoU, Sensitivity, Specificity
-├── demo/                           # Ứng dụng giao diện minh họa (Streamlit GUI tương tác)
-│   ├── app.py                      # Giao diện chính phân đoạn tương tác trên kho 3,929 lát cắt
-│   └── utils.py                    # Tiện ích nạp ảnh và hiển thị
-
-├── notebooks/                      # 4 Jupyter Notebooks thực nghiệm trực quan
-│   ├── 01_data_exploration.ipynb   # Khám phá và phân tích phân bố dữ liệu
-│   ├── 02_preprocessing_and_skull_stripping.ipynb # Khử nhiễu & tách sọ não
-│   ├── 03_segmentation_comparison.ipynb # So sánh thuật toán phân đoạn
-│   └── 04_quantitative_evaluation.ipynb # Đánh giá định lượng trên toàn bộ tập dữ liệu
+├── configs/                        # Cấu hình tham số hệ thống
+│   └── default_params.yaml         # Siêu tham số lọc nhiễu, tách sọ và phân đoạn
+├── data/                           # Dữ liệu ảnh MRI
+│   ├── README.md                   # Mô tả quy cách cấu trúc ảnh và nhãn
+│   └── full/                       # Toàn bộ 3.929 lát cắt chuẩn TCGA-LGG
+│       ├── images/                 # Ảnh MRI chuỗi xung FLAIR (256x256, PNG)
+│       ├── masks/                  # Mặt nạ Ground Truth (256x256, PNG nhị phân)
+│       └── metadata.csv            # Bảng thông tin 110 bệnh nhân và 3.929 lát cắt
+├── demo/                           # Giao diện Web tương tác Streamlit
+│   ├── app.py                      # Mã nguồn chính giao diện chẩn đoán trực quan
+│   └── utils.py                    # Tiện ích nạp ảnh, tạo ảnh trung gian và xuất file
+├── docs/                           # Tài liệu kỹ thuật và kết quả thực nghiệm
+│   ├── BENCHMARK_RESULTS.csv       # Tổng hợp định lượng theo lát u và não lành
+│   ├── BENCHMARK_RESULTS_FULL.csv  # Chi tiết 7.858 kết quả đo đạc từng ảnh
+│   ├── DATA_EXPLORATION_REPORT.md  # Báo cáo thống kê phân bố dữ liệu TCGA-LGG
+│   └── SPEC_PIPELINE_MRI.md        # Đặc tả toán học và giao diện lập trình
+├── notebooks/                      # Jupyter Notebooks thực nghiệm trực quan
+│   ├── 01_data_exploration.ipynb   # Thống kê, phân tích phân bố dữ liệu
+│   ├── 02_preprocessing_and_skull_stripping.ipynb # Khử nhiễu và tách sọ não 6 bước
+│   ├── 03_segmentation_comparison.ipynb # So sánh Watershed vs. Region Growing
+│   └── 04_quantitative_evaluation.ipynb # Đánh giá định lượng toàn diện
+├── reports/                        # Báo cáo đồ thị và hình ảnh xuất bản
+│   └── figures/                    # Biểu đồ phân tích và hình minh họa quy trình
 ├── scripts/                        # Scripts tự động hóa
-│   ├── download_full_dataset.py    # Tải toàn bộ 3,929 lát cắt từ Hugging Face
-│   ├── run_all_experiments.py      # Benchmark đa tiến trình xử lý 3,929 lát cắt (~25s)
-│   ├── export_report_docx.py       # Xuất báo cáo Word đúng chuẩn lề 3-3-3-2 cm
-│   └── create_notebooks.py         # Khởi tạo tự động các notebook thực nghiệm
-├── tests/                          # Bộ kiểm thử đơn vị tự động (Pytest)
-├── AGENTS.md                       # Thông tin nhóm & Quy chuẩn kỹ thuật toàn cục
-├── requirements.txt                # Thư viện phụ thuộc (OpenCV, NumPy, Streamlit, python-docx...)
+│   ├── download_full_dataset.py    # Tải 3.929 ảnh TCGA-LGG từ Hugging Face
+│   ├── run_all_experiments.py      # Benchmark đa tiến trình 3.929 lát cắt
+│   └── verify_day2_contract.py     # Kiểm chuẩn tự động hợp đồng kỹ thuật DIP
+├── src/                            # Mã nguồn module xử lý ảnh số lõi
+│   ├── __init__.py
+│   ├── pipeline.py                 # Bộ điều phối toàn trình BrainTumorPipeline
+│   ├── preprocessing/              # Tiền xử lý & Tách sọ
+│   │   ├── filters.py              # Lọc Bilateral và cân bằng CLAHE
+│   │   └── skull_strip.py          # Bóc sọ 6 bước dựa trên hình thái học
+│   ├── segmentation/               # Giải thuật phân đoạn u
+│   │   ├── watershed.py            # Marker-controlled Watershed
+│   │   └── region_growing.py       # Seeded Region Growing
+│   ├── measurement/                # Đo lường đặc trưng hình học
+│   │   └── features.py             # Diện tích, Circularity, Bounding Box
+│   └── evaluation/                 # Đo lường chỉ số đánh giá y sinh
+│       └── metrics.py              # Dice, IoU, Sensitivity, Specificity
+├── tests/                          # Bộ kiểm thử tự động
+│   ├── test_metrics.py             # Kiểm thử độ chính xác các hàm đánh giá
+│   ├── test_preprocessing.py       # Kiểm thử lọc nhiễu và bóc sọ
+│   └── test_segmentation.py        # Kiểm thử giải thuật phân đoạn
+├── .gitignore                      # Loại trừ dữ liệu nặng và cache môi trường
+├── requirements.txt                # Danh sách thư viện phụ thuộc
 └── README.md                       # Tài liệu tổng quan dự án
 ```
 
 ---
 
-## 📊 4. Kết Quả Thực Nghiệm Benchmark Quy Mô Toàn Bộ Dữ Liệu (3,929 Lát Cắt)
+## 8. Chi tiết Kỹ thuật Các Module (Technical Methodologies)
 
-Toàn bộ 3,929 lát cắt từ 110 bệnh nhân TCGA-LGG được phân tích và đánh giá định lượng độc lập giữa hai giải thuật DIP cổ điển:
+### 8.1. Tiền xử lý & Tách sọ Não (Skull Stripping)
+- **Bilateral Filter:** Bảo toàn độ sắc nét của đường biên khối u bằng cách kết hợp hàm Gauss theo khoảng cách không gian ($\sigma_{\text{space}} = 75$) và hàm Gauss theo độ chênh lệch cường độ pixel ($\sigma_{\text{color}} = 75$).
+- **CLAHE:** Cân bằng biểu đồ mức xám cục bộ với ngưỡng cắt Clip Limit = 2.0 trên các ô lưới 8x8 pixel, làm nổi bật viền tương phản giữa mô u và nhu mô não xung quanh mà không gây khuếch đại nhiễu hạt.
+- **Bóc tách sọ não:** Loại bỏ hoàn toàn tín hiệu xương sọ bằng phân ngưỡng Otsu tự động, toán tử mở (Opening) với phần tử cấu trúc hình elip $5 \times 5$, giữ lại thành phần liên thông lớn nhất (LCC) đại diện cho khối nhu mô não, và toán tử đóng (Closing) lấp đầy các rãnh não.
 
-| Nhóm dữ liệu kiểm thử | Phương pháp | Dice Score ($F_1$) | IoU (Jaccard) | Sensitivity | Specificity | Độ trễ (ms/ảnh) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Lát cắt có u (1,373 lát)** | **Marker-controlled Watershed** | **0.4446 ± 0.3014** | **0.3368 ± 0.2677** | **0.4436 ± 0.3170** | **0.9915 ± 0.0107** | **6.13 ± 3.32 ms** |
-| | Region Growing | 0.1990 ± 0.2682 | 0.1416 ± 0.2119 | 0.2226 ± 0.3221 | 0.9851 ± 0.0432 | 12.13 ± 22.83 ms |
-| **Lát não lành (2,556 lát)** | **Marker-controlled Watershed** | N/A (Không u) | N/A | N/A | **0.9904 ± 0.0100** | **6.15 ± 3.40 ms** |
-| | Region Growing | N/A (Không u) | N/A | N/A | 0.9760 ± 0.0480 | 12.05 ± 21.50 ms |
+### 8.2. Marker-controlled Watershed Segmentation
+- Sử dụng phép biến đổi khoảng cách Euclidean Distance Transform (EDT) trên mặt nạ nhị phân ngưỡng cao của mô u.
+- Điểm cực đại khoảng cách cục bộ được gán nhãn làm mầm hạt giống (Markers).
+- Thuật toán phân thủy mô phỏng quá trình dâng nước trên bề mặt gradient mức xám, ngăn chặn hiệu quả hiện tượng quá phân đoạn (over-segmentation) thường gặp ở giải thuật Watershed cổ điển.
 
-> 📌 **Nhận xét chuyên môn:**
-> 1. **Watershed vượt trội toàn diện:** Nhờ cơ chế gieo mầm hạt giống dựa trên biến đổi khoảng cách Euclid (Euclidean Distance Transform) trên mặt nạ tách sọ, Watershed đạt Dice 0.4446 (gấp 2.23 lần Region Growing) và thời gian thực thi ổn định chỉ ~6.13 ms/lát cắt.
-> 2. **Kiểm soát dương tính giả tuyệt hảo:** Độ đặc hiệu (Specificity) trên lát não lành đạt **99.04%** (Watershed) và **97.60%** (Region Growing), khẳng định bước tách sọ não (Skull Stripping) loại bỏ triệt để tín hiệu nhiễu từ hộp sọ và màng não.
-
----
-
-## 🚀 5. Hướng Dẫn Cài Đặt & Chạy Hệ Thống (Quickstart)
-
-### Bước 1: Cài đặt môi trường
-```bash
-git clone https://github.com/mtzwyu/brain-tumor-mri-segmentation.git
-cd brain-tumor-mri-segmentation
-pip install -r requirements.txt
-```
-
-### Bước 2: Tải dữ liệu toàn bộ (3,929 lát cắt)
-```bash
-# Tải và giải nén tự động 3,929 lát cắt từ Hugging Face (~1-2 phút tùy mạng)
-python scripts/download_full_dataset.py
-```
-
-### Bước 3: Chạy Benchmark đa tiến trình toàn bộ 3,929 lát cắt
-```bash
-# Chạy đánh giá đa luồng tốc độ cao (~25 giây hoàn thành toàn bộ 3,929 ảnh)
-python scripts/run_all_experiments.py
-```
-
-### Bước 4: Khởi chạy Giao diện Tương tác Web (Streamlit Demo)
-```bash
-streamlit run demo/app.py
-```
-
-### Bước 5: Chạy Kiểm thử Đơn vị Tự động (Unit Tests)
-```bash
-pytest -v
-```
+### 8.3. Seeded Region Growing
+- Tự động dò tìm pixel có cường độ sáng cực đại trong nhu mô não đã bóc sọ để làm điểm hạt giống ban đầu $(x_0, y_0)$.
+- Lan truyền theo cơ chế hàng đợi (Breadth-First Search - BFS) xét kết nối 8 láng giềng.
+- Điều kiện dừng và kết nạp pixel dựa trên ngưỡng chênh lệch cường độ so với hạt giống: $|I(x, y) - I(x_0, y_0)| \le T$, kết hợp loại bỏ các cụm điểm rời rạc bằng lọc diện tích tối thiểu.
 
 ---
 
-## 📋 6. Kế Hoạch Triển Khai Cấp Tốc 7 Ngày & Khung Đánh Giá Đồ Án Chuẩn HUIT
+## 9. Đóng góp & Phát triển (Contributing)
 
-### 6.1. Khung Tiêu Chí Đánh Giá (Rubric 5 Tiêu Chí - Thang Điểm 10)
-> Theo *Kế hoạch thực hiện Đồ án Xử lý ảnh số năm học 2026–2027* của Khoa CNTT — HUIT, điểm đồ án chiếm **100% điểm thi kết thúc học phần** (tương đương **70% tổng điểm học phần**):
+Mọi đóng góp nhằm nâng cao độ chính xác và mở rộng tính năng của dự án đều được hoan nghênh:
+1. Fork repository và tạo nhánh mới: `git checkout -b feature/tinh-nang-moi`.
+2. Tuân thủ chuẩn lập trình sạch (Clean Code), viết chú thích và docstring đầy đủ.
+3. Đảm bảo toàn bộ kiểm thử đơn vị đều vượt qua: `pytest`.
+4. Gửi Pull Request mô tả chi tiết các cải tiến kỹ thuật.
 
-| STT | Tiêu chí đánh giá | Chuẩn đầu ra (PLO/CLO) | Trọng số | Điểm tối đa |
-| :---: | :--- | :---: | :---: | :---: |
-| 1 | Phân tích và lựa chọn đúng phương pháp | PLO2 / CLO1 | 15% | 1.5 điểm |
-| 2 | **Áp dụng được các phương pháp xử lý (Trọng tâm)** | PLO2 / CLO2 | **50%** | **5.0 điểm** |
-| 3 | Đọc tài liệu, nghiên cứu giải quyết bài toán | PLO4 / CLO3 | 10% | 1.0 điểm |
-| 4 | Trình bày báo cáo | PLO7 / CLO5 | 15% | 1.5 điểm |
-| 5 | Phân công và phối hợp làm việc nhóm | PLO6 / CLO4 | 10% | 1.0 điểm |
-| **TỔNG** | **ĐIỂM ĐÁNH GIÁ CUỐI KỲ** | **ĐẠT CHUẨN ĐẦU RA** | **100%** | **10.0 điểm** |
+---
 
-### 6.2. Lộ Trình Sprint Cấp Tốc 7 Ngày Triển Khai Chi Tiết
-* **Ngày 1 (Khởi động, Dữ liệu & Đặc tả toán học):** Phân công vai trò 50%-50%, chuẩn hóa toàn bộ 3,929 lát cắt dữ liệu TCGA-LGG, chạy Notebook 01 EDA và soạn thảo đặc tả kỹ thuật `docs/SPEC_PIPELINE_MRI.md`.
+## 10. Tác giả & Trích dẫn (Authors & Citation)
 
-* **Ngày 2 (Tiền xử lý, Tách sọ não & Bộ đo y sinh):** Hiện thực hóa quy trình 6 bước Tách sọ não (*Skull Stripping*) loại bỏ xương sọ, lọc Bilateral + CLAHE, hoàn thiện Notebook 02 và cài đặt module `src/evaluation/metrics.py` (Dice, IoU, Sensitivity, Specificity).
-* **Ngày 3 (Phân đoạn Baseline Watershed & Đo đặc trưng hình học):** Hiện thực hóa Marker-controlled Watershed với biến đổi khoảng cách EDT, cài đặt module `src/measurement/features.py` (Diện tích, Tỷ lệ u/não, Circularity) và trực quan hóa Bounding Box cảnh báo đỏ.
-* **Ngày 4 (Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline):** Hiện thực hóa Seeded Region Growing (tự tìm seed cực đại cường độ, lan truyền 8 láng giềng BFS), hoàn thiện Notebook 03 và tích hợp lớp điều phối `BrainTumorPipeline` trong `src/pipeline.py`.
-* **Ngày 5 (Benchmark 3,929 lát cắt & Ứng dụng Web Demo):** Chạy thực nghiệm định lượng đa tiến trình trên toàn bộ 3,929 lát cắt, phân tích chuyên sâu các ca thất bại (*Failure Cases*), hoàn thiện Notebook 04 và hoàn thành giao diện Web Streamlit GUI (`demo/app.py`).
-* **Ngày 6 (Biên soạn Báo cáo Đồ án 12 Mục):** Soạn thảo 4 chương kỹ thuật và 6 chương tổng quan, ghép nối hoàn chỉnh Báo cáo toàn văn `docs/BAO_CAO_DO_AN_XLAS.md` và xuất file Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức HUIT.
-* **Ngày 7 (Slide thuyết trình, Video Demo, Test 12/12 & Đóng gói):** Rà soát mã nguồn `src/` (12/12 unit tests PASSED), thiết kế bộ Slide 20 trang (`docs/SLIDE_THUYET_TRINH_OUTLINE.md`), quay Video demo 3 phút và đóng gói hồ sơ nộp đồ án.
+### Nhóm Tác giả Phát triển:
+- **Hà Mạnh Trường** - Pipeline Tiền xử lý & Tách sọ (Skull Stripping), Giải thuật Phân đoạn Lõi u (Watershed & Region Growing).
+- **Huỳnh Tâm Trí** - Chuẩn hóa Dữ liệu Y sinh TCGA-LGG, Đo lường Đặc trưng Hình học, Khung Đánh giá Định lượng & Giao diện Streamlit.
 
-### 6.3. Chi Tiết Nhiệm Vụ Từng Sinh Viên
-* [Kế hoạch nhiệm vụ cấp tốc 7 ngày của Hà Mạnh Trường (Nhóm trưởng)](docs/NHIEM_VU_HA_MANH_TRUONG.md)
-* [Kế hoạch nhiệm vụ cấp tốc 7 ngày của Huỳnh Tâm Trí (Thành viên)](docs/NHIEM_VU_HUYNH_TAM_TRI.md)
-* [Báo cáo toàn văn đồ án 12 mục (Markdown)](docs/BAO_CAO_DO_AN_XLAS.md)
-* [Báo cáo đồ án định dạng Microsoft Word chuẩn HUIT](docs/BAO_CAO_DO_AN_XLAS.docx)
+### Trích dẫn Nguồn Dữ liệu (Citation):
+Nếu bạn sử dụng bộ dữ liệu hoặc mã nguồn của dự án này trong các nghiên cứu khoa học, vui lòng trích dẫn công trình gốc:
+```bibtex
+@article{buda2019association,
+  title={Association of genomic subtypes of lower-grade gliomas with shape features automatically extracted by a deep learning algorithm},
+  author={Buda, Mateusz and Saha, Ashirbani and Mazurowski, Maciej A},
+  journal={Computers in Biology and Medicine},
+  volume={109},
+  pages={218--225},
+  year={2019},
+  publisher={Elsevier}
+}
+```
 
+---
+
+## 11. Giấy phép Bản quyền (License)
+
+Dự án được phân phối dưới giấy phép **MIT License**. Xem chi tiết tại tệp [LICENSE](LICENSE).
