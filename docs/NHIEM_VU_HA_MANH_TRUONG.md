@@ -98,9 +98,9 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_preprocessing.py -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_preprocessing.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 100% test cases trong `test_preprocessing.py` đều đạt kết quả PASSED.
-  - [ ] Chạy hoàn thiện `notebooks/02_preprocessing_and_skull_stripping.ipynb` không phát sinh lỗi.
-  - [ ] Xuất bộ ảnh minh họa 6 bước trung gian để phục vụ đưa vào Chương 4 Báo cáo.
+  - [x] 100% test cases trong `test_preprocessing.py` đều đạt kết quả PASSED.
+  - [x] Chạy hoàn thiện `notebooks/02_preprocessing_and_skull_stripping.ipynb` không phát sinh lỗi.
+  - [x] Xuất bộ ảnh minh họa 6 bước trung gian để phục vụ đưa vào Chương 4 Báo cáo.
 
 ---
 
