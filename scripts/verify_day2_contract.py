@@ -422,17 +422,19 @@ def check_docs(checks: List[Check]) -> None:
         checks.append(Check("DOC", "Ngày 2: 3 ô [x], 0 ô [ ]", checked == 3 and unchecked == 0,
                             f"{checked} [x] • {unchecked} [ ]"))
 
-    later = [sections[d] for d in range(3, 8) if d in sections]
-    later_checked = sum(s.count("- [x]") for s in later)
-    later_unchecked = sum(s.count("- [ ]") for s in later)
-    checks.append(Check("DOC", "Ngày 3–7: 14 ô [ ] nguyên vẹn",
-                        later_checked == 0 and later_unchecked == 14,
-                        f"{later_checked} [x] • {later_unchecked} [ ]"))
+    # Ngày 3–7 có thể đã hoàn thành khi chạy lại về sau: chỉ kiểm tra Ngày 1–2
+    # không bị hồi quy và tổng số ô checklist luôn đủ 20.
+    earlier = [sections[d] for d in (1, 2) if d in sections]
+    earlier_checked = sum(s.count("- [x]") for s in earlier)
+    earlier_unchecked = sum(s.count("- [ ]") for s in earlier)
+    checks.append(Check("DOC", "Ngày 1–2: 6 [x] không hồi quy",
+                        earlier_checked == 6 and earlier_unchecked == 0,
+                        f"{earlier_checked} [x] • {earlier_unchecked} [ ]"))
 
     total_checked = text.count("- [x]")
     total_unchecked = text.count("- [ ]")
-    checks.append(Check("DOC", "Toàn tài liệu: 6 [x] / 14 [ ]",
-                        total_checked == 6 and total_unchecked == 14,
+    checks.append(Check("DOC", "Tổng 20 ô checklist (≥ 6 [x])",
+                        total_checked + total_unchecked == 20 and total_checked >= 6,
                         f"{total_checked} [x] • {total_unchecked} [ ]"))
 
 

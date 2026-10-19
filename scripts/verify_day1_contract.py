@@ -150,8 +150,8 @@ SIGNATURE_CONTRACT = [
     ),
     (
         "WatershedSegmenter.segment", "src.segmentation.watershed", "WatershedSegmenter.segment", (),
-        [("self", _REQUIRED), ("brain_image", _REQUIRED)],
-        "np.ndarray",
+        [("self", _REQUIRED), ("brain_image", _REQUIRED), ("return_intermediates", False)],
+        "Union[np.ndarray, Tuple[np.ndarray, Dict[str, np.ndarray]]]",
     ),
     (
         "find_seed_point", "src.segmentation.region_growing", "find_seed_point", (),

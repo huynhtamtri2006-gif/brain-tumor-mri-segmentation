@@ -150,7 +150,7 @@ Nguồn duy nhất (single source of truth) cho siêu tham số là `configs/def
 2. **Shape-preserving:** đầu ra ảnh/mặt nạ luôn cùng `(H, W)` với đầu vào trừ `overlay` `(H, W, 3)` và `quad` `(2H, 2W, 3)`.
 3. **Fail-safe:** không ném ngoại lệ với dữ liệu hợp lệ; trường hợp suy biến (ảnh rỗng, không có foreground) trả mặt nạ toàn `0` thay vì lỗi.
 4. **Không kiểm tra kiểu phòng vệ:** người gọi chịu trách nhiệm đảm bảo `dtype`/`shape`; truyền `float32` cho CLAHE hoặc mask sai kích thước sẽ để OpenCV ném lỗi.
-5. **Constructor:** các `__init__` trả về `None` ngầm định và **không** khai báo annotation trả về trong mã — cột chữ ký dưới đây phản ánh đúng `inspect.signature`.
+5. **Constructor:** các `__init__` trả về `None` ngầm định; riêng `WatershedSegmenter.__init__` khai báo tường minh `-> None` từ Ngày 3 — cột chữ ký dưới đây phản ánh đúng `inspect.signature`.
 
 ### 4.2. Module `src/preprocessing/filters.py`
 
@@ -176,9 +176,11 @@ Nguồn duy nhất (single source of truth) cho siêu tham số là `configs/def
 
 | Thành phần | Chữ ký (type hints) | Input | Output |
 | :--- | :--- | :--- | :--- |
-| `WatershedSegmenter.__init__` | `__init__(self, dist_thresh_ratio: float = 0.4, bg_dilate_kernel: int = 3)` | `dist_thresh_ratio` ∈ (0, 1); `bg_dilate_kernel` số lẻ ≥ 1. | Thực thể strategy; chưa xử lý ảnh. |
-| `WatershedSegmenter.segment` | `segment(self, brain_image: np.ndarray) -> np.ndarray` | `brain_image`: ảnh não **đã tách sọ** `(H, W)` uint8. | `Mask` `(H, W)` uint8 `{0, 255}`; uỷ quyền cho `segment_watershed` với tham số đã lưu. |
-| `segment_watershed` | `segment_watershed(brain_image: np.ndarray, dist_thresh_ratio: float = 0.4, bg_dilate_kernel: int = 3) -> np.ndarray` | `brain_image`: `(H, W)` uint8; pixel nền ngoài não phải bằng `0`. Ngưỡng tiền lọc cường độ dùng **phân vị 85** cố định (R4), dilation nền lặp 2 vòng (R2). | `Mask` `(H, W)` uint8 `{0, 255}`. Suy biến: không có pixel `> 0` hoặc `max(dist_transform) == 0` ⇒ ma trận `0`. |
+| `WatershedSegmenter.__init__` | `__init__(self, dist_thresh_ratio: float = 0.4, bg_dilate_kernel: int = 3, min_tumor_area: int = 50) -> None` | `dist_thresh_ratio` ∈ (0, 1); `bg_dilate_kernel` số lẻ ≥ 1; `min_tumor_area` ≥ 0 (0 ⇒ không lọc đảo nhỏ). | Thực thể strategy; chưa xử lý ảnh. |
+| `WatershedSegmenter.segment` | `segment(self, brain_image: np.ndarray, return_intermediates: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, np.ndarray]]]` | `brain_image`: ảnh não **đã tách sọ** `(H, W)` uint8. | `Mask` `(H, W)` uint8 `{0, 255}`; uỷ quyền cho `segment_watershed` với tham số đã lưu. |
+| `segment_watershed` | `segment_watershed(brain_image: np.ndarray, dist_thresh_ratio: float = 0.4, bg_dilate_kernel: int = 3, min_tumor_area: int = 50, return_intermediates: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, np.ndarray]]]` | `brain_image`: `(H, W)` uint8; pixel nền ngoài não phải bằng `0`. Ngưỡng tiền lọc cường độ dùng **phân vị 85** cố định (R4), dilation nền lặp 2 vòng (R2); hậu xử lý loại đảo `< min_tumor_area` (8-connectivity). | `Mask` `(H, W)` uint8 `{0, 255}`. Suy biến: không có pixel `> 0` hoặc `max(dist_transform) == 0` ⇒ ma trận `0`. |
+
+*Tuỳ chọn trung gian (từ Ngày 3):* khi `return_intermediates=True`, `segment_watershed` trả `(tumor_mask, intermediates)` với đúng 9 khoá `original`, `binary_high`, `opened`, `dist_transform`, `sure_fg`, `sure_bg`, `unknown`, `markers`, `tumor_mask` — tất cả `(H, W)` uint8 (`dist_transform` được chuẩn hoá min–max về `[0, 255]`, `markers` là marker đầu vào trước `cv2.watershed`). Mặc định `False` giữ nguyên hợp đồng cũ.
 
 *Hậu điều kiện:* `np.unique(out).issubset({0, 255})` luôn đúng; vùng u là các marker `> 1` sau `cv2.watershed` (loại nền `1` và đường phân thủy `-1`).
 
