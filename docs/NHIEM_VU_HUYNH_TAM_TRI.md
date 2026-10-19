@@ -96,9 +96,10 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_metrics.py -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_metrics.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 100% test cases trong `test_metrics.py` đạt kết quả PASSED.
-  - [ ] Bắt lỗi số học an toàn, không có hiện tượng ngoại lệ `ZeroDivisionError`.
-  - [ ] Các hàm trả về kiểu dữ liệu float chuẩn xác trong khoảng $[0.0, 1.0]$.
+  - [x] 100% test cases trong `test_metrics.py` đạt kết quả PASSED.
+  - [x] Bắt lỗi số học an toàn, không có hiện tượng ngoại lệ `ZeroDivisionError`.
+  - [x] Các hàm trả về kiểu dữ liệu float chuẩn xác trong khoảng $[0.0, 1.0]$.
+
 
 ---
 
