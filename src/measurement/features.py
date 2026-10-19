@@ -24,6 +24,11 @@ class DiagnosticResult:
     dice_score: Optional[float] = None
     iou_score: Optional[float] = None
 
+    @property
+    def tumor_area_pixels(self) -> int:
+        """Alias tương thích cho tumor_area_px."""
+        return self.tumor_area_px
+
     def to_dict(self) -> Dict[str, Any]:
         """Chuyển đổi kết quả sang dictionary để hiển thị hoặc lưu JSON/CSV."""
         return {

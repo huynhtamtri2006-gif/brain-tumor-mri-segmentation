@@ -1,7 +1,7 @@
 Chỉ Số Đánh Giá Y Khoa,Watershed (Baseline),Region Growing (Đối chứng)
 Quy mô lát cắt có u đánh giá,1373 lát cắt,1373 lát cắt
-Dice Score (DSC / F1),0.4446 +/- 0.3014,0.1990 +/- 0.2682
-IoU (Jaccard Index),0.3368 +/- 0.2677,0.1416 +/- 0.2119
-Sensitivity (Độ nhạy),0.4436 +/- 0.3170,0.2226 +/- 0.3221
-Specificity (Độ đặc hiệu),0.9915 +/- 0.0107,0.9851 +/- 0.0432
-Độ trễ trung bình (ms/ảnh),6.13 +/- 3.32 ms,12.13 +/- 22.83 ms
+Dice Score (DSC / F1),0.4086 +/- 0.3018,0.1368 +/- 0.2424
+IoU (Jaccard Index),0.3062 +/- 0.2651,0.0978 +/- 0.1894
+Sensitivity (Độ nhạy),0.4207 +/- 0.3155,0.1507 +/- 0.2846
+Specificity (Độ đặc hiệu),0.9880 +/- 0.0132,0.9898 +/- 0.0366
+Độ trễ trung bình (ms/ảnh),5.11 +/- 2.41 ms,11.59 +/- 26.03 ms
