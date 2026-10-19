@@ -10,7 +10,7 @@ Xác minh tối thiểu 20 mục:
   5. Bất biến DIP `stripped[mask == 0] == 0` và tính nhất quán chuỗi 6 bước.
   6. An toàn với ảnh rỗng (không crash, không chia cho 0).
   7. Hình minh họa `reports/figures/skull_stripping_steps.png` tồn tại, > 50 KB.
-  8. Hai notebook Ngày 2 tồn tại và có output cells (bao gồm ảnh).
+  8. Notebook Ngày 2 (`02_preprocessing_and_skull_stripping.ipynb`) tồn tại và có output cells (bao gồm ảnh).
   9. Checklist tài liệu: đúng 3 ô Ngày 2 là `[x]`, 14 ô Ngày 3–7 giữ `[ ]`.
 
 Chạy từ thư mục gốc repo:
@@ -51,7 +51,6 @@ from src.preprocessing.skull_strip import extract_brain_mask, strip_skull  # noq
 SAMPLE_IMAGE = ROOT / "data" / "sample" / "images" / "mri_brain_tumor_01.png"
 FIGURE_PATH = ROOT / "reports" / "figures" / "skull_stripping_steps.png"
 NOTEBOOKS = (
-    ROOT / "notebooks" / "02_skull_stripping.ipynb",
     ROOT / "notebooks" / "02_preprocessing_and_skull_stripping.ipynb",
 )
 TASK_DOC = ROOT / "docs" / "NHIEM_VU_HA_MANH_TRUONG.md"
