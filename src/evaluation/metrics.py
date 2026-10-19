@@ -30,6 +30,9 @@ def calculate_dice(pred_mask: np.ndarray, gt_mask: np.ndarray, smooth: float = 1
     if total_area == 0:
         return 1.0  # Cả 2 đều rỗng (không có u và dự đoán đúng không có u)
 
+    if intersection == 0:
+        return 0.0
+
     return float((2.0 * intersection + smooth) / (total_area + smooth))
 
 
@@ -53,6 +56,9 @@ def calculate_iou(pred_mask: np.ndarray, gt_mask: np.ndarray, smooth: float = 1e
 
     if union == 0:
         return 1.0
+
+    if intersection == 0:
+        return 0.0
 
     return float((intersection + smooth) / (union + smooth))
 
@@ -78,6 +84,9 @@ def calculate_sensitivity(pred_mask: np.ndarray, gt_mask: np.ndarray, smooth: fl
 
     if actual_positives == 0:
         return 1.0 if np.sum(p) == 0 else 0.0
+
+    if tp == 0:
+        return 0.0
 
     return float((tp + smooth) / (actual_positives + smooth))
 
@@ -105,7 +114,11 @@ def calculate_specificity(pred_mask: np.ndarray, gt_mask: np.ndarray, smooth: fl
     if actual_negatives == 0:
         return 1.0
 
+    if tn == 0:
+        return 0.0
+
     return float((tn + smooth) / (actual_negatives + smooth))
+
 
 
 def calculate_all_metrics(pred_mask: np.ndarray, gt_mask: np.ndarray) -> Dict[str, float]:
