@@ -42,12 +42,10 @@ with st.sidebar:
     st.divider()
 
     st.subheader("1. Nạp Dữ Liệu Ảnh MRI")
-    has_full_data = os.path.exists("data/full/images") and len(os.listdir("data/full/images")) > 50
-    data_options = ["Chọn từ 20 mẫu thử nghiệm nhanh (data/sample)"]
-    if has_full_data:
-        data_options.insert(0, "Chọn từ kho toàn bộ 3,929 lát cắt (data/full)")
-    data_options.append("Tải ảnh từ máy tính (.png, .jpg)")
-
+    data_options = [
+        "Chọn từ kho 3,929 lát cắt chuẩn TCGA-LGG (data/full)",
+        "Tải ảnh từ máy tính (.png, .jpg)"
+    ]
     data_mode = st.radio("Nguồn ảnh đầu vào:", data_options)
 
     input_img = None
@@ -69,14 +67,7 @@ with st.sidebar:
                 input_img, input_gt_mask = load_image_and_mask(sample_id, base_dir="data/full")
         else:
             st.warning("Chưa có ảnh trong data/full/images")
-    elif "20 mẫu" in data_mode:
-        sample_files = list_sample_cases("data/sample/images")
-        if sample_files:
-            selected_file = st.selectbox("Chọn ca bệnh mẫu:", sample_files)
-            sample_id = selected_file.replace(".png", "")
-            input_img, input_gt_mask = load_image_and_mask(sample_id, base_dir="data/sample")
-        else:
-            st.warning("Chưa có ảnh trong data/sample/images")
+
     else:
         uploaded_file = st.file_uploader("Tải lên ảnh MRI xám:", type=["png", "jpg", "jpeg", "tif"])
         if uploaded_file is not None:

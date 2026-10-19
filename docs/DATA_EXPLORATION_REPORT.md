@@ -59,21 +59,19 @@ Tập dữ liệu có nhiều lát không chứa vùng u trong mask hơn lát c�
 
 ---
 
-## 🔬 4. Phân Bổ Kiến Trúc Lưu Trữ 2 Tầng (Two-Tier Data Strategy)
+## 🔬 4. Tổ Chức Dữ Liệu Thực Nghiệm (TCGA-LGG Benchmark)
 
-Nhằm tối ưu hóa hiệu năng và tuân thủ quy chuẩn quản lý mã nguồn Git:
-1. **Tầng 1 — `data/sample/` (20 mẫu tiêu biểu, ~2.5 MB):**
-   * Được theo dõi trực tiếp trong Git repository.
-   * Đảm bảo bất kỳ người chấm bài hay thành viên nào sau khi `git clone` đều có thể chạy ngay toàn bộ test suite (`pytest`) và demo chỉ trong dưới 2 giây.
-2. **Tầng 2 — `data/full/` (3,929 lát cắt chuẩn hóa, ~800 MB):**
-   * Được quản lý tự động bởi script `python scripts/download_full_dataset.py`.
-   * Được đưa vào `.gitignore` để giữ repo gọn nhẹ, phục vụ huấn luyện, benchmark quy mô lớn và xuất bản công trình khoa học.
+Toàn bộ dữ liệu thực nghiệm chuẩn quốc tế gồm 3,929 lát cắt chuẩn TCGA-LGG từ 110 bệnh nhân được lưu trữ tập trung tại `data/full/`:
+* Thư mục `data/full/images/` và `data/full/masks/` chứa toàn bộ ảnh MRI xám và mặt nạ Ground Truth $256 \times 256$.
+* Bảng `data/full/metadata.csv` được theo dõi trực tiếp trong Git repository, ghi nhận chi tiết diện tích u và tỷ lệ phần trăm cho từng lát cắt.
+* Người dùng có thể tái tạo hoặc cập nhật kho dữ liệu bằng script `python scripts/download_full_dataset.py`.
 
 ---
 
-## 📑 5. Bảng Dữ Liệu 20 Ca Mẫu Tiêu Biểu Trong `data/sample/`
+## 📑 5. Bảng Dữ Liệu 20 Ca Bệnh Tiêu Biểu Trong Tập Thực Nghiệm (TCGA-LGG)
 
 | STT | Mã Ca Mẫu (`sample_id`) | Bệnh Nhân Nguồn | Kích Thước | Diện Tích U (px) | Tỷ Lệ U / Não (%) | Phân Loại Độ Khó |
+
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: |
 | 1 | `mri_brain_tumor_01` | `TCGA_CS_4941_19960909` | $256 \times 256$ | 1,426 | 2.18% | Trung bình |
 | 2 | `mri_brain_tumor_02` | `TCGA_CS_4941_19960909` | $256 \times 256$ | 2,646 | 4.04% | Trung bình |

@@ -97,9 +97,11 @@ Dữ liệu thực nghiệm của đồ án được trích xuất từ bộ d�
 2. **Kaggle Benchmark Dataset (Kho đối chứng / Dự phòng):** [https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation](https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation).
 3. **Viện Y tế Quốc gia Hoa Kỳ TCIA (NIH/NCI):** [https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LGG).
 
-### 5.2. Cấu trúc dữ liệu hai tầng (Two-Tier Data Architecture)
-* **Tầng 1 (`data/sample/` - Theo dõi trong Git):** Gồm 20 lát cắt đại diện từ 10 bệnh nhân khác nhau, phục vụ kiểm thử nhanh CI/CD (< 1.5s).
-* **Tầng 2 (`data/full/` - Gitignored theo quy chuẩn):** Toàn bộ **3,929 lát cắt chuẩn TCGA-LGG từ 110 bệnh nhân**, gồm ảnh PNG $256 \times 256$, mặt nạ nhị phân Ground Truth và file `metadata.csv` chi tiết.
+### 5.2. Cấu trúc tổ chức dữ liệu thực nghiệm
+Toàn bộ dữ liệu thực nghiệm của đồ án được lưu trữ tập trung tại thư mục `data/full/`:
+* Toàn bộ **3,929 lát cắt chuẩn TCGA-LGG từ 110 bệnh nhân**, gồm ảnh PNG $256 \times 256$, mặt nạ nhị phân Ground Truth và bảng `metadata.csv` chi tiết được theo dõi trong Git.
+* Dữ liệu được tích hợp tải tự động qua kịch bản `python scripts/download_full_dataset.py`.
+
 
 ### 5.3. Thống kê phân bố dữ liệu thực nghiệm
 * **Tổng số lát cắt:** 3,929 lát cắt (110 bệnh nhân).
@@ -193,7 +195,8 @@ Hệ thống xây dựng theo mô hình pipeline 7 bước khép kín và so sá
 # 9. CHƯƠNG TRÌNH MINH HỌA (STREAMLIT GUI DEMO)
 
 * **Kiến trúc ứng dụng:** Xây dựng bằng thư viện mã nguồn mở **Streamlit** (`demo/app.py` và `demo/utils.py`):
-  * **Thanh điều khiển (Sidebar):** Cho phép chuyển đổi linh hoạt giữa "Toàn bộ 3,929 lát cắt (data/full)" và "20 mẫu nhanh (data/sample)", lọc theo mã bệnh nhân (110 bệnh nhân), lựa chọn thuật toán phân đoạn (Watershed / Region Growing), và thanh trượt tinh chỉnh siêu tham số.
+  * **Thanh điều khiển (Sidebar):** Cho phép duyệt kho 3,929 lát cắt chuẩn (data/full), lọc theo mã bệnh nhân (110 bệnh nhân), lựa chọn thuật toán phân đoạn (Watershed / Region Growing), và thanh trượt tinh chỉnh siêu tham số.
+
   * **Khu vực hiển thị chính (Main Area):** 5 thẻ KPI chẩn đoán nổi bật (Trạng thái khối u, Diện tích pixel, Tỷ lệ u/não, Độ tròn Circularity, Điểm tương đồng Dice).
   * **Lưới ảnh trực quan hóa:** Hiển thị song song 4 ảnh trung gian $[Gốc \mid Tách sọ \mid Mặt nạ u \mid Khoanh vùng Bounding Box]$ và so sánh đối chiếu trực tiếp với Ground Truth.
 * **Hướng dẫn khởi chạy demo:**
@@ -243,7 +246,8 @@ Hệ thống xây dựng theo mô hình pipeline 7 bước khép kín và so sá
 ### Phụ lục B: Bảng Tổng Hợp Phân Công Nhiệm Vụ Sprint Cấp Tốc 7 Ngày Chi Tiết
 | Ngày | Nội dung công việc trọng tâm | Hà Mạnh Trường (Nhóm trưởng) | Huỳnh Tâm Trí (Thành viên) | Sản phẩm nghiệm thu |
 | :---: | :--- | :--- | :--- | :--- |
-| **Ngày 1** | Khởi động Sprint, Chuẩn hóa Dữ liệu & Đặc tả Kỹ thuật | Chủ trì lập kế hoạch Sprint 7 ngày, soạn thảo đặc tả `SPEC_PIPELINE_MRI.md` (13 signatures, 7 invariants) | Tổ chức cấu trúc dữ liệu 2 tầng (sample/full 3,929 lát), chạy Notebook 01 EDA, xuất `DATA_EXPLORATION_REPORT.md` | `SPEC_PIPELINE_MRI.md`, Notebook 01, Báo cáo dữ liệu |
+| **Ngày 1** | Khởi động Sprint, Chuẩn hóa Dữ liệu & Đặc tả Kỹ thuật | Chủ trì lập kế hoạch Sprint 7 ngày, soạn thảo đặc tả `SPEC_PIPELINE_MRI.md` (13 signatures, 7 invariants) | Chuẩn hóa toàn bộ 3,929 lát cắt dữ liệu TCGA-LGG, chạy Notebook 01 EDA, xuất `DATA_EXPLORATION_REPORT.md` | `SPEC_PIPELINE_MRI.md`, Notebook 01, Báo cáo dữ liệu |
+
 | **Ngày 2** | Tiền xử lý, Tách sọ não 6 bước & Bộ đo Y sinh | Cài đặt `filters.py` (Bilateral + CLAHE), `skull_strip.py` 6 bước kinh điển, hoàn thiện Notebook 02 | Cài đặt module `metrics.py` (Dice, IoU, Sens, Spec), xử lý an toàn mẫu rỗng $0/0$, viết test unit | `src/preprocessing/`, `src/evaluation/metrics.py`, Unit tests (test_preprocessing, test_metrics) |
 | **Ngày 3** | Phân đoạn Baseline Watershed & Đo Đặc trưng Hình học | Cài đặt `watershed.py` với biến đổi khoảng cách EDT, khảo sát ngưỡng `dist_thresh_ratio` | Cài đặt `features.py` (diện tích u, circularity, bounding box) và `visualization.py` (hộp đỏ, viền vàng, Quad view) | `src/segmentation/watershed.py`, `src/measurement/`, Unit tests (test_segmentation, test_measurement) |
 | **Ngày 4** | Phân đoạn Đối chứng Region Growing & Ghép nối Pipeline | Cài đặt `region_growing.py` (tự tìm seed cực đại cường độ, BFS 8 láng giềng), tích hợp `BrainTumorPipeline` | Hoàn thiện Notebook 03 (so sánh song song Watershed vs Region Growing), xây dựng framework benchmark | `src/pipeline.py`, Notebook 03, Bảng nhận xét định tính |

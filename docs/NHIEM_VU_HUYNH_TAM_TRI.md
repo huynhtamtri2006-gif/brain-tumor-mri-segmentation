@@ -11,7 +11,7 @@
 * **Lớp sinh hoạt:** 15DHKHDL03
 * **Vai trò:** **Thành viên**
 * **Trách nhiệm trọng tâm:**
-  * Thu thập, cấu trúc hóa dữ liệu ảnh MRI hai tầng: 20 mẫu kiểm thử nhanh (`data/sample/`) và toàn bộ 3,929 lát cắt chuẩn quốc tế TCGA-LGG (`data/full/`).
+  * Thu thập, cấu trúc hóa dữ liệu ảnh MRI toàn bộ 3,929 lát cắt chuẩn quốc tế TCGA-LGG (`data/full/`).
   * Nghiên cứu cơ sở toán học và cài đặt hệ thống chỉ số đánh giá y sinh chuẩn mực (Dice Score, IoU Jaccard, Sensitivity, Specificity).
   * Cài đặt module Rút trích đặc trưng hình học khối u (Diện tích u, Tỷ lệ u/não, Độ tròn bờ u Circularity, Bounding Box cảnh báo đỏ).
   * Xây dựng và hoàn thiện ứng dụng web tương tác minh họa (Streamlit GUI) hỗ trợ chế độ Dual-mode dữ liệu.
@@ -28,7 +28,7 @@
 | Tiêu chí đánh giá | Trọng số | Đóng góp và minh chứng chính của Huỳnh Tâm Trí |
 | :--- | :---: | :--- |
 | **1. Phân tích & lựa chọn đúng phương pháp (PLO2, CLO1)** | **15% (1.5đ)** | - Khảo sát các bộ độ tương đồng y khoa chuẩn quốc tế (Dice Similarity Coefficient, Jaccard Index).<br>- Lựa chọn các đặc trưng hình học (Area, Perimeter, Circularity) phản ánh độ gồ ghề bờ u theo góc nhìn chẩn đoán lâm sàng. |
-| **2. Áp dụng được các phương pháp xử lý (PLO2, CLO2)** *(Trọng tâm)* | **50% (5.0đ)** | - Tổ chức kiến trúc dữ liệu 2 tầng: `data/sample/` (20 mẫu) và `data/full/` (3,929 lát cắt chuẩn).<br>- Cài đặt module `src/evaluation/metrics.py` và `src/measurement/features.py`.<br>- Xây dựng ứng dụng Web tương tác Streamlit GUI (`demo/app.py`).<br>- Chạy thực nghiệm định lượng toàn diện trên 3,929 lát cắt và xuất báo cáo CSV chi tiết.<br>- Đạt 100% test cases trong `tests/test_metrics.py` và `tests/test_measurement.py`. |
+| **2. Áp dụng được các phương pháp xử lý (PLO2, CLO2)** *(Trọng tâm)* | **50% (5.0đ)** | - Chuẩn hóa kho dữ liệu toàn bộ 3,929 lát cắt chuẩn quốc tế TCGA-LGG (`data/full/`).<br>- Cài đặt module `src/evaluation/metrics.py` và `src/measurement/features.py`.<br>- Xây dựng ứng dụng Web tương tác Streamlit GUI (`demo/app.py`).<br>- Chạy thực nghiệm định lượng toàn diện trên 3,929 lát cắt và xuất báo cáo CSV chi tiết.<br>- Đạt 100% test cases trong `tests/test_metrics.py` và `tests/test_measurement.py`. |
 | **3. Đọc tài liệu, nghiên cứu giải quyết bài toán (PLO4, CLO3)** | **10% (1.0đ)** | - Nghiên cứu bài báo gốc của Buda et al. (2019) công bố trên tạp chí *Computers in Biology and Medicine* về bộ dữ liệu TCGA-LGG.<br>- Soạn thảo tài liệu phân tích dữ liệu chuyên sâu [DATA_EXPLORATION_REPORT.md](file:///C:/Users/xpaga/Documents/xlas/docs/DATA_EXPLORATION_REPORT.md). |
 | **4. Trình bày báo cáo (PLO7, CLO5)** | **15% (1.5đ)** | - Biên soạn các chương tổng quan, dữ liệu, bảng số liệu định lượng, giới thiệu GUI và kết luận.<br>- Chuẩn hóa bảng biểu, biểu đồ phân bố và hình ảnh chụp giao diện Streamlit rõ nét. |
 | **5. Phân công & phối hợp làm việc nhóm (PLO6, CLO4)** | **10% (1.0đ)** | - Phối hợp chặt chẽ với Nhóm trưởng Trường trong suốt Sprint 7 ngày theo đúng kế hoạch.<br>- Phụ trách toàn bộ khâu thiết kế Slide thuyết trình chuyên nghiệp và video clip minh họa hệ thống. |
@@ -60,20 +60,20 @@
 ## 📋 NỘI DUNG THỰC HIỆN CHI TIẾT TỪNG NGÀY
 
 ### 🔹 NGÀY 1: Tiếp Nhận Sprint, Thu Thập & Chuẩn Hóa Dữ Liệu TCGA-LGG (3,929 Lát Cắt)
-* **Mục tiêu:** Thiết lập cấu trúc dữ liệu 2 tầng chuẩn mực, kiểm tra tính hợp lệ của mặt nạ nhãn chuyên gia, và hoàn thành báo cáo khám phá dữ liệu ban đầu.
+* **Mục tiêu:** Thiết lập kho dữ liệu thực nghiệm TCGA-LGG chuẩn mực, kiểm tra tính hợp lệ của mặt nạ nhãn chuyên gia, và hoàn thành báo cáo khám phá dữ liệu ban đầu.
 * **Nhiệm vụ cụ thể:**
   1. Họp cùng Nhóm trưởng Trường: Tiếp nhận bản kế hoạch Sprint cấp tốc 7 ngày, thống nhất giao diện dữ liệu đầu vào.
   2. Thu thập và chuẩn hóa bộ dữ liệu nghiên cứu chuẩn The Cancer Genome Atlas Low-Grade Glioma (TCGA-LGG) gồm 3,929 lát cắt MRI từ 110 bệnh nhân:
-     * Tầng 1 (`data/sample/`): 20 ca mẫu kiểm thử nhanh phục vụ CI/CD (< 1.5s).
+     * Kho dữ liệu `data/full/`: 3,929 lát cắt MRI chuẩn hóa từ 110 bệnh nhân.
      * Tầng 2 (`data/full/`): Toàn bộ 3,929 lát cắt chuẩn (tải tự động qua `python scripts/download_full_dataset.py`).
   3. Kiểm tra tính hợp lệ của dữ liệu: Đảm bảo ảnh gốc là định dạng chuẩn $256 \times 256$, mặt nạ Ground Truth chỉ chứa giá trị nhị phân $\{0, 255\}$.
   4. Xây dựng và chạy hoàn thiện `notebooks/01_data_exploration.ipynb`:
      * Thống kê kích thước khối u: Diện tích nhỏ nhất (7 px), lớn nhất (7,929 px), trung vị (1,529 px), trung bình (1,931 px).
      * Phân nhóm 3 dải diện tích: U nhỏ (< 1.5%), U trung bình (1.5%–5%), U lớn (> 5% diện tích não).
      * Xuất tài liệu thống kê chuyên sâu `docs/DATA_EXPLORATION_REPORT.md`.
-* **Lệnh kiểm tra:** `python -c "import os; print('Sample images:', len(os.listdir('data/sample/images')))"`
+* **Lệnh kiểm tra:** `python -c "import os; print('Sample images:', len(os.listdir('data/full/images')))"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [x] Cấu trúc thư mục dữ liệu 2 tầng được thiết lập chuẩn mực.
+  - [x] Kho dữ liệu thực nghiệm TCGA-LGG được chuẩn hóa.
   - [x] Chạy hoàn thiện `notebooks/01_data_exploration.ipynb`.
   - [x] Hoàn tất tài liệu phân tích dữ liệu `docs/DATA_EXPLORATION_REPORT.md`.
 
@@ -168,7 +168,7 @@
   * Trực tiếp biên soạn 6 chương trong Báo cáo đồ án:
     1. **Trang bìa & Mục lục:** Chuẩn hóa thông tin đề tài, Giảng viên hướng dẫn, thông tin 2 thành viên nhóm, bảng phân công nhiệm vụ Sprint 7 ngày (tỷ lệ 50% - 50%), mục lục tự động, danh mục bảng biểu và hình ảnh.
     2. **Mục 1: Mở đầu / Giới thiệu đề tài:** Đặt vấn đề lâm sàng về khối u não, ý nghĩa của ảnh MRI, mục tiêu đầu vào - đầu ra và phạm vi giải quyết của đồ án.
-    3. **Mục 3: Mô tả tập dữ liệu:** Thuyết minh bộ dữ liệu quốc tế TCGA-LGG (Buda et al. 2019), cấu trúc 2 tầng `data/sample/` và `data/full/`, bảng thống kê mô tả kích thước u.
+    3. **Mục 3: Mô tả tập dữ liệu:** Thuyết minh bộ dữ liệu quốc tế TCGA-LGG (Buda et al. 2019), kho dữ liệu thực nghiệm `data/full/`, bảng thống kê mô tả kích thước u.
     4. **Mục 5: Kiến trúc pipeline & Bộ đo định lượng:** Trình bày sơ đồ luồng dữ liệu 4 tầng và công thức toán học các chỉ số Dice, IoU, Sensitivity, Specificity, Circularity.
     5. **Mục 8 (Phần định lượng): Bảng số liệu & Biểu đồ đánh giá:** Trình bày bảng so sánh Mean $\pm$ Std của 2 thuật toán trên 3,929 lát cắt, chèn biểu đồ trực quan hóa kết quả.
     6. **Mục 9: Chương trình ứng dụng minh họa (Demo GUI):** Mô tả kiến trúc module Streamlit, hướng dẫn cài đặt và vận hành, chèn 4 ảnh chụp màn hình giao diện thao tác thực tế.
@@ -186,7 +186,7 @@
 * **Nhiệm vụ cụ thể:**
   1. Thiết kế bộ Slide thuyết trình chính thức (20 slides) theo dàn ý chi tiết tại `docs/SLIDE_THUYET_TRINH_OUTLINE.md`:
      * Đặt vấn đề & Mục tiêu đề tài.
-     * Bộ dữ liệu TCGA-LGG & Chuẩn hóa 2 tầng.
+     * Bộ dữ liệu TCGA-LGG & Chuẩn hóa kho dữ liệu full.
      * Sơ đồ khối pipeline DIP 4 tầng.
      * Kỹ thuật Tách sọ não 6 bước & 2 thuật toán phân đoạn (Trường hỗ trợ nội dung kỹ thuật).
      * Bảng kết quả thực nghiệm toàn diện trên 3,929 lát cắt và biểu đồ đối sánh.

@@ -32,9 +32,11 @@ Thumbs.db
 # Agent scratch directory (work-in-progress issues/notes)
 .scratch/
 
-# Large dataset directories (keep only data/sample in git)
+# Large dataset directories (ignore raw images and masks, track metadata)
 data/raw/
 data/processed/
-data/full/
+data/full/images/
+data/full/masks/
 data/raw_hf/
 *.parquet
+

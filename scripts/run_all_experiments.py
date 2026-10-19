@@ -1,12 +1,11 @@
 """Script thực thi toàn diện 1 chạm (One-click Experiment Runner).
 
 Tự động chạy toàn bộ pipeline xử lý ảnh số (Watershed & Region Growing)
-hỗ trợ cả tập dữ liệu mẫu (20 ca) lẫn toàn bộ 3,929 lát cắt TCGA-LGG.
+trên toàn bộ 3,929 lát cắt chuẩn TCGA-LGG (data/full).
 Tối ưu hóa đa tiến trình (Multiprocessing) để tính toán siêu tốc.
 
 Sử dụng:
     python scripts/run_all_experiments.py
-    python scripts/run_all_experiments.py --data-dir data/full
 """
 
 import os
@@ -90,17 +89,17 @@ def run_benchmark_parallel(images_dir, masks_dir, method="watershed", max_worker
 
 def main():
     parser = argparse.ArgumentParser(description="Chạy thực nghiệm đánh giá mô hình phân đoạn u não MRI.")
-    parser.add_argument("--data-dir", type=str, default=None, help="Thư mục dữ liệu (data/full hoặc data/sample)")
+    parser.add_argument("--data-dir", type=str, default=None, help="Thư mục dữ liệu (mặc định data/full)")
+
     parser.add_argument("--workers", type=int, default=None, help="Số tiến trình CPU song song")
     args = parser.parse_args()
 
     # Tự động chọn thư mục dữ liệu
     if args.data_dir:
         data_dir = args.data_dir
-    elif os.path.exists("data/full/images") and len(os.listdir("data/full/images")) > 100:
-        data_dir = "data/full"
     else:
-        data_dir = "data/sample"
+        data_dir = "data/full"
+
 
     img_dir = os.path.join(data_dir, "images")
     mask_dir = os.path.join(data_dir, "masks")

@@ -27,21 +27,17 @@ Dữ liệu thực nghiệm của đồ án được trích xuất từ bộ d�
 
 ---
 
-## 📂 2. Cấu Trúc Thư Mục Dữ Liệu Hai Tầng (Two-Tier Architecture)
+## 📂 2. Cấu Trúc Thư Mục Dữ Liệu Thực Nghiệm
 
-Để tối ưu hóa dung lượng repository Git (< 3 MB) đồng thời đảm bảo khả năng tái lập thực nghiệm 100% trên tập dữ liệu quy mô lớn, dữ liệu được thiết kế theo cấu trúc hai tầng:
+Toàn bộ dữ liệu thực nghiệm chuẩn quốc tế gồm 3,929 lát cắt chuẩn TCGA-LGG được tổ chức trong thư mục `data/full/`:
 
 ```
 data/
 ├── README.md                      # Tài liệu thuyết minh dữ liệu thực nghiệm
-├── sample/                        # [Tầng 1 - Tracked in Git] Bộ 20 mẫu chuẩn phục vụ kiểm thử nhanh
-│   ├── images/                    # 20 ảnh cắt lát MRI não (.png, 256x256)
-│   ├── masks/                     # 20 mặt nạ Ground Truth khối u nhị phân (.png, 256x256)
-│   └── metadata.csv               # Bảng metadata thống kê diện tích và tỷ lệ u của 20 mẫu
-├── full/                          # [Tầng 2 - Gitignored] Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
+├── full/                          # Toàn bộ 3,929 lát cắt chuẩn TCGA-LGG
 │   ├── images/                    # 3,929 ảnh cắt lát MRI não (.png, 256x256)
 │   ├── masks/                     # 3,929 mặt nạ Ground Truth u não (.png, 256x256)
-│   └── metadata.csv               # Bảng metadata chi tiết 3,929 lát cắt từ 110 bệnh nhân
+│   └── metadata.csv               # Bảng metadata chi tiết 3,929 lát cắt từ 110 bệnh nhân (được track trên Git)
 └── processed/                     # Kết quả tiền xử lý và tách sọ não
 ```
 
@@ -49,13 +45,13 @@ data/
 > ```bash
 > python scripts/download_full_dataset.py
 > ```
-> Script tự động tải parquet từ Hugging Face, giải nén ảnh và mặt nạ thành PNG $256 \times 256$, sinh `metadata.csv` và dọn dẹp bộ nhớ đệm tự động.
+> Script tự động tải dữ liệu từ Hugging Face, giải nén ảnh và mặt nạ thành PNG $256 \times 256$, sinh `metadata.csv` và dọn dẹp bộ nhớ đệm tự động.
 
 ---
 
 ## 🔬 3. Quy Cách Mặt Nạ Ground Truth (Binary Mask)
 
-Mỗi file ảnh mặt nạ trong `data/sample/masks/` hoặc `data/full/masks/` tương ứng 1-1 với ảnh MRI trong thư mục `images/`:
+Mỗi file ảnh mặt nạ trong `data/full/masks/` tương ứng 1-1 với ảnh MRI trong thư mục `data/full/images/`:
 * **Kích thước chuẩn:** $256 \times 256$ pixels.
 * **Giá trị 0 (Đen):** Mô não lành / Hộp sọ / Vùng ngoài sọ (Background).
 * **Giá trị 255 (Trắng):** Vùng nhu mô u não (Core Tumor / Lesion Foreground).
@@ -67,16 +63,17 @@ Mỗi file ảnh mặt nạ trong `data/sample/masks/` hoặc `data/full/masks/`
 
 ## 📊 4. Thống Kê Chi Tiết Toàn Bộ Dữ Liệu Thực Nghiệm (3,929 Lát Cắt)
 
-| Chỉ số thống kê | Toàn bộ tập dữ liệu (`data/full`) | Tập mẫu nhanh (`data/sample`) |
-| :--- | :--- | :--- |
-| **Tổng số lát cắt MRI** | **3,929 lát cắt** | **20 lát cắt** |
-| **Số lượng bệnh nhân** | **110 bệnh nhân** (TCGA-LGG) | **10 bệnh nhân** |
-| **Lát cắt có khối u (Positive)** | **1,373 lát cắt** (34.95%) | **20 lát cắt** (100%) |
-| **Lát cắt não lành (Healthy/Negative)** | **2,556 lát cắt** (65.05%) | **0 lát cắt** |
-| **Diện tích u trung bình (Mean Area)** | **1,931.4 pixels** (2.95% ảnh) | **2,060.0 pixels** (3.14% ảnh) |
-| **Trung vị diện tích u (Median Area)** | **1,529.0 pixels** (2.33% ảnh) | **1,725.5 pixels** (2.63% ảnh) |
-| **Diện tích u nhỏ nhất (Min Area)** | **7 pixels** (0.01% ảnh) | **120 pixels** (0.18% ảnh) |
-| **Diện tích u lớn nhất (Max Area)** | **7,929 pixels** (12.10% ảnh) | **5,348 pixels** (8.16% ảnh) |
+| Chỉ số thống kê | Toàn bộ tập dữ liệu (`data/full`) |
+| :--- | :--- |
+| **Tổng số lát cắt MRI** | **3,929 lát cắt** |
+| **Số lượng bệnh nhân** | **110 bệnh nhân** (TCGA-LGG) |
+| **Lát cắt có khối u (Positive)** | **1,373 lát cắt** (34.95%) |
+| **Lát cắt não lành (Healthy/Negative)** | **2,556 lát cắt** (65.05%) |
+| **Diện tích u trung bình (Mean Area)** | **1,931.4 pixels** (2.95% ảnh) |
+| **Trung vị diện tích u (Median Area)** | **1,529.0 pixels** (2.33% ảnh) |
+| **Diện tích u nhỏ nhất (Min Area)** | **7 pixels** (0.01% ảnh) |
+| **Diện tích u lớn nhất (Max Area)** | **7,929 pixels** (12.10% ảnh) |
+
 
 ### Phân bố nhóm diện tích u trong 1,373 lát cắt bệnh lý:
 1. **Khối u nhỏ (< 1.5% diện tích ảnh):** 463 lát cắt (33.72%) — Thử thách phân đoạn do biên mờ và tín hiệu yếu.

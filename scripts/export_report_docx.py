@@ -582,11 +582,11 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
 
     add_section_title("5.2. Cấu trúc và Phân bố tập dữ liệu thực nghiệm")
     add_body_p(
-        "Nghiên cứu được thiết lập theo chiến lược dữ liệu 2 tầng (Two-Tier Data Strategy) nhằm kết hợp hoàn hảo giữa năng lực kiểm thử nhanh và tính nghiêm ngặt của nghiên cứu y sinh: "
-        "Tầng 1 là toàn bộ kho dữ liệu benchmark 3,929 lát cắt MRI thu thập từ 110 bệnh nhân TCGA-LGG (lưu trữ tại data/full/), trong đó có 1,373 lát cắt chứa u não (34.95%) "
-        "và 2,556 lát cắt mô não lành (65.05%). Tầng 2 là bộ 20 mẫu ảnh tiêu biểu từ 10 bệnh nhân (lưu tại data/sample/) phục vụ CI/CD và kiểm chứng thuật toán tức thời. "
+        "Nghiên cứu được thiết lập trên toàn bộ kho dữ liệu benchmark 3,929 lát cắt MRI thu thập từ 110 bệnh nhân TCGA-LGG (lưu trữ tại data/full/), "
+        "trong đó có 1,373 lát cắt chứa u não (34.95%) và 2,556 lát cắt mô não lành (65.05%). "
         "Nhóm tiến hành phân tầng 1,373 lát cắt u thành 3 nhóm độ khó theo diện tích u để khảo sát tính bền vững:"
     )
+
 
     # Bảng phân tầng dữ liệu
     tbl_dist = doc.add_table(rows=4, cols=4)
@@ -874,10 +874,11 @@ def build_docx_report(output_path: str = "docs/BAO_CAO_DO_AN_XLAS.docx"):
         "thân thiện với người dùng y khoa:"
     )
     add_body_p(
-        "Thanh điều khiển (Sidebar): Cho phép chuyển đổi linh hoạt giữa 'Toàn bộ 3,929 lát cắt (data/full)' và '20 mẫu nhanh (data/sample)', "
+        "Thanh điều khiển (Sidebar): Cho phép duyệt kho 3,929 lát cắt chuẩn (data/full), "
         "lọc theo mã bệnh nhân (110 bệnh nhân), lựa chọn thuật toán phân đoạn (Watershed / Region Growing), và thanh trượt tinh chỉnh siêu tham số trực tiếp theo thời gian thực.",
         bullet=True
     )
+
     add_body_p(
         "Khu vực hiển thị trung tâm (Main Area): 5 thẻ KPI chẩn đoán nổi bật: Trạng thái u (Phát hiện u / Não lành), Diện tích u (pixel), "
         "Tỷ lệ % u/não, Độ tròn Circularity, Điểm Dice và Chỉ số IoU so với Ground Truth chuyên gia.",
