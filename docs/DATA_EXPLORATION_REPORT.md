@@ -22,7 +22,7 @@
 
 ## 📊 2. Thống Kê Tổng Thể Toàn Bộ 3,929 Lát Cắt (110 Bệnh Nhân)
 
-Hệ thống đã tích hợp và xử lý trọn vẹn **100% kho dữ liệu TCGA-LGG** gồm **3,929 lát cắt MRI** thu thập từ **110 bệnh nhân**:
+Tập dữ liệu full gồm 3.929 lát cắt MRI từ 110 bệnh nhân. Trong đó, 1.373 lát (34,95%) có vùng u trong mask Ground Truth và 2.556 lát (65,05%) không có vùng u trong mask. Các thống kê dưới đây được tính từ data/full/metadata.csv
 
 | Chỉ Số Thống Kê Toàn Tập | Giá Trị Đo Lường | Tỷ Lệ (%) | Ý Nghĩa Chẩn Đoán Lâm Sàng |
 | :--- | :---: | :---: | :--- |
@@ -45,7 +45,7 @@ Hệ thống đã tích hợp và xử lý trọn vẹn **100% kho dữ liệu T
 | **Phân vị 75% (Q3)** | 2,765 px | 4.22% |
 | **Giá trị lớn nhất (Max)** | 7,929 px | 12.10% |
 | **Trung bình ± Độ lệch chuẩn (Mean ± Std)** | **1,931.4 ± 1,529.6 px** | **2.95 ± 2.33%** |
-
+Tập dữ liệu có nhiều lát không chứa vùng u trong mask hơn lát có u. Vì vậy, cần trình bày kết quả phân đoạn riêng cho nhóm có u và nhóm không có u; chỉ số gộp toàn tập có thể che khuất khả năng phát hiện u. Lát không có vùng u trong mask không đồng nghĩa với bệnh nhân khỏe mạnh.
 ### Phân tầng độ khó xử lý ảnh số (3 nhóm tổn thương):
 1. **Nhóm U Nhỏ ($< 1.5\%$ diện tích ảnh — 463 lát cắt, chiếm 33.7%):**
    * *Đặc điểm:* Tổn thương vi mô hoặc rìa mép ngoài cùng của khối u, kích thước từ vài chục đến dưới 983 pixel.
