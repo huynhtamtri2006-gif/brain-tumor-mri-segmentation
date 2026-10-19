@@ -119,9 +119,9 @@
   4. Chạy kiểm thử tự động: `pytest tests/test_segmentation.py -k watershed -v`.
 * **Lệnh kiểm tra:** `pytest tests/test_segmentation.py -k watershed -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Test `test_watershed_segmentation` đạt kết quả PASSED.
-  - [ ] Watershed phân đoạn chính xác trên các ca u kích thước trung bình và lớn.
-  - [ ] Cơ chế xử lý ca âm tính (lát não lành) hoạt động an toàn tuyệt đối.
+  - [x] Test `test_watershed_segmentation` đạt kết quả PASSED.
+  - [x] Watershed phân đoạn chính xác trên các ca u kích thước trung bình và lớn.
+  - [x] Cơ chế xử lý ca âm tính (lát não lành) hoạt động an toàn tuyệt đối.
 
 ---
 
