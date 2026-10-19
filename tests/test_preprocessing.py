@@ -28,3 +28,23 @@ def test_skull_stripping(sample_mri_image):
     assert stripped.shape == sample_mri_image.shape
     # Vùng ngoài não phải là 0
     assert np.all(stripped[mask == 0] == 0)
+
+
+def test_skull_stripping_with_intermediates(sample_mri_image):
+    result = strip_skull(sample_mri_image, return_intermediates=True)
+    assert len(result) == 3
+    stripped, mask, intermediates = result
+
+    expected_keys = {
+        "original", "denoised", "otsu", "opened",
+        "lcc", "closed_and_filled", "brain_mask", "stripped",
+    }
+    assert expected_keys.issubset(intermediates.keys())
+
+    for key in expected_keys:
+        step_image = intermediates[key]
+        assert step_image.shape == sample_mri_image.shape
+        assert step_image.dtype == np.uint8
+
+    assert np.array_equal(mask, intermediates["brain_mask"])
+    assert np.array_equal(stripped, intermediates["stripped"])

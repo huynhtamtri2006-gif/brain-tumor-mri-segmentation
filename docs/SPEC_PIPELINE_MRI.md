@@ -165,8 +165,10 @@ Nguồn duy nhất (single source of truth) cho siêu tham số là `configs/def
 
 | Hàm | Chữ ký (type hints) | Input | Output |
 | :--- | :--- | :--- | :--- |
-| `extract_brain_mask` | `extract_brain_mask(image: np.ndarray, kernel_size: int = 5) -> np.ndarray` | `image`: ảnh xám `(H, W)` uint8 (hoặc BGR). `kernel_size`: số lẻ ≥ 3 cho phần tử cấu trúc elip. Số vòng lặp Opening **cố định 2** (R2). | `Mask` `(H, W)` uint8 `{0, 255}` = hợp của thành phần liên thông lớn nhất (8-connectivity) và các lỗ được lấp. Trả toàn `0` nếu ảnh rỗng/không tách được foreground (`num_labels <= 1`). |
-| `strip_skull` | `strip_skull(image: np.ndarray, brain_mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]` | `image`: ảnh xám `(H, W)` uint8. `brain_mask`: mặt nạ tính trước, **phải cùng shape**; `None` ⇒ tự gọi `extract_brain_mask(image)`. | `(stripped, mask)`: `stripped` `(H, W)` uint8 thoả `stripped[mask == 0] == 0`; `mask` `(H, W)` uint8 `{0, 255}`. |
+| `extract_brain_mask` | `extract_brain_mask(image: np.ndarray, kernel_size: int = 5, return_intermediates: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, np.ndarray]]]` | `image`: ảnh xám `(H, W)` uint8 (hoặc BGR). `kernel_size`: số lẻ ≥ 3 cho phần tử cấu trúc elip. Số vòng lặp Opening **cố định 2** (R2). | `Mask` `(H, W)` uint8 `{0, 255}` = hợp của thành phần liên thông lớn nhất (8-connectivity) và các lỗ được lấp. Trả toàn `0` nếu ảnh rỗng/không tách được foreground (`num_labels <= 1`). |
+| `strip_skull` | `strip_skull(image: np.ndarray, brain_mask: Optional[np.ndarray] = None, return_intermediates: bool = False) -> Union[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray, Dict[str, np.ndarray]]]` | `image`: ảnh xám `(H, W)` uint8. `brain_mask`: mặt nạ tính trước, **phải cùng shape**; `None` ⇒ tự gọi `extract_brain_mask(image)`. | `(stripped, mask)`: `stripped` `(H, W)` uint8 thoả `stripped[mask == 0] == 0`; `mask` `(H, W)` uint8 `{0, 255}`. |
+
+*Tuỳ chọn trung gian (từ Ngày 2):* khi `return_intermediates=True`, `extract_brain_mask` trả `(mask, intermediates)` và `strip_skull` trả `(stripped, mask, intermediates)`; dict có đúng 8 khoá `original`, `denoised`, `otsu`, `opened`, `lcc`, `closed_and_filled`, `brain_mask`, `stripped`, tất cả `(H, W)` uint8. Mặc định `False` giữ nguyên hợp đồng cũ (tương thích ngược).
 
 *Tiền điều kiện:* nếu truyền `brain_mask`, hàm **không** kiểm tra lại tính nhị phân — mask có giá trị khác `{0, 255}` sẽ được `cv2.bitwise_and` hiểu theo bit.
 

@@ -140,13 +140,13 @@ SIGNATURE_CONTRACT = [
         # apply_skull_stripping. Chấp nhận cả hai tên, ưu tiên tên nhiệm vụ.
         "apply_skull_stripping", "src.preprocessing.skull_strip",
         "apply_skull_stripping", ("strip_skull",),
-        [("image", _REQUIRED), ("brain_mask", None)],
-        "Tuple[np.ndarray, np.ndarray]",
+        [("image", _REQUIRED), ("brain_mask", None), ("return_intermediates", False)],
+        "Union[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray, Dict[str, np.ndarray]]]",
     ),
     (
         "extract_brain_mask", "src.preprocessing.skull_strip", "extract_brain_mask", (),
-        [("image", _REQUIRED), ("kernel_size", 5)],
-        "np.ndarray",
+        [("image", _REQUIRED), ("kernel_size", 5), ("return_intermediates", False)],
+        "Union[np.ndarray, Tuple[np.ndarray, Dict[str, np.ndarray]]]",
     ),
     (
         "WatershedSegmenter.segment", "src.segmentation.watershed", "WatershedSegmenter.segment", (),
