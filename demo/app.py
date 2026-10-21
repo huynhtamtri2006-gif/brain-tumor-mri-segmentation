@@ -1,154 +1,255 @@
-"""Ứng dụng Web Demo Streamlit: Phân đoạn và phát hiện khối u não trên ảnh MRI.
+"""Web demo Streamlit cho pipeline phân đoạn u não trên ảnh MRI."""
 
-Học phần: Xử lý ảnh số (2026-2027) - Bộ môn Khoa học Dữ liệu - Khoa CNTT - HUIT.
-Nhóm sinh viên: Hà Mạnh Trường (2045240326) & Huỳnh Tâm Trí (2045240315).
-"""
+from __future__ import annotations
 
+import csv
+import io
 import os
 import sys
-import numpy as np
+
 import cv2
+import numpy as np
 import streamlit as st
 
-# Thêm đường dẫn gốc vào sys.path để import src
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
-from src.pipeline import BrainTumorPipeline
 from demo.utils import list_sample_cases, load_image_and_mask
+from src.pipeline import BrainTumorPipeline
 
-# Cấu hình trang Streamlit
+
 st.set_page_config(
-    page_title="Phân Đoạn U Não MRI — HUIT DIP Project",
-    page_icon="🧠",
+    page_title="Phân đoạn u não MRI | HUIT",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Custom CSS cho giao diện y khoa hiện đại
-st.markdown("""
-<style>
-    .main-header { font-size: 2.2rem; font-weight: 700; color: #1E3A8A; margin-bottom: 0.2rem; }
-    .sub-header { font-size: 1.05rem; color: #4B5563; margin-bottom: 1.5rem; }
-    .metric-card { background-color: #F3F4F6; border-radius: 8px; padding: 12px; border-left: 4px solid #3B82F6; }
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+      :root { --ink: #172b4d; --muted: #62748a; --line: #dbe3ec; --blue: #1769aa; }
+      .block-container { max-width: 1440px; padding-top: 3.5rem; padding-bottom: 3rem; }
+      [data-testid="stSidebar"] { background: #f5f8fc; border-right: 1px solid var(--line); }
+      [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2,
+      [data-testid="stSidebar"] h3 { color: var(--ink); }
+      .app-eyebrow { color: var(--blue); font-size: .78rem; font-weight: 700;
+        letter-spacing: .12em; text-transform: uppercase; margin-bottom: .5rem; }
+      .app-title { color: var(--ink); font-size: 2rem; font-weight: 750;
+        line-height: 1.2; margin: 0; }
+      .app-subtitle { color: var(--muted); font-size: 1rem; margin-top: .65rem; }
+      .section-label { color: var(--ink); font-size: 1.15rem; font-weight: 700;
+        padding-top: .3rem; }
+      div[data-testid="stMetric"] { background: #fff; border: 1px solid var(--line);
+        border-radius: 12px; padding: 1rem 1.1rem; }
+      div[data-testid="stMetricLabel"] p { color: var(--muted); }
+      div[data-testid="stAlert"] { border-radius: 10px; }
+      a[data-testid="stHeaderActionElements"] { display: none !important; }
+      hr { border-color: var(--line); }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-# 1. SIDEBAR
+
+def decode_upload(uploaded_file: object) -> np.ndarray | None:
+    """Đọc ảnh tải lên thành ảnh xám OpenCV."""
+    if uploaded_file is None:
+        return None
+    raw = np.frombuffer(uploaded_file.getvalue(), dtype=np.uint8)
+    return cv2.imdecode(raw, cv2.IMREAD_GRAYSCALE)
+
+
+def result_signature(
+    source_key: str,
+    method_key: str,
+    params: dict[str, float | int],
+) -> tuple[object, ...]:
+    return (source_key, method_key, *sorted(params.items()))
+
+
+st.markdown('<div class="app-eyebrow">Đồ án xử lý ảnh số · HUIT</div>', unsafe_allow_html=True)
+st.markdown('<h1 class="app-title">Phân đoạn khối u não trên ảnh MRI</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="app-subtitle">Thử nghiệm hai phương pháp phân đoạn và đối chiếu kết quả với mặt nạ tham chiếu.</p>',
+    unsafe_allow_html=True,
+)
+st.divider()
+
+
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Logo_HUIT.png/220px-Logo_HUIT.png", width=120)
-    st.title("⚙️ Cấu Hình Hệ Thống")
-    st.markdown("**Đồ án Xử lý ảnh số (2026–2027)**")
-    st.markdown("👨‍🎓 **Hà Mạnh Trường** - `2045240326`  \n👨‍🎓 **Huỳnh Tâm Trí** - `2045240315`")
-    st.divider()
+    st.title("Thiết lập phân tích")
+    st.caption("Chọn nguồn ảnh và cấu hình phương pháp xử lý.")
 
-    st.subheader("1. Nạp Dữ Liệu Ảnh MRI")
-    data_options = [
-        "Chọn từ kho 3,929 lát cắt chuẩn TCGA-LGG (data/full)",
-        "Tải ảnh từ máy tính (.png, .jpg)"
-    ]
-    data_mode = st.radio("Nguồn ảnh đầu vào:", data_options)
+    source_mode = st.radio(
+        "Nguồn ảnh",
+        ("Kho TCGA-LGG trên máy", "Tải ảnh từ thiết bị"),
+        index=0,
+    )
 
-    input_img = None
-    input_gt_mask = None
+    input_img: np.ndarray | None = None
+    input_gt_mask: np.ndarray | None = None
+    source_key = ""
+    sample_id: str | None = None
 
-    if "3,929" in data_mode:
-        full_files = list_sample_cases("data/full/images")
+    if source_mode == "Kho TCGA-LGG trên máy":
+        image_dir = os.path.join(PROJECT_ROOT, "data", "full", "images")
+        full_files = list_sample_cases(image_dir)
         if full_files:
-            # Cho phép tìm kiếm/lọc nhanh
-            search_patient = st.text_input("Lọc theo mã bệnh nhân (ví dụ: TCGA_CS_4941):", "")
-            if search_patient:
-                filtered_files = [f for f in full_files if search_patient.upper() in f.upper()]
+            patient_query = st.text_input(
+                "Lọc mã bệnh nhân",
+                placeholder="Ví dụ: TCGA_CS_4941",
+            ).strip().upper()
+            filtered_files = (
+                [name for name in full_files if patient_query in name.upper()]
+                if patient_query
+                else full_files[:100]
+            )
+            if filtered_files:
+                selected_file = st.selectbox(
+                    "Lát cắt MRI",
+                    filtered_files,
+                    help=f"Hiển thị {len(filtered_files)} trên tổng số {len(full_files)} ảnh.",
+                )
+                sample_id = os.path.splitext(selected_file)[0]
+                input_img, input_gt_mask = load_image_and_mask(
+                    sample_id,
+                    base_dir=os.path.join(PROJECT_ROOT, "data", "full"),
+                )
+                source_key = f"dataset:{sample_id}"
             else:
-                filtered_files = full_files[:100] # hiển thị 100 lát đầu để mượt giao diện
-            
-            selected_file = st.selectbox(f"Chọn lát cắt MRI ({len(filtered_files)}/{len(full_files)} khả dụng):", filtered_files)
-            if selected_file:
-                sample_id = selected_file.replace(".png", "")
-                input_img, input_gt_mask = load_image_and_mask(sample_id, base_dir="data/full")
+                st.warning("Không tìm thấy ảnh nào khớp với mã bệnh nhân này.")
         else:
-            st.warning("Chưa có ảnh trong data/full/images")
+            st.info(
+                "Kho ảnh đầy đủ chưa có trên máy chủ này. Hãy tải ảnh lên hoặc chạy ứng dụng trên máy có data/full."
+            )
 
     else:
-        uploaded_file = st.file_uploader("Tải lên ảnh MRI xám:", type=["png", "jpg", "jpeg", "tif"])
-        if uploaded_file is not None:
-            file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-            input_img = cv2.imdecode(file_bytes, cv2.IMREAD_GRAYSCALE)
+        uploaded_image = st.file_uploader(
+            "Ảnh MRI",
+            type=("png", "jpg", "jpeg", "tif", "tiff"),
+            help="Ảnh sẽ được đọc ở thang xám để xử lý.",
+        )
+        input_img = decode_upload(uploaded_image)
+        if uploaded_image is not None:
+            source_key = f"upload:{uploaded_image.name}:{uploaded_image.size}"
+        uploaded_mask = st.file_uploader(
+            "Mặt nạ tham chiếu (không bắt buộc)",
+            type=("png", "jpg", "jpeg", "tif", "tiff"),
+            key="ground_truth_upload",
+        )
+        input_gt_mask = decode_upload(uploaded_mask)
 
     st.divider()
-    st.subheader("2. Thuật Toán Phân Đoạn (DIP)")
-    method_option = st.selectbox(
-        "Lựa chọn phương pháp:",
-        ["Phương án A: Marker-controlled Watershed (Baseline)", "Phương án B: Seeded Region Growing (Đối chứng)"]
+    method_label = st.selectbox(
+        "Phương pháp phân đoạn",
+        ("Watershed", "Region Growing"),
     )
-    method_key = "watershed" if "Watershed" in method_option else "region_growing"
+    method_key = "watershed" if method_label == "Watershed" else "region_growing"
 
-    with st.expander("Tùy chỉnh siêu tham số"):
-        if method_key == "watershed":
-            dist_ratio = st.slider("Ngưỡng khoảng cách cực đại (Dist Ratio):", 0.1, 0.9, 0.4, 0.05)
-            pipeline_params = {"dist_thresh_ratio": dist_ratio}
-        else:
-            tol = st.slider("Dung sai độ sáng (Intensity Tolerance):", 5, 40, 15, 1)
-            pipeline_params = {"intensity_tolerance": tol}
+    if method_key == "watershed":
+        dist_ratio = st.slider("Ngưỡng khoảng cách", 0.1, 0.9, 0.4, 0.05)
+        pipeline_params: dict[str, float | int] = {"dist_thresh_ratio": dist_ratio}
+    else:
+        tolerance = st.slider("Dung sai cường độ", 5, 40, 15, 1)
+        pipeline_params = {"intensity_tolerance": tolerance}
 
-# 2. KHU VỰC HIỂN THỊ CHÍNH (MAIN AREA)
-st.markdown('<div class="main-header">🧠 HỆ THỐNG PHÂN ĐOẠN & PHÁT HIỆN KHỐI U NÃO MRI</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Trường ĐH Công Thương TP.HCM — Bộ môn Khoa học Dữ liệu — Học phần Xử lý ảnh số</div>', unsafe_allow_html=True)
+    run_button = st.button(
+        "Chạy phân đoạn",
+        type="primary",
+        width="stretch",
+        disabled=input_img is None,
+    )
+
 
 if input_img is None:
-    st.info("👈 Vui lòng chọn hoặc tải ảnh MRI ở thanh điều khiển bên trái để bắt đầu phân đoạn.")
+    st.info("Chọn một lát cắt trong thanh bên hoặc tải ảnh MRI lên để bắt đầu.")
 else:
-    # Nút thực thi chẩn đoán
-    col_btn, _ = st.columns([1, 4])
-    with col_btn:
-        run_button = st.button("🚀 TIẾN HÀNH PHÂN ĐOẠN", type="primary", use_container_width=True)
+    current_signature = result_signature(source_key, method_key, pipeline_params)
 
-    if run_button or True: # Tự động chạy khi có ảnh
-        pipeline = BrainTumorPipeline(method=method_key, params=pipeline_params)
-        diag_res, inters = pipeline.process(input_img, gt_mask=input_gt_mask)
+    if run_button:
+        with st.spinner("Đang tiền xử lý và phân đoạn ảnh..."):
+            pipeline = BrainTumorPipeline(method=method_key, params=pipeline_params)
+            diagnostic, intermediates = pipeline.process(input_img, gt_mask=input_gt_mask)
+            st.session_state["segmentation_result"] = {
+                "signature": current_signature,
+                "diagnostic": diagnostic,
+                "intermediates": intermediates,
+            }
 
-        # Hàng 1: Thẻ chỉ số chẩn đoán (Dashboard KPI Cards)
-        st.subheader("📊 Kết Quả Chẩn Đoán & Định Lượng")
-        kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
-        with kpi1:
-            st.metric("Phát hiện khối u", "CÓ U" if diag_res.tumor_detected else "BÌNH THƯỜNG",
-                      delta="Cảnh báo" if diag_res.tumor_detected else None, delta_color="inverse")
-        with kpi2:
-            st.metric("Diện tích khối u", f"{diag_res.tumor_area_px:,} px")
-        with kpi3:
-            st.metric("Tỷ lệ % u / não", f"{diag_res.tumor_ratio_percent:.2f} %")
-        with kpi4:
-            st.metric("Độ tròn (Circularity)", f"{diag_res.circularity:.3f}")
-        with kpi5:
-            if diag_res.dice_score is not None:
-                st.metric("Chỉ số Dice (F1)", f"{diag_res.dice_score:.4f}", help="So với Ground Truth chuyên gia")
-            else:
-                st.metric("Chỉ số Dice", "N/A (Ảnh tự do)")
+    saved_result = st.session_state.get("segmentation_result")
+    if not saved_result or saved_result["signature"] != current_signature:
+        st.info("Ảnh đã sẵn sàng. Nhấn “Chạy phân đoạn” để xem kết quả.")
+    else:
+        diagnostic = saved_result["diagnostic"]
+        intermediates = saved_result["intermediates"]
+
+        st.markdown('<div class="section-label">Kết quả định lượng</div>', unsafe_allow_html=True)
+        metric_cols = st.columns(5)
+        metric_cols[0].metric(
+            "Trạng thái",
+            "Có vùng" if diagnostic.tumor_detected else "Không có",
+        )
+        metric_cols[1].metric("Diện tích dự đoán", f"{diagnostic.tumor_area_px:,} px")
+        metric_cols[2].metric("Tỷ lệ trên vùng não", f"{diagnostic.tumor_ratio_percent:.2f}%")
+        metric_cols[3].metric("Độ tròn", f"{diagnostic.circularity:.3f}")
+        metric_cols[4].metric(
+            "Dice so với tham chiếu",
+            f"{diagnostic.dice_score:.4f}" if diagnostic.dice_score is not None else "Chưa có",
+        )
+
+        if sample_id:
+            st.caption(f"Mã lát cắt: {sample_id} · Phương pháp: {method_label}")
+        elif input_gt_mask is None:
+            st.caption("Chưa tải mặt nạ tham chiếu; Dice không được tính.")
 
         st.divider()
+        st.markdown('<div class="section-label">Các bước xử lý ảnh</div>', unsafe_allow_html=True)
+        image_cols = st.columns(4)
+        image_items = (
+            ("Ảnh MRI gốc", intermediates["original"], None),
+            ("Ảnh sau tách sọ", intermediates["stripped"], None),
+            ("Mặt nạ dự đoán", intermediates["tumor_mask"], None),
+            ("Vùng phân đoạn trên ảnh", intermediates["overlay"], "BGR"),
+        )
+        for column, (label, image, channels) in zip(image_cols, image_items):
+            with column:
+                st.caption(label)
+                if channels:
+                    st.image(image, width="stretch", channels=channels)
+                else:
+                    st.image(image, width="stretch")
 
-        # Hàng 2: Trực quan hóa 4 bước trung gian DIP
-        st.subheader("🔬 Trực Quan Hóa Quy Trình Xử Lý Ảnh Số (DIP Steps)")
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
-            st.caption("1. Ảnh MRI Sọ Não Gốc")
-            st.image(inters["original"], use_container_width=True, clamp=True)
-        with c2:
-            st.caption("2. Tách Sọ (Skull Stripped)")
-            st.image(inters["stripped"], use_container_width=True, clamp=True)
-        with c3:
-            st.caption(f"3. Mặt Nạ U ({method_key.title()})")
-            st.image(inters["tumor_mask"], use_container_width=True, clamp=True)
-        with c4:
-            st.caption("4. Định Vị (Bounding Box Đỏ)")
-            st.image(inters["overlay"], use_container_width=True, channels="BGR")
-
-        # So sánh Ground Truth nếu có
         if input_gt_mask is not None:
-            with st.expander("🔍 So sánh trực tiếp Mặt nạ Dự đoán với Ground Truth Bác sĩ"):
-                gt_c1, gt_c2 = st.columns(2)
-                with gt_c1:
-                    st.caption("Mặt Nạ Ground Truth Chuyên Gia")
-                    st.image(input_gt_mask, use_container_width=True)
-                with gt_c2:
-                    st.caption("Mặt Nạ Dự Đoán Của Thuật Toán")
-                    st.image(inters["tumor_mask"], use_container_width=True)
+            st.divider()
+            st.markdown('<div class="section-label">Đối chiếu mặt nạ</div>', unsafe_allow_html=True)
+            gt_col, pred_col = st.columns(2)
+            with gt_col:
+                st.caption("Ground Truth")
+                st.image(input_gt_mask, width="stretch")
+            with pred_col:
+                st.caption("Mặt nạ dự đoán")
+                st.image(intermediates["tumor_mask"], width="stretch")
+
+        report = io.StringIO()
+        writer = csv.writer(report)
+        writer.writerow(("sample_id", "method", "tumor_detected", "tumor_area_px", "tumor_ratio_percent", "circularity", "dice", "iou"))
+        writer.writerow((
+            sample_id or "uploaded_image",
+            method_label,
+            diagnostic.tumor_detected,
+            diagnostic.tumor_area_px,
+            round(diagnostic.tumor_ratio_percent, 4),
+            round(diagnostic.circularity, 4),
+            diagnostic.dice_score,
+            diagnostic.iou_score,
+        ))
+        st.download_button(
+            "Tải báo cáo kết quả CSV",
+            data=report.getvalue().encode("utf-8-sig"),
+            file_name=f"segmentation_{sample_id or 'upload'}.csv",
+            mime="text/csv",
+        )
+
+st.divider()
+st.caption("Đồ án học phần Xử lý ảnh số · HUIT · Kết quả chỉ phục vụ mục đích học tập và nghiên cứu.")
