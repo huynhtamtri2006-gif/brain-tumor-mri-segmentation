@@ -7,20 +7,21 @@ Tuân thủ nghiêm ngặt quy chuẩn định dạng trích xuất từ docs/Nh
 - Heading 1: 15.0pt, IN HOA, IN ĐẬM, Center, space before 12pt, after 6pt.
 - Heading 2: 13.5pt, Chữ thường, IN ĐẬM, Left, space before 8pt, after 0pt.
 - Heading 3: 13.0pt, Chữ thường, IN NGHIÊNG, Left, space before 6pt, after 2pt.
-- Bảng: Font 11.0pt, Header in đậm, Caption TRÊN bảng 11.5pt in nghiêng căn giữa.
+- Bảng: Font 10.5-11.0pt, Header in đậm, Caption TRÊN bảng 11.5pt in nghiêng căn giữa.
 - Hình: Căn giữa, Caption DƯỚI hình 11.5pt in nghiêng căn giữa.
 """
 
 from __future__ import annotations
 
 import os
+import sys
 from typing import List, Optional, Tuple, Any
 import docx
 from docx.shared import Cm, Pt, RGBColor, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
+from docx.oxml import OxmlElement, parse_xml
+from docx.oxml.ns import qn, nsdecls
 
 
 def set_cell_margins(cell, top=100, bottom=100, left=150, right=150):
@@ -43,6 +44,22 @@ def set_cell_shading(cell, color_hex="F2F2F2"):
     shd.set(qn('w:color'), 'auto')
     shd.set(qn('w:fill'), color_hex)
     tcPr.append(shd)
+
+
+def set_table_borders(table, color="B0B0B0", sz="4", val="single"):
+    """Đặt đường viền mỏng, trang nhã cho toàn bộ bảng (kiểu APA/IEEE chuẩn mực)."""
+    tblPr = table._tbl.tblPr
+    borders = parse_xml(
+        f'<w:tblBorders {nsdecls("w")}>'
+        f'<w:top w:val="{val}" w:sz="{sz}" w:space="0" w:color="{color}"/>'
+        f'<w:bottom w:val="{val}" w:sz="{sz}" w:space="0" w:color="{color}"/>'
+        f'<w:insideH w:val="{val}" w:sz="{sz}" w:space="0" w:color="{color}"/>'
+        f'<w:insideV w:val="{val}" w:sz="{sz}" w:space="0" w:color="{color}"/>'
+        f'<w:left w:val="none"/>'
+        f'<w:right w:val="none"/>'
+        f'</w:tblBorders>'
+    )
+    tblPr.append(borders)
 
 
 class ReportBuilder:
@@ -180,39 +197,102 @@ class ReportBuilder:
         # Ngắt trang sau trang bìa
         self.doc.add_page_break()
 
+    def add_page_break(self):
+        """Thêm ngắt trang sang trang mới."""
+        self.doc.add_page_break()
+
     def add_heading_1(self, text: str):
         """Thêm tiêu đề Heading 1 (Chương và mục lớn mở đầu)."""
         p = self.doc.add_paragraph(text.upper(), style="Heading 1")
+        p.paragraph_format.first_line_indent = Cm(0)
         return p
 
     def add_heading_2(self, text: str):
         """Thêm tiêu đề Heading 2 (Tiểu mục cấp 1: X.Y)."""
         p = self.doc.add_paragraph(text, style="Heading 2")
+        p.paragraph_format.first_line_indent = Cm(0)
         return p
 
     def add_heading_3(self, text: str):
         """Thêm tiêu đề Heading 3 (Tiểu mục cấp 2: X.Y.Z)."""
         p = self.doc.add_paragraph(text, style="Heading 3")
+        p.paragraph_format.first_line_indent = Cm(0)
         return p
 
-    def add_paragraph(self, text: str, indent: bool = True):
+    def add_paragraph(
+        self,
+        text: str,
+        indent: bool = True,
+        bold_prefix: Optional[str] = None,
+        italic: bool = False
+    ):
         """Thêm đoạn văn bản thân (Body text)."""
         p = self.doc.add_paragraph(style="Normal")
         if indent:
             p.paragraph_format.first_line_indent = Cm(1.27)
         else:
             p.paragraph_format.first_line_indent = Cm(0)
-        p.add_run(text)
+
+        if bold_prefix:
+            r_pre = p.add_run(bold_prefix)
+            r_pre.bold = True
+            r_pre.font.name = "Times New Roman"
+            r_pre.font.size = Pt(13.0)
+
+        r = p.add_run(text)
+        r.italic = italic
+        r.font.name = "Times New Roman"
+        r.font.size = Pt(13.0)
         return p
 
-    def add_bullet(self, text: str):
+    def add_bullet(self, text: str, bold_prefix: Optional[str] = None):
         """Thêm danh sách dạng gạch đầu dòng."""
         p = self.doc.add_paragraph(style="Normal")
         p.paragraph_format.first_line_indent = Cm(0)
         p.paragraph_format.left_indent = Cm(1.27)
         r_bullet = p.add_run("• ")
         r_bullet.bold = True
-        p.add_run(text)
+        r_bullet.font.name = "Times New Roman"
+        r_bullet.font.size = Pt(13.0)
+
+        if bold_prefix:
+            r_pre = p.add_run(bold_prefix)
+            r_pre.bold = True
+            r_pre.font.name = "Times New Roman"
+            r_pre.font.size = Pt(13.0)
+
+        r = p.add_run(text)
+        r.font.name = "Times New Roman"
+        r.font.size = Pt(13.0)
+        return p
+
+    def add_equation(self, latex_str: str, label: str = ""):
+        """Thêm công thức toán học căn giữa trang."""
+        p = self.doc.add_paragraph()
+        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(4.0)
+        p.paragraph_format.space_after = Pt(6.0)
+        p.paragraph_format.line_spacing = 1.5
+        p.paragraph_format.first_line_indent = Cm(0)
+
+        added = False
+        try:
+            from math_equation import add_math
+            add_math(p, latex_str)
+            if label:
+                r_lbl = p.add_run(f"    ({label})")
+                r_lbl.font.name = "Times New Roman"
+                r_lbl.font.size = Pt(13.0)
+            added = True
+        except Exception:
+            pass
+
+        if not added:
+            txt = f"{latex_str}    ({label})" if label else latex_str
+            r = p.add_run(txt)
+            r.italic = True
+            r.font.name = "Times New Roman"
+            r.font.size = Pt(13.0)
         return p
 
     def add_table(
@@ -228,6 +308,7 @@ class ReportBuilder:
             p_cap.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_cap.paragraph_format.space_before = Pt(8.0)
             p_cap.paragraph_format.space_after = Pt(4.0)
+            p_cap.paragraph_format.first_line_indent = Cm(0)
             r_cap = p_cap.add_run(caption)
             r_cap.font.name = "Times New Roman"
             r_cap.font.size = Pt(11.5)
@@ -235,6 +316,7 @@ class ReportBuilder:
 
         table = self.doc.add_table(rows=len(data) + 1, cols=len(headers))
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
+        set_table_borders(table)
 
         # Hàng tiêu đề
         hdr_row = table.rows[0]
@@ -243,14 +325,15 @@ class ReportBuilder:
             cell.text = ""
             p = cell.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.space_before = Pt(2.0)
-            p.paragraph_format.space_after = Pt(2.0)
+            p.paragraph_format.space_before = Pt(3.0)
+            p.paragraph_format.space_after = Pt(3.0)
+            p.paragraph_format.first_line_indent = Cm(0)
             r = p.add_run(str(h_text))
             r.font.name = "Times New Roman"
             r.font.size = Pt(11.0)
             r.bold = True
-            set_cell_margins(cell, top=100, bottom=100, left=150, right=150)
-            set_cell_shading(cell, "F2F2F2")
+            set_cell_margins(cell, top=120, bottom=120, left=120, right=120)
+            set_cell_shading(cell, "EAEAEA")
 
         # Các hàng dữ liệu
         for row_idx, row_values in enumerate(data):
@@ -265,12 +348,16 @@ class ReportBuilder:
                     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 else:
                     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                p.paragraph_format.space_before = Pt(2.0)
-                p.paragraph_format.space_after = Pt(2.0)
+                p.paragraph_format.space_before = Pt(2.5)
+                p.paragraph_format.space_after = Pt(2.5)
+                p.paragraph_format.first_line_indent = Cm(0)
                 r = p.add_run(val_str)
                 r.font.name = "Times New Roman"
                 r.font.size = Pt(10.5)
-                set_cell_margins(cell, top=80, bottom=80, left=120, right=120)
+                # Hàng tổng cộng hoặc cột đầu in đậm
+                if col_idx == 0 and len(val_str) <= 10:
+                    r.bold = True
+                set_cell_margins(cell, top=80, bottom=80, left=100, right=100)
 
         # Chỉnh độ rộng cột nếu có
         if col_widths and len(col_widths) == len(headers):
@@ -294,6 +381,7 @@ class ReportBuilder:
         p_img.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p_img.paragraph_format.space_before = Pt(6.0)
         p_img.paragraph_format.space_after = Pt(2.0)
+        p_img.paragraph_format.first_line_indent = Cm(0)
         r_img = p_img.add_run()
         r_img.add_picture(image_path, width=Cm(width))
 
@@ -302,6 +390,7 @@ class ReportBuilder:
             p_cap.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_cap.paragraph_format.space_before = Pt(4.0)
             p_cap.paragraph_format.space_after = Pt(8.0)
+            p_cap.paragraph_format.first_line_indent = Cm(0)
             r_cap = p_cap.add_run(caption)
             r_cap.font.name = "Times New Roman"
             r_cap.font.size = Pt(11.5)
@@ -316,7 +405,11 @@ class ReportBuilder:
         p.paragraph_format.space_after = Pt(3.0)
         r_idx = p.add_run(f"[{index}] ")
         r_idx.bold = True
-        p.add_run(text)
+        r_idx.font.name = "Times New Roman"
+        r_idx.font.size = Pt(13.0)
+        r_txt = p.add_run(text)
+        r_txt.font.name = "Times New Roman"
+        r_txt.font.size = Pt(13.0)
         return p
 
     def save(self, output_path: str):

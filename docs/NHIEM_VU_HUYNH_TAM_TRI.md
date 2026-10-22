@@ -176,8 +176,8 @@
   * Phối hợp cùng Trường ghép nối thành `docs/BAO_CAO_DO_AN_XLAS.md` và chạy `python scripts/export_report_docx.py` để xuất bản file Word `docs/BAO_CAO_DO_AN_XLAS.docx` tuân thủ nghiêm ngặt Quy chuẩn Word HUIT (Times New Roman 13pt, line spacing 1.5, lề 3-3-3-2 cm).
 * **Lệnh kiểm tra:** `python scripts/export_report_docx.py`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
-  - [ ] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
+  - [x] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
+  - [x] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
 
 ---
 
