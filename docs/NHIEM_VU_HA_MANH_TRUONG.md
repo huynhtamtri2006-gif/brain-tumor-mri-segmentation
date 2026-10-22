@@ -174,8 +174,8 @@
   * Phối hợp cùng Trí ghép nối toàn bộ 12 mục thành file `docs/BAO_CAO_DO_AN_XLAS.md` và chạy script xuất bản Word `docs/BAO_CAO_DO_AN_XLAS.docx` tuân thủ nghiêm ngặt Quy chuẩn Word HUIT (Times New Roman 13pt, giãn dòng 1.5, lề 3-3-3-2 cm).
 * **Lệnh kiểm tra:** `python scripts/export_report_docx.py`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 4 chương kỹ thuật hoàn thiện đầy đủ công thức toán và hình ảnh minh chứng sắc nét.
-  - [ ] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` xuất thành công, không bị lỗi bảng biểu hay tràn lề.
+  - [x] 4 chương kỹ thuật hoàn thiện đầy đủ công thức toán và hình ảnh minh chứng sắc nét.
+  - [x] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` xuất thành công, không bị lỗi bảng biểu hay tràn lề.
 
 ---
 
