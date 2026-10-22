@@ -651,16 +651,56 @@ else:
     # 7. DẢI THẺ KPI Y SINH NỔI BẬT (HERO CLINICAL CARDS)
     # =========================================================================
 
-    has_tumor = diag_primary.tumor_detected
-    status_card_class = "alert-danger" if has_tumor else "alert-success"
-    status_badge_text = "PHÁT HIỆN KHỐI U NÃO" if has_tumor else "MÔ NÃO LÀNH TÍNH"
-    status_color = "#dc2626" if has_tumor else "#059669"
+    has_gt = input_gt_mask is not None
+    gt_tumor_px = int(np.sum(input_gt_mask > 0)) if has_gt else None
+    has_pred_tumor = diag_primary.tumor_detected
 
-    dice_val = f"{diag_primary.dice_score:.4f}" if diag_primary.dice_score is not None else "N/A"
-    iou_val = f"{diag_primary.iou_score:.4f}" if diag_primary.iou_score is not None else "N/A"
+    # Đối chiếu chẩn đoán giữa thuật toán phân đoạn và Ground Truth y tế
+    if has_gt:
+        if gt_tumor_px == 0 and has_pred_tumor:
+            status_card_class = "card-amber"
+            status_badge_text = "DƯƠNG TÍNH GIẢ (BÁO NHẦM)"
+            status_color = "#d97706"
+            status_sub_text = "Thực tế bệnh nhân: Não lành không u (GT: 0 px)"
+        elif gt_tumor_px == 0 and not has_pred_tumor:
+            status_card_class = "alert-success"
+            status_badge_text = "MÔ NÃO LÀNH TÍNH"
+            status_color = "#059669"
+            status_sub_text = "Khớp chuẩn y tế: Không có khối u (GT: 0 px)"
+        elif gt_tumor_px > 0 and has_pred_tumor:
+            status_card_class = "alert-danger"
+            status_badge_text = "PHÁT HIỆN KHỐI U NÃO"
+            status_color = "#dc2626"
+            status_sub_text = f"Dương tính thật: GT {gt_tumor_px:,} px"
+        else:
+            status_card_class = "card-amber"
+            status_badge_text = "BỎ SÓT KHỐI U (ÂM TÍNH GIẢ)"
+            status_color = "#d97706"
+            status_sub_text = f"Thực tế bệnh nhân: Có u (GT: {gt_tumor_px:,} px)"
+    else:
+        status_card_class = "alert-danger" if has_pred_tumor else "alert-success"
+        status_badge_text = "PHÁT HIỆN KHỐI U NÃO" if has_pred_tumor else "MÔ NÃO LÀNH TÍNH"
+        status_color = "#dc2626" if has_pred_tumor else "#059669"
+        status_sub_text = f"Độ trễ xử lý: {latency_primary:.1f} ms"
+
+    # Điểm Dice và IoU
+    if has_gt and gt_tumor_px == 0:
+        dice_val = "0.0000 (Ca âm tính)"
+        iou_val = "0.0000 (Ca âm tính)"
+        dice_color = "#64748b"
+    elif diag_primary.dice_score is not None:
+        dice_val = f"{diag_primary.dice_score:.4f}"
+        iou_val = f"{diag_primary.iou_score:.4f}"
+        dice_color = "#059669" if diag_primary.dice_score >= 0.75 else "#0284c7"
+    else:
+        dice_val = "N/A"
+        iou_val = "N/A"
+        dice_color = "#64748b"
 
     # Nhận xét hình thái học
-    if diag_primary.circularity >= 0.6:
+    if not has_pred_tumor or diag_primary.tumor_area_px == 0:
+        circ_note = "Không ghi nhận bờ tổn thương"
+    elif diag_primary.circularity >= 0.6:
         circ_note = "Bờ u tròn đều (Lành tính)"
     elif diag_primary.circularity >= 0.4:
         circ_note = "Bờ u gồ ghề (Trung bình)"
@@ -675,7 +715,7 @@ else:
             <div class="kpi-val" style="color: {status_color}; font-size: 1.35rem;">
               {status_badge_text}
             </div>
-            <div class="kpi-sub">Độ trễ xử lý: {latency_primary:.1f} ms</div>
+            <div class="kpi-sub">{status_sub_text}</div>
           </div>
 
           <div class="kpi-card card-blue">
@@ -698,7 +738,7 @@ else:
 
           <div class="kpi-card {'alert-success' if diag_primary.dice_score and diag_primary.dice_score >= 0.75 else 'card-blue'}">
             <div class="kpi-label">Độ Tương Đồng Y Sinh</div>
-            <div class="kpi-val" style="color: {'#059669' if diag_primary.dice_score and diag_primary.dice_score >= 0.75 else '#0284c7'};">
+            <div class="kpi-val" style="color: {dice_color};">
               Dice: {dice_val}
             </div>
             <div class="kpi-sub">IoU (Jaccard): {iou_val}</div>
