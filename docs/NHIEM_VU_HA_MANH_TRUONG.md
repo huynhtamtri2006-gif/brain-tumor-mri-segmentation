@@ -157,9 +157,9 @@
      * **Đề xuất giải pháp khắc phục:** Bổ sung lọc đẳng hướng đa tỷ lệ (multiscale vesselness/blob filter) hoặc kết hợp ngưỡng thích ứng gradient cục bộ.
 * **Lệnh kiểm tra:** `python -c "import pandas as pd; df=pd.read_csv('docs/BENCHMARK_RESULTS.csv'); print(df)"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Hoàn tất phân tích dữ liệu 7,858 lượt thực nghiệm.
-  - [ ] Lập bảng phân tích 3 trường hợp lâm sàng điển hình (ca xuất sắc, ca trung bình, ca thất bại).
-  - [ ] Soạn thảo toàn văn phần phân tích kỹ thuật phục vụ Mục 8 của Báo cáo đồ án.
+  - [x] Hoàn tất phân tích dữ liệu 7,858 lượt thực nghiệm.
+  - [x] Lập bảng phân tích 3 trường hợp lâm sàng điển hình (ca xuất sắc, ca trung bình, ca thất bại).
+  - [x] Soạn thảo toàn văn phần phân tích kỹ thuật phục vụ Mục 8 của Báo cáo đồ án.
 
 ---
 

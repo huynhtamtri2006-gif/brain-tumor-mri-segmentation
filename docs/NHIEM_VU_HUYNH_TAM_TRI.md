@@ -156,9 +156,9 @@
      * Lưu các biểu đồ độ phân giải cao phục vụ chèn vào Chương 8 của Báo cáo.
 * **Lệnh kiểm tra:** `streamlit run demo/app.py --server.headless true`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
-  - [ ] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
-  - [ ] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
+  - [x] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
+  - [x] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
+  - [x] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
 
 ---
 
