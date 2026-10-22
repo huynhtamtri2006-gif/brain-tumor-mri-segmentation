@@ -1,5 +1,6 @@
 """Web demo Streamlit chẩn đoán u não MRI — Giao diện NeuroScan PACS Workstation.
 Khoa Công nghệ Thông tin — Bộ môn Khoa học Dữ liệu — Đại học Công Thương TP.HCM (HUIT).
+Hỗ trợ chuyển đổi linh hoạt giữa giao diện Sáng (Clinical Light) và Tối (Clinical Dark).
 """
 
 from __future__ import annotations
@@ -28,7 +29,7 @@ from src.pipeline import BrainTumorPipeline
 
 
 # =============================================================================
-# 1. CẤU HÌNH TRANG VÀ GIAO DIỆN CLINICAL WORKSTATION
+# 1. CẤU HÌNH TRANG VÀ QUẢN LÝ CHẾ ĐỘ GIAO DIỆN (THEME)
 # =============================================================================
 
 st.set_page_config(
@@ -38,17 +39,52 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.markdown(
-    """
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+# Nhận diện chế độ giao diện từ session_state
+if "theme_mode_selector" not in st.session_state:
+    st.session_state["theme_mode_selector"] = "🌙 Chế độ Tối (Clinical Dark)"
 
-      :root {
+is_light = "Sáng" in st.session_state["theme_mode_selector"]
+
+# Khởi tạo bảng biến CSS thích ứng cho 2 chế độ Sáng và Tối
+if is_light:
+    theme_vars = """
+        --bg-main: #f8fafc;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f1f5f9;
+        --bg-sidebar: #f8fafc;
+        --border-color: #e2e8f0;
+        --border-subtle: #cbd5e1;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --accent-blue: #0284c7;
+        --accent-cyan: #0891b2;
+        --accent-green: #059669;
+        --accent-red: #dc2626;
+        --accent-amber: #d97706;
+        --pacs-header-bg: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+        --pacs-header-border: #bae6fd;
+        --pacs-header-shadow: 0 4px 20px -2px rgba(14, 165, 233, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.05);
+        --pacs-title-color: #0f172a;
+        --pacs-pill-bg: #e0f2fe;
+        --pacs-pill-border: #bae6fd;
+        --pacs-pill-text: #0369a1;
+        --pacs-pill-bold: #0284c7;
+        --stat-box-bg: #f8fafc;
+        --stat-box-border: #e2e8f0;
+        --stat-box-text: #1e293b;
+        --input-bg: #ffffff;
+        --input-border: #cbd5e1;
+        --input-text: #0f172a;
+    """
+else:
+    theme_vars = """
         --bg-main: #0b0f19;
         --bg-card: #111827;
         --bg-card-hover: #1e293b;
+        --bg-sidebar: #0d1322;
         --border-color: #1f293d;
-        --border-glow: #0284c7;
+        --border-subtle: #334155;
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
@@ -57,47 +93,137 @@ st.markdown(
         --accent-green: #10b981;
         --accent-red: #ef4444;
         --accent-amber: #f59e0b;
-      }
+        --pacs-header-bg: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+        --pacs-header-border: #1e293b;
+        --pacs-header-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(14, 165, 233, 0.08);
+        --pacs-title-color: #ffffff;
+        --pacs-pill-bg: rgba(30, 41, 59, 0.7);
+        --pacs-pill-border: #334155;
+        --pacs-pill-text: #cbd5e1;
+        --pacs-pill-bold: #38bdf8;
+        --stat-box-bg: #111827;
+        --stat-box-border: #1e293b;
+        --stat-box-text: #cbd5e1;
+        --input-bg: #111827;
+        --input-border: #1f293d;
+        --input-text: #f8fafc;
+    """
 
-      html, body, [class*="css"] {
+st.markdown(
+    f"""
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+      :root {{
+        {theme_vars}
+      }}
+
+      html, body, [class*="css"] {{
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      }
+      }}
 
-      .stApp {
-        background-color: var(--bg-main);
-        color: var(--text-primary);
-      }
+      .stApp {{
+        background-color: var(--bg-main) !important;
+        color: var(--text-primary) !important;
+      }}
 
-      .block-container {
+      .block-container {{
         max-width: 1520px;
         padding-top: 1.8rem;
         padding-bottom: 3rem;
-      }
+      }}
 
       /* Sidebar Styling */
-      [data-testid="stSidebar"] {
-        background: #0d1322 !important;
-        border-right: 1px solid #1a2333 !important;
-      }
-      [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
-        color: var(--text-secondary);
-      }
+      [data-testid="stSidebar"] {{
+        background-color: var(--bg-sidebar) !important;
+        border-right: 1px solid var(--border-color) !important;
+      }}
+      [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+      [data-testid="stSidebar"] span,
+      [data-testid="stSidebar"] label {{
+        color: var(--text-primary) !important;
+      }}
+      [data-testid="stSidebar"] .stCaption,
+      [data-testid="stSidebar"] small {{
+        color: var(--text-muted) !important;
+      }}
+
+      /* Toàn bộ Radio Buttons & Nhãn */
+      [data-testid="stRadio"] label {{
+        color: var(--text-primary) !important;
+      }}
+      [data-testid="stRadio"] div[role="radiogroup"] span {{
+        color: var(--text-primary) !important;
+      }}
+
+      /* Inputs & Dropdowns */
+      [data-testid="stTextInput"] input {{
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border: 1px solid var(--input-border) !important;
+        border-radius: 8px !important;
+      }}
+      [data-testid="stSelectbox"] > div > div {{
+        background-color: var(--input-bg) !important;
+        color: var(--input-text) !important;
+        border: 1px solid var(--input-border) !important;
+        border-radius: 8px !important;
+      }}
+      [data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"] {{
+        background-color: var(--bg-card) !important;
+        color: var(--text-primary) !important;
+      }}
+      [data-baseweb="menu"] li {{
+        background-color: var(--bg-card) !important;
+        color: var(--text-primary) !important;
+      }}
+      [data-baseweb="menu"] li:hover {{
+        background-color: var(--bg-card-hover) !important;
+      }}
+
+      /* Expander */
+      [data-testid="stExpander"] {{
+        background-color: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 10px !important;
+      }}
+      [data-testid="stExpander"] summary {{
+        color: var(--text-primary) !important;
+      }}
+      [data-testid="stExpander"] details {{
+        background-color: var(--bg-card) !important;
+        border-color: var(--border-color) !important;
+      }}
+
+      /* Secondary Buttons (như các Preset) */
+      div[data-testid="stButton"] button[kind="secondary"] {{
+        background-color: var(--bg-card) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease !important;
+      }}
+      div[data-testid="stButton"] button[kind="secondary"]:hover {{
+        border-color: #0284c7 !important;
+        color: #0284c7 !important;
+      }}
 
       /* Top Header Hub */
-      .pacs-header {
-        background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
-        border: 1px solid #1e293b;
+      .pacs-header {{
+        background: var(--pacs-header-bg);
+        border: 1px solid var(--pacs-header-border);
         border-radius: 16px;
         padding: 1.5rem 2rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(14, 165, 233, 0.08);
-      }
-      .pacs-badge {
+        box-shadow: var(--pacs-header-shadow);
+      }}
+      .pacs-badge {{
         display: inline-flex;
         align-items: center;
         gap: 6px;
         background: rgba(14, 165, 233, 0.12);
-        color: #38bdf8;
+        color: #0284c7;
         border: 1px solid rgba(14, 165, 233, 0.28);
         border-radius: 20px;
         padding: 4px 12px;
@@ -106,9 +232,9 @@ st.markdown(
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 0.6rem;
-      }
-      .pacs-title {
-        color: #ffffff;
+      }}
+      .pacs-title {{
+        color: var(--pacs-title-color);
         font-size: 2rem;
         font-weight: 800;
         letter-spacing: -0.02em;
@@ -116,154 +242,187 @@ st.markdown(
         display: flex;
         align-items: center;
         gap: 12px;
-      }
-      .pacs-subtitle {
+      }}
+      .pacs-subtitle {{
         color: var(--text-secondary);
         font-size: 0.95rem;
         margin-top: 0.4rem;
         margin-bottom: 0;
-      }
-      .pacs-status-bar {
+      }}
+      .pacs-status-bar {{
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 1rem;
         padding-top: 0.8rem;
-        border-top: 1px solid #1e293b;
-      }
-      .pacs-pill {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid #334155;
+        border-top: 1px solid var(--border-color);
+      }}
+      .pacs-pill {{
+        background: var(--pacs-pill-bg);
+        border: 1px solid var(--pacs-pill-border);
         border-radius: 6px;
         padding: 4px 10px;
         font-size: 0.78rem;
-        color: #cbd5e1;
+        color: var(--pacs-pill-text);
         font-family: 'JetBrains Mono', monospace;
-      }
-      .pacs-pill b {
-        color: #38bdf8;
-      }
+      }}
+      .pacs-pill b {{
+        color: var(--pacs-pill-bold);
+      }}
+
+      /* Header Sections & Titles */
+      .section-heading {{
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }}
+      .preset-bar-title {{
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+      }}
 
       /* KPI Cards */
-      .kpi-container {
+      .kpi-container {{
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 14px;
         margin-bottom: 1.5rem;
-      }
-      .kpi-card {
-        background: #111827;
-        border: 1px solid #1f293d;
+      }}
+      .kpi-card {{
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 14px;
         padding: 1.1rem 1.25rem;
         position: relative;
         overflow: hidden;
-        transition: transform 0.2s ease, border-color 0.2s ease;
-      }
-      .kpi-card:hover {
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }}
+      .kpi-card:hover {{
         transform: translateY(-2px);
-        border-color: #38bdf8;
-      }
-      .kpi-card.alert-danger {
-        border-left: 4px solid #ef4444;
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, #111827 100%);
-      }
-      .kpi-card.alert-success {
-        border-left: 4px solid #10b981;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #111827 100%);
-      }
-      .kpi-card.card-blue {
+        border-color: #0284c7;
+        box-shadow: 0 6px 16px rgba(14, 165, 233, 0.15);
+      }}
+      .kpi-card.alert-danger {{
+        border-left: 4px solid var(--accent-red);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-card) 100%);
+      }}
+      .kpi-card.alert-success {{
+        border-left: 4px solid var(--accent-green);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-card) 100%);
+      }}
+      .kpi-card.card-blue {{
         border-left: 4px solid #0ea5e9;
-      }
-      .kpi-card.card-amber {
+      }}
+      .kpi-card.card-amber {{
         border-left: 4px solid #f59e0b;
-      }
-      .kpi-card.card-purple {
+      }}
+      .kpi-card.card-purple {{
         border-left: 4px solid #8b5cf6;
-      }
-      .kpi-label {
+      }}
+      .kpi-label {{
         font-size: 0.78rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         color: var(--text-muted);
         margin-bottom: 0.4rem;
-      }
-      .kpi-val {
+      }}
+      .kpi-val {{
         font-size: 1.65rem;
         font-weight: 750;
-        color: #ffffff;
+        color: var(--text-primary);
         font-family: 'JetBrains Mono', monospace;
         line-height: 1.2;
-      }
-      .kpi-sub {
+      }}
+      .kpi-sub {{
         font-size: 0.75rem;
         color: var(--text-secondary);
         margin-top: 0.35rem;
-      }
+      }}
 
       /* Frame ảnh chuyên dụng */
-      .img-card {
-        background: #111827;
-        border: 1px solid #1e293b;
+      .img-card {{
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 0.75rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
-      .img-card-header {
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }}
+      .img-card-header {{
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.5rem;
         padding-bottom: 0.4rem;
-        border-bottom: 1px solid #1f293d;
-      }
-      .img-card-title {
+        border-bottom: 1px solid var(--border-color);
+      }}
+      .img-card-title {{
         font-size: 0.85rem;
         font-weight: 700;
-        color: #e2e8f0;
-      }
-      .img-card-tag {
+        color: var(--text-primary);
+      }}
+      .img-card-tag {{
         font-size: 0.7rem;
         padding: 2px 7px;
         border-radius: 4px;
-        background: #1e293b;
-        color: #94a3b8;
+        background: var(--stat-box-bg);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
         font-family: 'JetBrains Mono', monospace;
-      }
+      }}
 
-      /* Nút Preset Card */
-      .preset-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-bottom: 1.5rem;
-      }
-      @media (max-width: 900px) {
-        .preset-grid { grid-template-columns: repeat(2, 1fr); }
-      }
+      /* Hộp thông số thống kê đối chứng */
+      .stat-box {{
+        background: var(--stat-box-bg);
+        border: 1px solid var(--stat-box-border);
+        border-radius: 8px;
+        padding: 0.85rem;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--stat-box-text);
+        line-height: 1.6;
+      }}
+
+      /* Hộp phân tích bản đồ sai số */
+      .error-breakdown-box {{
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }}
 
       /* Tùy chỉnh Tabs */
-      div[data-testid="stTabs"] button {
+      div[data-testid="stTabs"] button {{
         font-size: 0.92rem;
         font-weight: 600;
         color: var(--text-secondary);
         padding: 0.6rem 1.2rem;
-      }
-      div[data-testid="stTabs"] button[aria-selected="true"] {
-        color: #38bdf8 !important;
-        border-bottom-color: #38bdf8 !important;
-      }
+      }}
+      div[data-testid="stTabs"] button[aria-selected="true"] {{
+        color: #0284c7 !important;
+        border-bottom-color: #0284c7 !important;
+      }}
 
       /* Download Button */
-      div[data-testid="stDownloadButton"] button {
+      div[data-testid="stDownloadButton"] button {{
         background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
-        color: #fff !important;
+        color: #ffffff !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
-      }
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25) !important;
+      }}
     </style>
     """,
     unsafe_allow_html=True,
@@ -322,7 +481,10 @@ st.markdown(
 # 4. THANH TRẢI NGHIỆM NHANH 4 CA LÂM SÀNG TIÊU BIỂU (CURATED PRESETS)
 # =============================================================================
 
-st.markdown("<div style='font-size: 0.82rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;'>⚡ Ca Lâm Sàng Tiêu Biểu (1 Chạm Để Phân Tích Nhanh):</div>", unsafe_allow_html=True)
+st.markdown(
+    "<div class='preset-bar-title'>⚡ Ca Lâm Sàng Tiêu Biểu (1 Chạm Để Phân Tích Nhanh):</div>",
+    unsafe_allow_html=True,
+)
 
 preset_cols = st.columns(4)
 for idx, (col, preset) in enumerate(zip(preset_cols, PRESET_CASES)):
@@ -340,6 +502,17 @@ for idx, (col, preset) in enumerate(zip(preset_cols, PRESET_CASES)):
 # =============================================================================
 
 with st.sidebar:
+    # 5.1. BỘ CHỌN CHẾ ĐỘ GIAO DIỆN SÁNG / TỐI
+    st.markdown("### 🎨 Giao Diện Hiển Thị")
+    st.radio(
+        "Chế độ màu",
+        ("🌙 Chế độ Tối (Clinical Dark)", "☀️ Chế độ Sáng (Clinical Light)"),
+        key="theme_mode_selector",
+        label_visibility="collapsed",
+        horizontal=True,
+    )
+
+    st.markdown("---")
     st.markdown("### 🎛️ Bảng Điều Khiển")
     st.caption("Cấu hình nguồn ảnh, giải thuật và các siêu tham số xử lý.")
 
@@ -451,7 +624,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(
         """
-        <div style='font-size: 0.75rem; color: #64748b; line-height: 1.4;'>
+        <div style='font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;'>
           <b>Đồ án Xử lý ảnh số (HUIT - 2026)</b><br>
           Nhóm sinh viên: Hà Mạnh Trường & Huỳnh Tâm Trí<br>
           GVHD: ThS. Đinh Nguyễn Trọng Nghĩa
@@ -515,7 +688,7 @@ else:
 
           <div class="kpi-card card-blue">
             <div class="kpi-label">Diện Tích Tổn Thương</div>
-            <div class="kpi-val">{diag_primary.tumor_area_px:,} <span style="font-size: 0.9rem; color: #94a3b8;">px</span></div>
+            <div class="kpi-val">{diag_primary.tumor_area_px:,} <span style="font-size: 0.9rem; color: var(--text-muted);">px</span></div>
             <div class="kpi-sub">Khoang não: {diag_primary.brain_area_px:,} px</div>
           </div>
 
@@ -533,7 +706,7 @@ else:
 
           <div class="kpi-card {'alert-success' if diag_primary.dice_score and diag_primary.dice_score >= 0.75 else 'card-blue'}">
             <div class="kpi-label">Độ Tương Đồng Y Sinh</div>
-            <div class="kpi-val" style="color: {'#10b981' if diag_primary.dice_score and diag_primary.dice_score >= 0.75 else '#38bdf8'};">
+            <div class="kpi-val" style="color: {'#10b981' if diag_primary.dice_score and diag_primary.dice_score >= 0.75 else '#0284c7'};">
               Dice: {dice_val}
             </div>
             <div class="kpi-sub">IoU (Jaccard): {iou_val}</div>
@@ -548,7 +721,10 @@ else:
     # =========================================================================
 
     if "Chi tiết 4 tầng" in analysis_mode:
-        st.markdown("<div style='font-size: 1.1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.8rem;'>🔬 Chi Tiết 4 Tầng Xử Lý Ảnh Số (Quad Pipeline Inspection)</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='section-heading'>🔬 Chi Tiết 4 Tầng Xử Lý Ảnh Số (Quad Pipeline Inspection)</div>",
+            unsafe_allow_html=True,
+        )
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -613,7 +789,10 @@ else:
             st.caption("Khung viền đỏ Bounding Box và đường bao viền vàng.")
 
     elif "So sánh song song" in analysis_mode:
-        st.markdown("<div style='font-size: 1.1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.8rem;'>⚖️ Đối Chứng Song Song 2 Giải Thuật Trên Cùng Một Lát Cắt</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='section-heading'>⚖️ Đối Chứng Song Song 2 Giải Thuật Trên Cùng Một Lát Cắt</div>",
+            unsafe_allow_html=True,
+        )
 
         ws_inter = inter_primary if is_ws else inter_sec
         ws_diag = diag_primary if is_ws else diag_sec
@@ -643,7 +822,7 @@ else:
             ws_iou_str = f"{ws_diag.iou_score:.4f}" if ws_diag.iou_score is not None else "N/A"
             st.markdown(
                 f"""
-                <div style="background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 0.8rem; margin-top: 0.5rem; font-size: 0.85rem;">
+                <div class="stat-box">
                   • <b>Dice Similarity:</b> <span style="color: #10b981; font-weight: bold;">{ws_dice_str}</span><br>
                   • <b>IoU (Jaccard):</b> {ws_iou_str}<br>
                   • <b>Diện tích phát hiện:</b> {ws_diag.tumor_area_px:,} px<br>
@@ -672,7 +851,7 @@ else:
             rg_iou_str = f"{rg_diag.iou_score:.4f}" if rg_diag.iou_score is not None else "N/A"
             st.markdown(
                 f"""
-                <div style="background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 0.8rem; margin-top: 0.5rem; font-size: 0.85rem;">
+                <div class="stat-box">
                   • <b>Dice Similarity:</b> <span style="color: #f59e0b; font-weight: bold;">{rg_dice_str}</span><br>
                   • <b>IoU (Jaccard):</b> {rg_iou_str}<br>
                   • <b>Diện tích phát hiện:</b> {rg_diag.tumor_area_px:,} px<br>
@@ -684,7 +863,10 @@ else:
             )
 
     else:  # Bản đồ sai số y khoa (Error Map)
-        st.markdown("<div style='font-size: 1.1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.8rem;'>🗺️ Bản Đồ Phân Rã Sai Số Y Khoa (Diagnostic Error Map)</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div class='section-heading'>🗺️ Bản Đồ Phân Rã Sai Số Y Khoa (Diagnostic Error Map)</div>",
+            unsafe_allow_html=True,
+        )
 
         if input_gt_mask is None:
             st.warning("Ca chụp này chưa có mặt nạ Ground Truth. Vui lòng chọn một ca trong kho TCGA-LGG để xem bản đồ phân rã sai số.")
@@ -720,28 +902,28 @@ else:
 
                 st.markdown(
                     f"""
-                    <div style="background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem;">
-                      <div style="font-weight: 700; font-size: 1rem; color: #f8fafc; margin-bottom: 0.8rem;">Chú Giải & Thống Kê Điểm Ảnh:</div>
+                    <div class="error-breakdown-box">
+                      <div style="font-weight: 700; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.8rem;">Chú Giải & Thống Kê Điểm Ảnh:</div>
 
-                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; padding: 0.4rem 0.6rem; background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; border-radius: 4px;">
-                        <span><b style="color: #22c55e;">■ Đúng Chuẩn (True Positive - TP):</b></span>
-                        <span style="font-family: 'JetBrains Mono'; font-weight: bold;">{tp_px:,} px</span>
+                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; padding: 0.4rem 0.6rem; background: rgba(34, 197, 94, 0.12); border-left: 4px solid #10b981; border-radius: 4px;">
+                        <span><b style="color: #10b981;">■ Đúng Chuẩn (True Positive - TP):</b></span>
+                        <span style="font-family: 'JetBrains Mono'; font-weight: bold; color: var(--text-primary);">{tp_px:,} px</span>
                       </div>
 
-                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; padding: 0.4rem 0.6rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; border-radius: 4px;">
+                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; padding: 0.4rem 0.6rem; background: rgba(239, 68, 68, 0.12); border-left: 4px solid #ef4444; border-radius: 4px;">
                         <span><b style="color: #ef4444;">■ Báo Nhầm (False Positive - FP):</b></span>
-                        <span style="font-family: 'JetBrains Mono'; font-weight: bold;">{fp_px:,} px</span>
+                        <span style="font-family: 'JetBrains Mono'; font-weight: bold; color: var(--text-primary);">{fp_px:,} px</span>
                       </div>
 
-                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.4rem 0.6rem; background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 4px;">
+                      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding: 0.4rem 0.6rem; background: rgba(245, 158, 11, 0.12); border-left: 4px solid #f59e0b; border-radius: 4px;">
                         <span><b style="color: #f59e0b;">■ Bỏ Sót (False Negative - FN):</b></span>
-                        <span style="font-family: 'JetBrains Mono'; font-weight: bold;">{fn_px:,} px</span>
+                        <span style="font-family: 'JetBrains Mono'; font-weight: bold; color: var(--text-primary);">{fn_px:,} px</span>
                       </div>
 
-                      <div style="font-size: 0.85rem; color: #94a3b8; border-top: 1px solid #1f293d; padding-top: 0.8rem;">
-                        • <b>Độ nhạy (Sensitivity / Recall):</b> <span style="color: #38bdf8;">{sens*100:.2f}%</span><br>
-                        • <b>Độ đặc hiệu (Specificity):</b> <span style="color: #10b981;">{spec*100:.2f}%</span><br>
-                        • <b>Dice Similarity:</b> <span style="color: #38bdf8;">{diag_primary.dice_score:.4f}</span>
+                      <div style="font-size: 0.85rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); padding-top: 0.8rem; line-height: 1.6;">
+                        • <b>Độ nhạy (Sensitivity / Recall):</b> <span style="color: #0284c7; font-weight: bold;">{sens*100:.2f}%</span><br>
+                        • <b>Độ đặc hiệu (Specificity):</b> <span style="color: #10b981; font-weight: bold;">{spec*100:.2f}%</span><br>
+                        • <b>Dice Similarity:</b> <span style="color: #0284c7; font-weight: bold;">{diag_primary.dice_score:.4f}</span>
                       </div>
                     </div>
                     """,
@@ -753,7 +935,10 @@ else:
     # =========================================================================
 
     st.markdown("---")
-    st.markdown("<div style='font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.6rem;'>📋 Hồ Sơ Chẩn Đoán & Xuất Báo Cáo Y Khoa</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='section-heading' style='font-size: 1rem;'>📋 Hồ Sơ Chẩn Đoán & Xuất Báo Cáo Y Khoa</div>",
+        unsafe_allow_html=True,
+    )
 
     report_csv = io.StringIO()
     writer = csv.writer(report_csv)
@@ -797,7 +982,7 @@ else:
 st.markdown("---")
 st.markdown(
     """
-    <div style='text-align: center; color: #64748b; font-size: 0.8rem; padding: 1rem 0;'>
+    <div style='text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 1rem 0;'>
       Đồ án Học phần Xử lý ảnh số (0101006276) — Bộ môn Khoa học Dữ liệu — Khoa CNTT — Trường ĐH Công Thương TP.HCM (HUIT).<br>
       <i>Sản phẩm phục vụ nghiên cứu khoa học và minh chứng đồ án. Không dùng thay thế chỉ định y tế chính thức.</i>
     </div>
