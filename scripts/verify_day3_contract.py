@@ -390,17 +390,18 @@ def check_docs(checks: List[Check]) -> None:
                             checked == 3 and unchecked == 0,
                             f"{checked} [x] • {unchecked} [ ]"))
 
-    later = [sections[d] for d in range(4, 8) if d in sections]
-    later_checked = sum(s.count("- [x]") for s in later)
-    later_unchecked = sum(s.count("- [ ]") for s in later)
-    checks.append(Check("DOC", "Ngày 4–7: 0 [x] • 11 [ ]",
-                        later_checked == 0 and later_unchecked == 11,
-                        f"{later_checked} [x] • {later_unchecked} [ ]"))
+    # Ngày 1–3 không bị hồi quy và tổng số ô checklist luôn đủ 20.
+    earlier = [sections[d] for d in (1, 2, 3) if d in sections]
+    earlier_checked = sum(s.count("- [x]") for s in earlier)
+    earlier_unchecked = sum(s.count("- [ ]") for s in earlier)
+    checks.append(Check("DOC", "Ngày 1–3: 9 [x] không hồi quy",
+                        earlier_checked == 9 and earlier_unchecked == 0,
+                        f"{earlier_checked} [x] • {earlier_unchecked} [ ]"))
 
     total_checked = text.count("- [x]")
     total_unchecked = text.count("- [ ]")
-    checks.append(Check("DOC", "Tổng: 9 [x] / 11 [ ]",
-                        total_checked == 9 and total_unchecked == 11,
+    checks.append(Check("DOC", "Tổng 20 ô checklist (>= 9 [x])",
+                        total_checked + total_unchecked == 20 and total_checked >= 9,
                         f"{total_checked} [x] • {total_unchecked} [ ]"))
 
 

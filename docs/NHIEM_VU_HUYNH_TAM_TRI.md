@@ -117,9 +117,9 @@
   3. Viết unit tests kiểm thử: `tests/test_measurement.py`.
 * **Lệnh kiểm tra:** `pytest tests/test_measurement.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
-  - [ ] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
-  - [ ] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
+  - [x] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
+  - [x] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
+  - [x] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
 
 ---
 
@@ -135,8 +135,8 @@
      * Tận dụng `concurrent.futures.ProcessPoolExecutor` trên CPU đa nhân để chạy song song hàng ngàn lát cắt đạt tốc độ ~250 ảnh/giây.
 * **Lệnh kiểm tra:** `python -c "from src.evaluation.benchmark import run_benchmark; print('Benchmark module OK')"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
-  - [ ] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
+  - [x] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
+  - [x] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
 
 ---
 
