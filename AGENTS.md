@@ -124,19 +124,48 @@ Single-context layout using root `GLOSSARY.md` and `docs/adr/`. See `docs/agents
 ---
 
 ## 7. Quy chuẩn Định dạng Văn bản Báo cáo Đồ án (Word / DOCX Format)
-**Áp dụng bắt buộc cho toàn bộ báo cáo đồ án, thuyết minh chuyên đề khi xuất định dạng Microsoft Word (`.docx`):**
-* **Kỹ năng Word bắt buộc:** Bắt buộc sử dụng skill `docx` (`python-docx` / `docx-js`) để sinh và thao tác văn bản Word.
-* **Quy chuẩn Font chữ & Giãn dòng:**
-  * Font chữ: **Times New Roman** thống nhất toàn bộ văn bản.
-  * Cỡ chữ nội dung (Body text): **13pt**.
-  * Giãn cách dòng (Line spacing): **1.5 lines** (không dùng giãn dòng đơn hay 1.15).
-* **Quy chuẩn Căn lề trang in (Page Margins theo chuẩn NXB/Bộ Giáo dục):**
+**Áp dụng bắt buộc cho toàn bộ báo cáo đồ án, thuyết minh chuyên đề khi xuất định dạng Microsoft Word (`.docx`), trích xuất chuẩn hóa từ tệp mẫu `docs/Nhom12_BaoCao.docx`:**
+
+* **Kỹ năng Word bắt buộc:** Sử dụng thư viện `python-docx` kết hợp module điều phối `src/report/docx_builder.py` để sinh và thao tác văn bản Word.
+* **Quy chuẩn Căn lề trang in (Page Margins chuẩn NXB & HUIT):**
+  * Khổ giấy: **Letter** (`21.59 cm x 27.94 cm`) hoặc **A4** (`21.00 cm x 29.70 cm`).
   * Lề trên (Top): **3.0 cm**
   * Lề dưới (Bottom): **3.0 cm**
   * Lề trái (Left): **3.0 cm** (khoảng cách đóng gáy hồ sơ)
   * Lề phải (Right): **2.0 cm**
+  * Khoảng cách Header / Footer: **1.27 cm** (0.5 inch).
+* **Quy chuẩn Kiểu chữ & Đoạn văn bản (Body Text / Normal Style):**
+  * Font chữ: **Times New Roman** thống nhất 100% toàn bộ văn bản.
+  * Cỡ chữ nội dung: **13.0 pt** (`w:sz = 26` nửa pt).
+  * Căn lề đoạn: **Căn đều hai bên (Justified / Both)** (`w:jc = both`).
+  * Giãn cách dòng: **1.5 lines** (`w:line = 360` twips, `lineRule = auto`).
+  * Khoảng cách đoạn: Trước đoạn **0 pt**, Sau đoạn **4.0 pt** (`w:after = 80` twips).
+  * Thụt đầu dòng (First Line Indent): **1.27 cm** (`w:ind = 720` twips) cho các đoạn văn xuôi nội dung; tiêu đề và bảng biểu đặt **0 cm**.
 * **Quy tắc phân cấp Tiêu đề (Heading Hierarchy):**
-  * **Mục lớn / Chương:** Đánh số thứ tự 1, 2, ... hoặc CHƯƠNG 1, CHƯƠNG 2... — **IN HOA, IN ĐẬM, ĐỨNG THẲNG** (ví dụ: **1. GIỚI THIỆU ĐỀ TÀI**).
-  * **Tiểu mục cấp 1:** Thể hiện là 1.1; 1.2,... 2.1; 2.2.... — **Chữ thường, in đậm** (ví dụ: **1.1. Bối cảnh nghiên cứu**).
-  * **Tiểu mục cấp 2 (Tiểu tiết):** Thể hiện là 1.1.1, 1.2.1, 2.1.1.... — **Chữ thường, in nghiêng** (ví dụ: *1.1.1. Đặc điểm ảnh cộng hưởng từ MRI*).
+  * **Heading 1 (Chương & Mục lớn mở đầu):** Dùng cho `LỜI MỞ ĐẦU`, `TÓM TẮT`, `BẢNG PHÂN CÔNG NHIỆM VỤ`, `MỤC LỤC`, `CHƯƠNG 1...`, `TÀI LIỆU THAM KHẢO`, `PHỤ LỤC`. Định dạng: **15.0 pt**, **IN HOA, IN ĐẬM**, **Căn giữa** (`CENTER`), Trước: **12.0 pt**, Sau: **6.0 pt**.
+  * **Heading 2 (Tiểu mục cấp 1: X.Y):** Dùng cho `1.1`, `1.2`, `2.1`... Định dạng: **13.5 pt**, **Chữ thường, IN ĐẬM**, **Căn trái** (`LEFT`), Trước: **8.0 pt**, Sau: **0 pt**.
+  * **Heading 3 (Tiểu mục cấp 2: X.Y.Z):** Dùng cho `1.1.1`, `1.2.1`... Định dạng: **13.0 pt**, **Chữ thường, IN NGHIÊNG**, **Căn trái** (`LEFT`), Trước: **6.0 pt**, Sau: **2.0 pt**.
+* **Quy chuẩn Bảng biểu (Tables) & Caption:**
+  * Cỡ chữ trong ô bảng: **10.5 pt - 11.0 pt**, giãn dòng đơn (1.0) hoặc 1.15 lines.
+  * Hàng tiêu đề (Header row): **In đậm (Bold)**, căn giữa ô.
+  * Ô dữ liệu chữ căn trái, ô dữ liệu số căn giữa hoặc căn phải.
+  * **Vị trí Caption Bảng:** Nằm **TRÊN** bảng. Định dạng: `Bảng X.Y: Tên bảng`, cỡ chữ **11.5 pt**, **In nghiêng (Italic)**, căn giữa (`CENTER`), Sau 4.0 pt.
+* **Quy chuẩn Hình ảnh (Figures) & Caption:**
+  * Hình ảnh được căn giữa trang (`CENTER`).
+  * **Vị trí Caption Hình:** Nằm **DƯỚI** hình. Định dạng: `Hình X.Y: Tên hình ảnh minh họa`, cỡ chữ **11.5 pt**, **In nghiêng (Italic)**, căn giữa (`CENTER`), Trước 4.0 pt, Sau 6.0 pt.
+* **Quy chuẩn Trang bìa (Cover Page Layout):**
+  * Căn giữa toàn bộ trang bìa, không đánh số trang:
+    1. `TRƯỜNG ĐẠI HỌC CÔNG THƯƠNG TP. HỒ CHÍ MINH` (15.0 pt, In hoa, In đậm, Sau 6pt).
+    2. `KHOA CÔNG NGHỆ THÔNG TIN` (14.0 pt, In hoa, In đậm, Sau 6pt).
+    3. `BỘ MÔN KHOA HỌC DỮ LIỆU` (14.0 pt, In hoa, In đậm, Sau 6pt).
+    4. `BÁO CÁO ĐỒ ÁN HỌC PHẦN` (13.0 pt, In hoa, Đứng).
+    5. `XỬ LÝ ẢNH SỐ` (14.0 pt, In hoa, In đậm, Sau 6pt).
+    6. `ĐỀ TÀI` (16.0 pt, In hoa, In đậm).
+    7. `PHÂN ĐOẠN VÀ PHÁT HIỆN KHỐI U NÃO TRÊN ẢNH CỘNG HƯỞNG TỪ MRI` (16.0 pt, In hoa, In đậm).
+    8. `(BỘ DỮ LIỆU CHUẨN TCGA-LGG)` (13.0 pt, In nghiêng).
+    9. `Giảng viên hướng dẫn: ...` (13.0 pt).
+    10. `Sinh viên thực hiện:` (13.0 pt, In đậm), liệt kê đầy đủ thành viên, MSSV và tỷ lệ đóng góp (50% - 50%).
+    11. `TP. Hồ Chí Minh, Năm 2026` (13.0 pt, In đậm).
+* **Khung Cấu Trúc 8 Chương chuẩn mực Bộ môn KHDL - HUIT:**
+  * Bìa ngoài & Bìa trong $\rightarrow$ Lời mở đầu $\rightarrow$ Tóm tắt $\rightarrow$ Bảng phân công nhiệm vụ $\rightarrow$ Mục lục, Danh mục bảng, Danh mục hình $\rightarrow$ **Chương 1: Giới thiệu đề tài** $\rightarrow$ **Chương 2: Cơ sở lý thuyết Xử lý ảnh số** $\rightarrow$ **Chương 3: Mô tả tập dữ liệu MRI TCGA-LGG** $\rightarrow$ **Chương 4: Tiền xử lý ảnh và Tách sọ não** $\rightarrow$ **Chương 5: Phương pháp phân đoạn u não và Pipeline** $\rightarrow$ **Chương 6: Kết quả thực nghiệm và Đánh giá định lượng** $\rightarrow$ **Chương 7: Xây dựng ứng dụng minh họa Demo Web UI** $\rightarrow$ **Chương 8: Kết luận và Hướng phát triển** $\rightarrow$ **Tài liệu tham khảo (chuẩn IEEE `[1]`, `[2]`)** $\rightarrow$ **Phụ lục**.
 
