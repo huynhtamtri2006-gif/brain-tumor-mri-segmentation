@@ -106,7 +106,7 @@ PRESET_CASES: List[Dict[str, Any]] = [
     {
         "id": "TCGA_DU_5851_19950428_2",
         "title": "Ca 4: Não Lành Không U",
-        "badge": "Spec 99.9%",
+        "badge": "GT 0 px (Âm tính)",
         "badge_color": "#8b5cf6",
         "desc": "Lát cắt âm tính hoàn toàn không có bệnh lý (Healthy Control Case).",
         "type": "negative"
