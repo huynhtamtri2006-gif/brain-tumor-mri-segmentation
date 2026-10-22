@@ -138,9 +138,9 @@
   3. Hoàn thiện nội dung so sánh thuật toán trong `notebooks/03_tumor_segmentation_comparison.ipynb`.
 * **Lệnh kiểm tra:** `pytest tests/test_segmentation.py tests/test_pipeline.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 100% test cases trong `test_segmentation.py` và `test_pipeline.py` đều đạt (PASSED).
-  - [ ] `BrainTumorPipeline` hỗ trợ chuyển đổi linh hoạt giữa 2 giải thuật qua cờ cấu hình `method='watershed'` hoặc `'region_growing'`.
-  - [ ] Lưới ảnh so sánh đối chứng 2 giải thuật được xuất đầy đủ.
+  - [x] 100% test cases trong `test_segmentation.py` và `test_pipeline.py` đều đạt (PASSED).
+  - [x] `BrainTumorPipeline` hỗ trợ chuyển đổi linh hoạt giữa 2 giải thuật qua cờ cấu hình `method='watershed'` hoặc `'region_growing'`.
+  - [x] Lưới ảnh so sánh đối chứng 2 giải thuật được xuất đầy đủ.
 
 ---
 

@@ -22,7 +22,7 @@ from src.evaluation.metrics import calculate_dice, calculate_iou
 class BrainTumorPipeline:
     """Hệ thống điều phối xử lý ảnh số chẩn đoán khối u não MRI."""
 
-    def __init__(self, method: str = "watershed", params: Optional[Dict[str, Any]] = None):
+    def __init__(self, method: str = "watershed", params: Optional[Dict[str, Any]] = None) -> None:
         """Khởi tạo pipeline với phương pháp phân đoạn mong muốn.
         
         Args:
