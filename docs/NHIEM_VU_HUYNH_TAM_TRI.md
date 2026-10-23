@@ -117,9 +117,9 @@
   3. Viết unit tests kiểm thử: `tests/test_measurement.py`.
 * **Lệnh kiểm tra:** `pytest tests/test_measurement.py -v`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
-  - [ ] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
-  - [ ] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
+  - [x] 100% test cases trong `test_measurement.py` đạt kết quả PASSED.
+  - [x] Bounding Box và Contour vẽ chính xác trên tọa độ u, không bị lệch hoặc tràn khung.
+  - [x] Lưới 4 ảnh Quad display hiển thị đồng bộ kích thước $256 \times 256$.
 
 ---
 
@@ -135,8 +135,8 @@
      * Tận dụng `concurrent.futures.ProcessPoolExecutor` trên CPU đa nhân để chạy song song hàng ngàn lát cắt đạt tốc độ ~250 ảnh/giây.
 * **Lệnh kiểm tra:** `python -c "from src.evaluation.benchmark import run_benchmark; print('Benchmark module OK')"`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
-  - [ ] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
+  - [x] Chạy mượt mà toàn bộ `notebooks/03_tumor_segmentation_comparison.ipynb`.
+  - [x] Framework benchmark sẵn sàng thực thi quy mô lớn mà không nghẽn bộ nhớ.
 
 ---
 
@@ -156,9 +156,9 @@
      * Lưu các biểu đồ độ phân giải cao phục vụ chèn vào Chương 8 của Báo cáo.
 * **Lệnh kiểm tra:** `streamlit run demo/app.py --server.headless true`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
-  - [ ] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
-  - [ ] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
+  - [x] Giao diện Streamlit chạy trơn tru, phản hồi nhanh dưới 1 giây.
+  - [x] Hoàn tất 7,858 lượt đánh giá thực nghiệm trên 3,929 lát cắt chuẩn.
+  - [x] Toàn bộ file CSV và biểu đồ đánh giá định lượng được lưu hoàn chỉnh.
 
 ---
 
@@ -176,8 +176,8 @@
   * Phối hợp cùng Trường ghép nối thành `docs/BAO_CAO_DO_AN_XLAS.md` và chạy `python scripts/export_report_docx.py` để xuất bản file Word `docs/BAO_CAO_DO_AN_XLAS.docx` tuân thủ nghiêm ngặt Quy chuẩn Word HUIT (Times New Roman 13pt, line spacing 1.5, lề 3-3-3-2 cm).
 * **Lệnh kiểm tra:** `python scripts/export_report_docx.py`
 * **Tiêu chí nghiệm thu & Checklist:**
-  - [ ] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
-  - [ ] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
+  - [x] Toàn bộ 6 chương tổng quan và định lượng được biên soạn chỉn chu.
+  - [x] File Word `docs/BAO_CAO_DO_AN_XLAS.docx` chuẩn thể thức in ấn, căn lề và bảng biểu hoàn hảo.
 
 ---
 

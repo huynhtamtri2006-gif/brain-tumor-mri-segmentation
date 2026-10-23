@@ -14,7 +14,7 @@ from .base import BaseSegmenter
 class RegionGrowingSegmenter(BaseSegmenter):
     """Bộ phân đoạn u não sử dụng giải thuật phát triển vùng từ hạt giống cực đại cường độ."""
 
-    def __init__(self, tolerance: int = 15, min_area: int = 50, max_area: int = 25000):
+    def __init__(self, tolerance: int = 15, min_area: int = 50, max_area: int = 25000) -> None:
         self.tolerance = tolerance
         self.min_area = min_area
         self.max_area = max_area
